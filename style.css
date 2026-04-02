@@ -179,34 +179,38 @@ label {
 }
 
 #canvas-controls {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
-  background: rgba(0,0,0,0.5);
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(0,0,0,0.7);
   border-radius: 6px;
-  margin-top: 8px;
+  z-index: 15;
+  white-space: nowrap;
 }
 
-#duration-display {
+.keyframe-info {
   font-family: monospace;
-  font-size: 16px;
-  color: var(--accent);
-  min-width: 70px;
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 100px;
 }
 
-#btn-record-duration {
-  user-select: none;
-  -webkit-user-select: none;
+#btn-add-keyframe {
+  background: #1a6b3a;
+  border-color: #2ecc71;
 }
-#btn-record-duration.recording {
-  background: var(--accent);
-  animation: pulse 0.5s infinite alternate;
+#btn-add-keyframe:hover { background: #2ecc71; }
+
+#btn-delete-keyframe {
+  background: #6b1a2a;
+  border-color: var(--accent);
 }
-@keyframes pulse {
-  from { box-shadow: 0 0 4px var(--accent); }
-  to { box-shadow: 0 0 16px var(--accent); }
-}
+#btn-delete-keyframe:hover { background: var(--accent); }
 
 /* === Property Panel === */
 #property-panel {
@@ -351,6 +355,48 @@ label {
 .keyframe-bar.audio-bar { background: var(--success); }
 .keyframe-bar.voice-bar { background: #3498db; }
 
+.keyframe-diamond {
+  position: absolute;
+  top: 5px;
+  width: 14px; height: 14px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #f1c40f;
+  border: 1px solid #f39c12;
+  cursor: pointer;
+  z-index: 2;
+}
+.keyframe-diamond:hover { background: #fff; border-color: #f1c40f; }
+.keyframe-diamond.active { background: #e94560; border-color: #fff; }
+
+.keyframe-segment {
+  position: absolute;
+  top: 8px;
+  height: 8px;
+  background: rgba(241, 196, 15, 0.3);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Keyframe list in property panel */
+.kf-list { list-style: none; margin-top: 4px; }
+.kf-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.kf-item:hover { background: rgba(255,255,255,0.05); }
+.kf-item.active { background: var(--selection); border-color: var(--accent); }
+.kf-item .kf-time { color: #f1c40f; font-family: monospace; min-width: 45px; }
+.kf-item .kf-pos { color: var(--text-muted); font-family: monospace; flex: 1; }
+.kf-item .kf-delete { color: var(--accent); cursor: pointer; opacity: 0.5; }
+.kf-item .kf-delete:hover { opacity: 1; }
+.kf-easing-select { font-size: 10px; max-width: 80px; }
+
 #timeline-playhead {
   position: absolute;
   top: 0;
@@ -458,18 +504,3 @@ label {
 
 /* Canvas dragging states */
 #canvas-overlay.dragging { cursor: grabbing; }
-#canvas-overlay.setting-start { cursor: crosshair; }
-#canvas-overlay.setting-end { cursor: crosshair; }
-
-/* Start/End point markers */
-.point-marker {
-  position: absolute;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 20;
-  border: 2px solid white;
-}
-.point-marker.start { background: var(--success); }
-.point-marker.end { background: var(--accent); }
