@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <div class="header-left">
+        <h1>Animation Studio</h1>
+      </div>
+      <div class="header-center">
+        <span id="project-name">新規プロジェクト</span>
+      </div>
+      <div class="header-right">
+        <button id="btn-new-project" title="新規プロジェクト">📄 新規</button>
+        <button id="btn-save-project" title="プロジェクト保存">💾 保存</button>
+        <button id="btn-load-project" title="プロジェクト読込">📂 読込</button>
+        <button id="btn-export" title="動画エクスポート">🎬 エクスポート</button>
+      </div>
+    </header>
+
+    <div id="main-area">
+      <!-- Left Panel: Layers -->
+      <aside id="layer-panel">
+        <div class="panel-header">
+          <h2>レイヤー</h2>
+          <button id="btn-add-layer" title="画像レイヤー追加">+ 画像</button>
+        </div>
+        <ul id="layer-list"></ul>
+      </aside>
+
+      <!-- Center: Canvas -->
+      <main id="canvas-area">
+        <div id="canvas-container">
+          <canvas id="stage-canvas" width="1280" height="720"></canvas>
+          <!-- Overlay for drag interaction -->
+          <div id="canvas-overlay"></div>
+        </div>
+        <div id="canvas-controls">
+          <button id="btn-set-start" title="現在位置を始点に設定">📍 始点設定</button>
+          <button id="btn-set-end" title="現在位置を終点に設定">🏁 終点設定</button>
+          <button id="btn-record-duration" title="押している間の時間をアニメーション秒数に設定">⏱ 秒数計測（長押し）</button>
+          <span id="duration-display">0.00秒</span>
+        </div>
+      </main>
+
+      <!-- Right Panel: Properties -->
+      <aside id="property-panel">
+        <div class="panel-header">
+          <h2>プロパティ</h2>
+        </div>
+        <div id="property-content">
+          <p class="placeholder-text">レイヤーを選択してください</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Bottom: Timeline -->
+    <div id="timeline-area">
+      <div id="timeline-controls">
+        <button id="btn-play" title="再生">▶</button>
+        <button id="btn-pause" title="一時停止">⏸</button>
+        <button id="btn-stop" title="停止">⏹</button>
+        <span id="time-display">00:00.000 / 00:00.000</span>
+        <label>総時間(秒): <input type="number" id="total-duration" value="10" min="1" max="600" step="0.1"></label>
+      </div>
+      <div id="timeline-tracks-container">
+        <div id="timeline-ruler"></div>
+        <div id="timeline-tracks"></div>
+        <div id="timeline-playhead"></div>
+      </div>
+    </div>
+
+    <!-- Audio Panel (collapsible) -->
+    <div id="audio-panel">
+      <div class="panel-header" id="audio-panel-toggle">
+        <h2>🔊 オーディオ</h2>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div id="audio-content">
+        <div class="audio-section">
+          <h3>BGM</h3>
+          <button id="btn-add-bgm">+ BGM追加</button>
+          <ul id="bgm-list"></ul>
+        </div>
+        <div class="audio-section">
+          <h3>効果音</h3>
+          <button id="btn-add-sfx">+ 効果音追加</button>
+          <ul id="sfx-list"></ul>
+        </div>
+        <div class="audio-section">
+          <h3>音声ファイル</h3>
+          <button id="btn-add-voice">+ 音声追加</button>
+          <ul id="voice-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file inputs -->
+  <input type="file" id="file-image" accept="image/*" style="display:none">
+  <input type="file" id="file-audio" accept="audio/*" style="display:none" data-audio-type="">
+  <input type="file" id="file-project" accept=".animproj,.json" style="display:none">
+
+  <!-- Export Modal -->
+  <div id="export-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>動画エクスポート</h2>
+      <div class="modal-body">
+        <label>解像度:
+          <select id="export-resolution">
+            <option value="1920x1080">1920x1080 (Full HD)</option>
+            <option value="1280x720" selected>1280x720 (HD)</option>
+            <option value="854x480">854x480 (SD)</option>
+            <option value="3840x2160">3840x2160 (4K)</option>
+          </select>
+        </label>
+        <label>フレームレート:
+          <select id="export-fps">
+            <option value="24">24fps</option>
+            <option value="30" selected>30fps</option>
+            <option value="60">60fps</option>
+          </select>
+        </label>
+        <label>フォーマット:
+          <select id="export-format">
+            <option value="webm" selected>WebM (YouTube対応)</option>
+            <option value="mp4">MP4 (H.264)</option>
+          </select>
+        </label>
+        <div id="export-progress" class="hidden">
+          <progress id="export-progress-bar" value="0" max="100"></progress>
+          <span id="export-progress-text">0%</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-export-start">エクスポート開始</button>
+        <button id="btn-export-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rename Modal -->
+  <div id="rename-modal" class="modal hidden">
+    <div class="modal-content modal-small">
+      <h2>プロジェクト名変更</h2>
+      <input type="text" id="rename-input" placeholder="プロジェクト名">
+      <div class="modal-footer">
+        <button id="btn-rename-ok">OK</button>
+        <button id="btn-rename-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
