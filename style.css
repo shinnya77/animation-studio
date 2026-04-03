@@ -397,6 +397,41 @@ label {
 .kf-item .kf-delete:hover { opacity: 1; }
 .kf-easing-select { font-size: 10px; max-width: 80px; }
 
+/* === Vibration UI === */
+.vibration-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 3px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 3px;
+  flex-wrap: wrap;
+  font-size: 11px;
+}
+.vib-source-select {
+  font-size: 10px;
+  max-width: 120px;
+  min-width: 80px;
+}
+.vib-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.vib-intensity, .vib-threshold {
+  width: 50px;
+  font-size: 10px;
+}
+.vib-delete {
+  cursor: pointer;
+  color: var(--accent);
+  opacity: 0.5;
+  font-size: 11px;
+  margin-left: auto;
+}
+.vib-delete:hover { opacity: 1; }
+
 #timeline-playhead {
   position: absolute;
   top: 0;

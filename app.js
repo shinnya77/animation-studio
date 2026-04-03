@@ -20,8 +20,9 @@
   // ---- State ----
   const state = {
     projectName: '新規プロジェクト',
-    // Each layer: { id, name, img, imgSrc, thumbCanvas, visible, x, y, w, h, rotation, opacity, scaleX, scaleY, keyframes: [] }
+    // Each layer: { id, name, img, imgSrc, thumbCanvas, visible, x, y, w, h, rotation, opacity, scaleX, scaleY, keyframes: [], vibrations: [] }
     // Each keyframe: { time, x, y, rotation, opacity, scaleX, scaleY, easing }
+    // Each vibration: { sourceType: 'bgm'|'sfx'|'voice', sourceIndex: number, intensity: number, threshold: number }
     layers: [],
     selectedLayerId: null,
     totalDuration: 10,
@@ -41,6 +42,8 @@
     audioCtx: null,
     activeAudioSources: [],
     lastTotalDuration: null,
+    // Analyser nodes for voice vibration: trackId -> { analyser, dataArray }
+    activeAnalysers: new Map(),
   };
 
   // ---- DOM refs ----
@@ -243,13 +246,15 @@
   })();
 
   // ---- Render Canvas ----
-  function renderLayer(targetCtx, layer, time, scaleX, scaleY) {
+  function renderLayer(targetCtx, layer, time, scaleX, scaleY, vibOffset) {
     if (!layer.visible || !layer.img) return;
     const st = getLayerStateAtTime(layer, time);
+    const vdx = vibOffset ? vibOffset.dx : 0;
+    const vdy = vibOffset ? vibOffset.dy : 0;
 
     targetCtx.save();
     targetCtx.globalAlpha = st.opacity;
-    targetCtx.translate((st.x + layer.w / 2) * scaleX, (st.y + layer.h / 2) * scaleY);
+    targetCtx.translate((st.x + vdx + layer.w / 2) * scaleX, (st.y + vdy + layer.h / 2) * scaleY);
     targetCtx.rotate((st.rotation * Math.PI) / 180);
     targetCtx.scale(st.scaleX, st.scaleY);
     targetCtx.drawImage(layer.img, (-layer.w / 2) * scaleX, (-layer.h / 2) * scaleY, layer.w * scaleX, layer.h * scaleY);
@@ -262,7 +267,8 @@
 
     for (let i = state.layers.length - 1; i >= 0; i--) {
       const layer = state.layers[i];
-      renderLayer(ctx, layer, state.currentTime, 1, 1);
+      const vibOffset = state.isPlaying ? getLayerVibrationOffset(layer) : null;
+      renderLayer(ctx, layer, state.currentTime, 1, 1, vibOffset);
 
       // Draw selection overlay for selected layer
       if (layer.id === state.selectedLayerId && !state.isPlaying) {
@@ -340,6 +346,7 @@
         rotation: 0, opacity: 1,
         scaleX: 1, scaleY: 1,
         keyframes: [],
+        vibrations: [], // [{ sourceType, sourceIndex, intensity, threshold }]
       };
       state.layers.unshift(layer);
       state.selectedLayerId = id;
@@ -476,10 +483,21 @@
         <ul class="kf-list">${kfListHtml || '<li style="color:var(--text-muted);font-size:11px;padding:4px;">キーフレームなし</li>'}</ul>
       </div>
       <div class="prop-group">
+        <h3>🔊 音声連動振動</h3>
+        <p style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">
+          音声に反応してレイヤーを揺らします。複数設定可能。
+        </p>
+        <div id="vibration-list"></div>
+        <button id="btn-add-vibration" style="margin-top:4px;font-size:11px;">+ 振動追加</button>
+      </div>
+      <div class="prop-group">
         <h3>レイヤー順序</h3>
         <div class="prop-row" id="layer-order-buttons"></div>
       </div>
     `;
+
+    // Vibration UI
+    buildVibrationUI(layer);
 
     // Move-layer buttons
     const orderRow = propertyContent.querySelector('#layer-order-buttons');
@@ -548,6 +566,111 @@
         }
       });
     });
+  }
+
+  function getAudioTrackOptions() {
+    const opts = [];
+    state.bgmTracks.forEach((t, i) => opts.push({ type: 'bgm', index: i, label: `BGM: ${t.name || ('BGM ' + (i + 1))}` }));
+    state.sfxTracks.forEach((t, i) => opts.push({ type: 'sfx', index: i, label: `効果音: ${t.name || ('SFX ' + (i + 1))}` }));
+    state.voiceTracks.forEach((t, i) => opts.push({ type: 'voice', index: i, label: `音声: ${t.name || ('Voice ' + (i + 1))}` }));
+    return opts;
+  }
+
+  function buildVibrationUI(layer) {
+    const container = propertyContent.querySelector('#vibration-list');
+    const btnAdd = propertyContent.querySelector('#btn-add-vibration');
+    const audioOpts = getAudioTrackOptions();
+
+    function renderVibList() {
+      container.innerHTML = '';
+      if (layer.vibrations.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted);font-size:11px;padding:4px;">振動設定なし</div>';
+        return;
+      }
+      layer.vibrations.forEach((vib, idx) => {
+        const row = document.createElement('div');
+        row.className = 'vibration-item';
+
+        const sel = document.createElement('select');
+        sel.className = 'vib-source-select';
+        if (audioOpts.length === 0) {
+          const o = document.createElement('option');
+          o.textContent = '(音声なし)';
+          sel.appendChild(o);
+          sel.disabled = true;
+        } else {
+          audioOpts.forEach((ao) => {
+            const o = document.createElement('option');
+            o.value = ao.type + ':' + ao.index;
+            o.textContent = ao.label;
+            if (ao.type === vib.sourceType && ao.index === vib.sourceIndex) o.selected = true;
+            sel.appendChild(o);
+          });
+        }
+        sel.onchange = () => {
+          const [t, i] = sel.value.split(':');
+          vib.sourceType = t;
+          vib.sourceIndex = parseInt(i);
+        };
+
+        const intensityLabel = document.createElement('span');
+        intensityLabel.className = 'vib-label';
+        intensityLabel.textContent = '強さ:';
+
+        const intensityInput = document.createElement('input');
+        intensityInput.type = 'number';
+        intensityInput.className = 'vib-intensity';
+        intensityInput.value = vib.intensity;
+        intensityInput.min = 1;
+        intensityInput.max = 100;
+        intensityInput.step = 1;
+        intensityInput.title = 'ピクセル振幅（1=微振動、20=大きく揺れる）';
+        intensityInput.onchange = () => { vib.intensity = parseFloat(intensityInput.value) || 5; };
+
+        const threshLabel = document.createElement('span');
+        threshLabel.className = 'vib-label';
+        threshLabel.textContent = '閾値:';
+
+        const threshInput = document.createElement('input');
+        threshInput.type = 'number';
+        threshInput.className = 'vib-threshold';
+        threshInput.value = vib.threshold;
+        threshInput.min = 0;
+        threshInput.max = 1;
+        threshInput.step = 0.05;
+        threshInput.title = '反応する音量の閾値（0=常に、0.3=大きめの音のみ）';
+        threshInput.onchange = () => { vib.threshold = parseFloat(threshInput.value) || 0; };
+
+        const delBtn = document.createElement('span');
+        delBtn.className = 'vib-delete';
+        delBtn.textContent = '✕';
+        delBtn.onclick = () => {
+          layer.vibrations.splice(idx, 1);
+          renderVibList();
+        };
+
+        row.appendChild(sel);
+        row.appendChild(intensityLabel);
+        row.appendChild(intensityInput);
+        row.appendChild(threshLabel);
+        row.appendChild(threshInput);
+        row.appendChild(delBtn);
+        container.appendChild(row);
+      });
+    }
+
+    btnAdd.onclick = () => {
+      const firstOpt = audioOpts[0];
+      layer.vibrations.push({
+        sourceType: firstOpt ? firstOpt.type : 'voice',
+        sourceIndex: firstOpt ? firstOpt.index : 0,
+        intensity: 5,
+        threshold: 0.1,
+      });
+      renderVibList();
+    };
+
+    renderVibList();
   }
 
   // ---- Timeline ----
@@ -729,14 +852,24 @@
     const aCtx = getAudioCtx();
     if (aCtx.state === 'suspended') aCtx.resume();
 
-    const playTrack = (track) => {
+    const playTrack = (track, sourceType, sourceIndex) => {
       if (!track.audioBuffer) return;
       const src = aCtx.createBufferSource();
       const gain = aCtx.createGain();
       gain.gain.value = track.volume ?? 1;
       src.buffer = track.audioBuffer;
       src.connect(gain);
-      gain.connect(aCtx.destination);
+
+      // Create analyser for vibration detection
+      const analyser = aCtx.createAnalyser();
+      analyser.fftSize = 256;
+      gain.connect(analyser);
+      analyser.connect(aCtx.destination);
+
+      const dataArray = new Uint8Array(analyser.fftSize);
+      const key = sourceType + ':' + sourceIndex;
+      state.activeAnalysers.set(key, { analyser, dataArray });
+
       const offset = Math.max(0, state.currentTime - (track.startTime || 0));
       const when = Math.max(0, (track.startTime || 0) - state.currentTime);
       if (offset < track.audioBuffer.duration) {
@@ -745,14 +878,44 @@
       }
     };
 
-    state.bgmTracks.forEach(playTrack);
-    state.sfxTracks.forEach(playTrack);
-    state.voiceTracks.forEach(playTrack);
+    state.bgmTracks.forEach((t, i) => playTrack(t, 'bgm', i));
+    state.sfxTracks.forEach((t, i) => playTrack(t, 'sfx', i));
+    state.voiceTracks.forEach((t, i) => playTrack(t, 'voice', i));
   }
 
   function stopAudioPlayback() {
     state.activeAudioSources.forEach((s) => { try { s.stop(); } catch (e) {} });
     state.activeAudioSources = [];
+    state.activeAnalysers.clear();
+  }
+
+  // Get amplitude (0-1) for a specific audio track from its analyser
+  function getTrackAmplitude(sourceType, sourceIndex) {
+    const key = sourceType + ':' + sourceIndex;
+    const entry = state.activeAnalysers.get(key);
+    if (!entry) return 0;
+    entry.analyser.getByteTimeDomainData(entry.dataArray);
+    let maxDev = 0;
+    for (let i = 0; i < entry.dataArray.length; i++) {
+      const dev = Math.abs(entry.dataArray[i] - 128) / 128;
+      if (dev > maxDev) maxDev = dev;
+    }
+    return maxDev;
+  }
+
+  // Calculate combined vibration offset for a layer (real-time playback)
+  function getLayerVibrationOffset(layer) {
+    if (!layer.vibrations || layer.vibrations.length === 0) return { dx: 0, dy: 0 };
+    let dx = 0, dy = 0;
+    for (const vib of layer.vibrations) {
+      const amp = getTrackAmplitude(vib.sourceType, vib.sourceIndex);
+      if (amp > vib.threshold) {
+        const strength = ((amp - vib.threshold) / (1 - vib.threshold)) * vib.intensity;
+        dx += (Math.random() - 0.5) * 2 * strength;
+        dy += (Math.random() - 0.5) * 2 * strength;
+      }
+    }
+    return { dx, dy };
   }
 
   // ---- Canvas Interaction ----
@@ -953,6 +1116,7 @@
         rotation: l.rotation, opacity: l.opacity,
         scaleX: l.scaleX, scaleY: l.scaleY,
         keyframes: l.keyframes,
+        vibrations: l.vibrations || [],
       })),
       bgmTracks: state.bgmTracks.map(serializeAudioTrack),
       sfxTracks: state.sfxTracks.map(serializeAudioTrack),
@@ -996,7 +1160,7 @@
               ];
             }
 
-            state.layers.push({ ...ld, img, imgSrc: ld.imgSrc, thumbCanvas, keyframes });
+            state.layers.push({ ...ld, img, imgSrc: ld.imgSrc, thumbCanvas, keyframes, vibrations: ld.vibrations || [] });
             resolve();
           };
           img.onerror = () => resolve();
@@ -1213,6 +1377,10 @@
             { time: 5.5, x: 560, y: 80, rotation: 0, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeIn' },
             { time: 7, x: 560, y: -120, rotation: -5, opacity: 0, scaleX: 0.8, scaleY: 0.8, easing: 'easeInOut' },
           ],
+          vibrations: [
+            // 効果音（雷等）でタイトルが大きく揺れる例
+            { sourceType: 'sfx', sourceIndex: 0, intensity: 15, threshold: 0.3 },
+          ],
         },
         {
           id: 2, name: 'キャラクター', imgSrc: charSrc,
@@ -1225,6 +1393,12 @@
             { time: 5, x: 1400, y: 560, rotation: -3, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeInOut' },
             { time: 7, x: 1800, y: 500, rotation: 10, opacity: 1, scaleX: 1.2, scaleY: 1.2, easing: 'easeIn' },
             { time: 8, x: 2100, y: 600, rotation: 0, opacity: 0, scaleX: 1, scaleY: 1, easing: 'linear' },
+          ],
+          vibrations: [
+            // 音声トラックで喋りに合わせて微振動
+            { sourceType: 'voice', sourceIndex: 0, intensity: 5, threshold: 0.1 },
+            // 効果音（雷等）でびっくりして大きく揺れる
+            { sourceType: 'sfx', sourceIndex: 0, intensity: 25, threshold: 0.3 },
           ],
         },
         {
@@ -1399,7 +1573,7 @@
       return tex;
     }
 
-    function renderFrame(time) {
+    function renderFrame(time, vibOffsets) {
       gl.viewport(0, 0, width, height);
       gl.clearColor(0.133, 0.133, 0.133, 1); // #222
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -1409,15 +1583,16 @@
         if (!layer.visible || !layer.img) continue;
 
         const st = getLayerStateAtTime(layer, time);
+        const vib = vibOffsets ? (vibOffsets.get(layer.id) || { dx: 0, dy: 0 }) : { dx: 0, dy: 0 };
         const tex = getTexture(layer);
         gl.bindTexture(gl.TEXTURE_2D, tex);
 
         // Build 2D transform matrix (column-major for GLSL)
         const sx = (layer.w / width) * 2 * st.scaleX;
         const sy = (layer.h / height) * 2 * st.scaleY;
-        const tx = (st.x / width) * 2 - 1 + (layer.w / width) * (1 - st.scaleX);
+        const tx = ((st.x + vib.dx) / width) * 2 - 1 + (layer.w / width) * (1 - st.scaleX);
         // Flip Y for WebGL
-        const ty = -((st.y / height) * 2 - 1 + (layer.h / height) * (1 - st.scaleY)) - sy;
+        const ty = -(((st.y + vib.dy) / height) * 2 - 1 + (layer.h / height) * (1 - st.scaleY)) - sy;
         const rad = -(st.rotation * Math.PI) / 180;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
@@ -1468,17 +1643,90 @@
     return offlineCtx.startRendering();
   }
 
+  // Pre-analyze per-track audio waveform for export-time vibration
+  // Returns Map<'type:index', Float32Array of per-frame amplitudes>
+  async function analyzeAudioForVibration(fps, totalFrames) {
+    const ampMap = new Map();
+    const tracksToAnalyze = [];
+    // Collect only tracks that are actually referenced by some layer vibration
+    const usedKeys = new Set();
+    state.layers.forEach((l) => {
+      (l.vibrations || []).forEach((v) => usedKeys.add(v.sourceType + ':' + v.sourceIndex));
+    });
+    if (usedKeys.size === 0) return ampMap;
+
+    const trackSets = [
+      { type: 'bgm', tracks: state.bgmTracks },
+      { type: 'sfx', tracks: state.sfxTracks },
+      { type: 'voice', tracks: state.voiceTracks },
+    ];
+    for (const { type, tracks } of trackSets) {
+      for (let idx = 0; idx < tracks.length; idx++) {
+        const key = type + ':' + idx;
+        if (!usedKeys.has(key)) continue;
+        const t = tracks[idx];
+        if (!t.audioBuffer) { ampMap.set(key, new Float32Array(totalFrames + 1)); continue; }
+        tracksToAnalyze.push({ key, track: t });
+      }
+    }
+
+    for (const { key, track } of tracksToAnalyze) {
+      const buf = track.audioBuffer;
+      const startTime = track.startTime || 0;
+      const amps = new Float32Array(totalFrames + 1);
+      // Analyze amplitude from raw PCM data per frame window
+      const sampleRate = buf.sampleRate;
+      const channelData = buf.getChannelData(0); // mono analysis
+      const samplesPerFrame = Math.floor(sampleRate / fps);
+
+      for (let frame = 0; frame <= totalFrames; frame++) {
+        const time = frame / fps;
+        const offsetInTrack = time - startTime;
+        if (offsetInTrack < 0 || offsetInTrack >= buf.duration) { amps[frame] = 0; continue; }
+        const sampleStart = Math.floor(offsetInTrack * sampleRate);
+        const sampleEnd = Math.min(sampleStart + samplesPerFrame, channelData.length);
+        let maxDev = 0;
+        for (let s = sampleStart; s < sampleEnd; s++) {
+          const dev = Math.abs(channelData[s]);
+          if (dev > maxDev) maxDev = dev;
+        }
+        amps[frame] = maxDev;
+      }
+      ampMap.set(key, amps);
+    }
+    return ampMap;
+  }
+
+  // Calculate vibration offset for a layer during export using pre-analyzed amplitudes
+  function getExportVibrationOffset(layer, frame, ampMap) {
+    if (!layer.vibrations || layer.vibrations.length === 0) return { dx: 0, dy: 0 };
+    let dx = 0, dy = 0;
+    for (const vib of layer.vibrations) {
+      const key = vib.sourceType + ':' + vib.sourceIndex;
+      const amps = ampMap.get(key);
+      if (!amps) continue;
+      const amp = amps[frame] || 0;
+      if (amp > vib.threshold) {
+        const strength = ((amp - vib.threshold) / (1 - vib.threshold)) * vib.intensity;
+        dx += (Math.random() - 0.5) * 2 * strength;
+        dy += (Math.random() - 0.5) * 2 * strength;
+      }
+    }
+    return { dx, dy };
+  }
+
   // ---- Export (main entry) ----
   async function exportVideo(width, height, fps, format, useGpu) {
     const renderedAudioBuffer = await renderAudioMixdown();
     const totalFrames = Math.ceil(state.totalDuration * fps);
+    const vibAmpMap = await analyzeAudioForVibration(fps, totalFrames);
 
     // GPU path: WebGL compositing + MediaRecorder encoding
     if (useGpu) {
       const glr = createGLRenderer(width, height);
       if (glr) {
         try {
-          await exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames);
+          await exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames, vibAmpMap);
           glr.destroy();
           return;
         } catch (e) {
@@ -1489,11 +1737,11 @@
     }
 
     // CPU fallback: Canvas2D + MediaRecorder
-    await exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames);
+    await exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames, vibAmpMap);
   }
 
   // ---- GL + MediaRecorder export path ----
-  async function exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames) {
+  async function exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames, vibAmpMap) {
     const mimeType = format === 'mp4'
       ? (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1' : 'video/webm;codecs=vp9')
       : 'video/webm;codecs=vp9';
@@ -1521,7 +1769,13 @@
     const videoTrack = stream.getVideoTracks()[0];
     for (let frame = 0; frame <= totalFrames; frame++) {
       const time = Math.min(frame / fps, state.totalDuration);
-      glr.renderFrame(time);
+
+      // Compute per-layer vibration offsets for this frame
+      const vibOffsets = new Map();
+      state.layers.forEach((layer) => {
+        vibOffsets.set(layer.id, getExportVibrationOffset(layer, frame, vibAmpMap));
+      });
+      glr.renderFrame(time, vibOffsets);
 
       // Request frame capture from stream
       if (videoTrack.requestFrame) videoTrack.requestFrame();
@@ -1543,7 +1797,7 @@
   }
 
   // ---- Canvas2D + MediaRecorder export path (CPU fallback) ----
-  async function exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames) {
+  async function exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames, vibAmpMap) {
     const offCanvas = document.createElement('canvas');
     offCanvas.width = width; offCanvas.height = height;
     const offCtx = offCanvas.getContext('2d');
@@ -1582,7 +1836,8 @@
       offCtx.fillRect(0, 0, width, height);
 
       for (let i = state.layers.length - 1; i >= 0; i--) {
-        renderLayer(offCtx, state.layers[i], time, scaleX, scaleY);
+        const vibOffset = getExportVibrationOffset(state.layers[i], frame, vibAmpMap);
+        renderLayer(offCtx, state.layers[i], time, scaleX, scaleY, vibOffset);
       }
 
       const progress = Math.round((frame / totalFrames) * 100);
