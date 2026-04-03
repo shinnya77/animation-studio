@@ -3,8 +3,8 @@
 (() => {
   'use strict';
 
-  const CANVAS_W = 1280;
-  const CANVAS_H = 720;
+  const CANVAS_W = 1920;
+  const CANVAS_H = 1080;
   const TIMELINE_PX_PER_SEC = 80;
   const TRACK_LABEL_WIDTH = 120;
 
@@ -68,6 +68,27 @@
   const renameInput = $('#rename-input');
   const projectNameEl = $('#project-name');
   const keyframeInfo = $('#keyframe-info');
+  const gpuInfoEl = $('#gpu-info');
+  const useGpuCheckbox = $('#export-use-gpu');
+
+  // ---- GPU Detection ----
+  const gpuInfo = (() => {
+    const info = { renderer: null, webgl2: false, webcodecs: false, hardwareAccel: false };
+    try {
+      const testCanvas = document.createElement('canvas');
+      const gl = testCanvas.getContext('webgl2');
+      if (gl) {
+        info.webgl2 = true;
+        const ext = gl.getExtension('WEBGL_debug_renderer_info');
+        if (ext) {
+          info.renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
+          info.hardwareAccel = !/swiftshader|llvmpipe|software/i.test(info.renderer);
+        }
+      }
+    } catch (e) {}
+    info.webcodecs = typeof VideoEncoder === 'function';
+    return info;
+  })();
 
   // ---- Utils ----
   function genId() { return state.nextId++; }
@@ -1057,7 +1078,20 @@
   $('#btn-rename-cancel').addEventListener('click', () => { renameModal.classList.add('hidden'); });
 
   // ---- Export ----
-  $('#btn-export').addEventListener('click', () => { exportModal.classList.remove('hidden'); });
+  $('#btn-export').addEventListener('click', () => {
+    exportModal.classList.remove('hidden');
+    // Show GPU info
+    const gpu = gpuInfo;
+    const lines = [];
+    if (gpu.renderer) lines.push(`GPU: ${gpu.renderer}`);
+    else lines.push('GPU: 検出不可');
+    lines.push(`WebGL2: <span class="${gpu.webgl2 ? 'gpu-available' : 'gpu-unavailable'}">${gpu.webgl2 ? '✓ 利用可能' : '✗ 非対応'}</span>`);
+    lines.push(`WebCodecs (HWエンコード): <span class="${gpu.webcodecs ? 'gpu-available' : 'gpu-unavailable'}">${gpu.webcodecs ? '✓ 利用可能' : '✗ 非対応 (MediaRecorder使用)'}</span>`);
+    if (gpu.hardwareAccel) lines.push('<span class="gpu-available">✓ ハードウェアアクセラレーション有効</span>');
+    else lines.push('<span class="gpu-unavailable">⚠ ソフトウェアレンダリング</span>');
+    gpuInfoEl.innerHTML = lines.join('<br>');
+    useGpuCheckbox.disabled = !gpu.webgl2;
+  });
   $('#btn-export-cancel').addEventListener('click', () => {
     exportModal.classList.add('hidden');
     exportProgress.classList.add('hidden');
@@ -1067,45 +1101,192 @@
     const [expW, expH] = $('#export-resolution').value.split('x').map(Number);
     const fps = parseInt($('#export-fps').value);
     const format = $('#export-format').value;
+    const useGpu = useGpuCheckbox.checked && gpuInfo.webgl2;
     $('#btn-export-start').disabled = true;
     exportProgress.classList.remove('hidden');
-    try { await exportVideo(expW, expH, fps, format); }
+    try { await exportVideo(expW, expH, fps, format, useGpu); }
     catch (err) { alert('エクスポートに失敗しました: ' + err.message); }
     $('#btn-export-start').disabled = false;
   });
 
-  async function exportVideo(width, height, fps, format) {
-    const offCanvas = document.createElement('canvas');
-    offCanvas.width = width; offCanvas.height = height;
-    const offCtx = offCanvas.getContext('2d');
-    const scaleX = width / CANVAS_W;
-    const scaleY = height / CANVAS_H;
+  // ---- WebGL Renderer for GPU export ----
+  function createGLRenderer(width, height) {
+    const glCanvas = document.createElement('canvas');
+    glCanvas.width = width; glCanvas.height = height;
+    const gl = glCanvas.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true });
+    if (!gl) return null;
 
+    const vsrc = `#version 300 es
+      in vec2 a_pos;
+      in vec2 a_uv;
+      uniform mat3 u_matrix;
+      out vec2 v_uv;
+      void main() {
+        vec3 p = u_matrix * vec3(a_pos, 1.0);
+        gl_Position = vec4(p.xy, 0.0, 1.0);
+        v_uv = a_uv;
+      }`;
+    const fsrc = `#version 300 es
+      precision mediump float;
+      in vec2 v_uv;
+      uniform sampler2D u_tex;
+      uniform float u_alpha;
+      out vec4 outColor;
+      void main() {
+        vec4 c = texture(u_tex, v_uv);
+        outColor = vec4(c.rgb, c.a * u_alpha);
+      }`;
+
+    function compileShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const aPos = gl.getAttribLocation(prog, 'a_pos');
+    const aUv = gl.getAttribLocation(prog, 'a_uv');
+    const uMatrix = gl.getUniformLocation(prog, 'u_matrix');
+    const uAlpha = gl.getUniformLocation(prog, 'u_alpha');
+
+    // Quad: position + uv
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      0, 0, 0, 1,   1, 0, 1, 1,   0, 1, 0, 0,
+      1, 0, 1, 1,   1, 1, 1, 0,   0, 1, 0, 0,
+    ]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
+    gl.enableVertexAttribArray(aUv);
+    gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 16, 8);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // Texture cache: layerId -> WebGLTexture
+    const texCache = new Map();
+
+    function getTexture(layer) {
+      if (texCache.has(layer.id)) return texCache.get(layer.id);
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, layer.img);
+      texCache.set(layer.id, tex);
+      return tex;
+    }
+
+    function renderFrame(time) {
+      gl.viewport(0, 0, width, height);
+      gl.clearColor(0.133, 0.133, 0.133, 1); // #222
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      for (let i = state.layers.length - 1; i >= 0; i--) {
+        const layer = state.layers[i];
+        if (!layer.visible || !layer.img) continue;
+
+        const st = getLayerStateAtTime(layer, time);
+        const tex = getTexture(layer);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+
+        // Build 2D transform matrix (column-major for GLSL)
+        const sx = (layer.w / width) * 2 * st.scaleX;
+        const sy = (layer.h / height) * 2 * st.scaleY;
+        const tx = (st.x / width) * 2 - 1 + (layer.w / width) * (1 - st.scaleX);
+        // Flip Y for WebGL
+        const ty = -((st.y / height) * 2 - 1 + (layer.h / height) * (1 - st.scaleY)) - sy;
+        const rad = -(st.rotation * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+
+        // Pivot at center of quad
+        const cx = tx + sx / 2;
+        const cy = ty + sy / 2;
+
+        // T(cx,cy) * R * T(-cx,-cy) * S+T
+        // Combined: scale, then translate, then rotate around center
+        const m = new Float32Array([
+          sx * cos, sx * sin, 0,
+          -sy * sin, sy * cos, 0,
+          cx - cx * cos + cy * sin, cy - cx * sin - cy * cos, 1,
+        ]);
+
+        gl.uniformMatrix3fv(uMatrix, false, m);
+        gl.uniform1f(uAlpha, st.opacity);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+    }
+
+    function destroy() {
+      texCache.forEach((tex) => gl.deleteTexture(tex));
+      texCache.clear();
+      gl.deleteProgram(prog);
+    }
+
+    return { canvas: glCanvas, gl, renderFrame, destroy };
+  }
+
+  // ---- Render audio mixdown (shared by both export paths) ----
+  async function renderAudioMixdown() {
+    const hasAudio = state.bgmTracks.length > 0 || state.sfxTracks.length > 0 || state.voiceTracks.length > 0;
+    if (!hasAudio) return null;
+    const aCtx = getAudioCtx();
+    const offlineCtx = new OfflineAudioContext(2, Math.ceil(state.totalDuration * aCtx.sampleRate), aCtx.sampleRate);
+    [...state.bgmTracks, ...state.sfxTracks, ...state.voiceTracks].forEach((t) => {
+      if (!t.audioBuffer) return;
+      const src = offlineCtx.createBufferSource();
+      const gain = offlineCtx.createGain();
+      gain.gain.value = t.volume ?? 1;
+      src.buffer = t.audioBuffer;
+      src.connect(gain);
+      gain.connect(offlineCtx.destination);
+      src.start(t.startTime || 0);
+    });
+    return offlineCtx.startRendering();
+  }
+
+  // ---- Export (main entry) ----
+  async function exportVideo(width, height, fps, format, useGpu) {
+    const renderedAudioBuffer = await renderAudioMixdown();
+    const totalFrames = Math.ceil(state.totalDuration * fps);
+
+    // GPU path: WebGL compositing + MediaRecorder encoding
+    if (useGpu) {
+      const glr = createGLRenderer(width, height);
+      if (glr) {
+        try {
+          await exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames);
+          glr.destroy();
+          return;
+        } catch (e) {
+          glr.destroy();
+          // Fall through to CPU path
+        }
+      }
+    }
+
+    // CPU fallback: Canvas2D + MediaRecorder
+    await exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames);
+  }
+
+  // ---- GL + MediaRecorder export path ----
+  async function exportWithGLMediaRecorder(glr, width, height, fps, format, renderedAudioBuffer, totalFrames) {
     const mimeType = format === 'mp4'
       ? (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1' : 'video/webm;codecs=vp9')
       : 'video/webm;codecs=vp9';
 
-    const aCtx = getAudioCtx();
-    let renderedAudioBuffer = null;
-    const hasAudio = state.bgmTracks.length > 0 || state.sfxTracks.length > 0 || state.voiceTracks.length > 0;
-
-    if (hasAudio) {
-      const offlineCtx = new OfflineAudioContext(2, Math.ceil(state.totalDuration * aCtx.sampleRate), aCtx.sampleRate);
-      [...state.bgmTracks, ...state.sfxTracks, ...state.voiceTracks].forEach((t) => {
-        if (!t.audioBuffer) return;
-        const src = offlineCtx.createBufferSource();
-        const gain = offlineCtx.createGain();
-        gain.gain.value = t.volume ?? 1;
-        src.buffer = t.audioBuffer;
-        src.connect(gain);
-        gain.connect(offlineCtx.destination);
-        src.start(t.startTime || 0);
-      });
-      renderedAudioBuffer = await offlineCtx.startRendering();
-    }
-
-    const stream = offCanvas.captureStream(fps);
+    const stream = glr.canvas.captureStream(0); // manual frame capture
     if (renderedAudioBuffer) {
+      const aCtx = getAudioCtx();
       const liveAudioCtx = new AudioContext({ sampleRate: aCtx.sampleRate });
       const src = liveAudioCtx.createBufferSource();
       src.buffer = renderedAudioBuffer;
@@ -1116,14 +1297,69 @@
 
     const recorder = new MediaRecorder(stream, {
       mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : 'video/webm',
-      videoBitsPerSecond: 8000000,
+      videoBitsPerSecond: 12_000_000,
     });
     const chunks = [];
     recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
     const exportDone = new Promise((resolve) => { recorder.onstop = () => resolve(); });
     recorder.start();
 
-    const totalFrames = Math.ceil(state.totalDuration * fps);
+    const videoTrack = stream.getVideoTracks()[0];
+    for (let frame = 0; frame <= totalFrames; frame++) {
+      const time = Math.min(frame / fps, state.totalDuration);
+      glr.renderFrame(time);
+
+      // Request frame capture from stream
+      if (videoTrack.requestFrame) videoTrack.requestFrame();
+
+      const progress = Math.round((frame / totalFrames) * 100);
+      exportProgressBar.value = progress;
+      exportProgressText.textContent = progress + '% (GPU)';
+
+      // Pace at ~real frame intervals for MediaRecorder sync
+      await new Promise((r) => setTimeout(r, 1000 / fps));
+    }
+
+    recorder.stop();
+    await exportDone;
+
+    const ext = recorder.mimeType.includes('mp4') ? 'mp4' : 'webm';
+    downloadBlob(new Blob(chunks, { type: recorder.mimeType }), state.projectName + '.' + ext);
+    finishExport();
+  }
+
+  // ---- Canvas2D + MediaRecorder export path (CPU fallback) ----
+  async function exportWithCanvas2D(width, height, fps, format, renderedAudioBuffer, totalFrames) {
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = width; offCanvas.height = height;
+    const offCtx = offCanvas.getContext('2d');
+    const scaleX = width / CANVAS_W;
+    const scaleY = height / CANVAS_H;
+
+    const mimeType = format === 'mp4'
+      ? (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1' : 'video/webm;codecs=vp9')
+      : 'video/webm;codecs=vp9';
+
+    const stream = offCanvas.captureStream(fps);
+    if (renderedAudioBuffer) {
+      const aCtx = getAudioCtx();
+      const liveAudioCtx = new AudioContext({ sampleRate: aCtx.sampleRate });
+      const src = liveAudioCtx.createBufferSource();
+      src.buffer = renderedAudioBuffer;
+      const dest = liveAudioCtx.createMediaStreamDestination();
+      src.connect(dest); src.start();
+      dest.stream.getAudioTracks().forEach((t) => stream.addTrack(t));
+    }
+
+    const recorder = new MediaRecorder(stream, {
+      mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : 'video/webm',
+      videoBitsPerSecond: 12_000_000,
+    });
+    const chunks = [];
+    recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+    const exportDone = new Promise((resolve) => { recorder.onstop = () => resolve(); });
+    recorder.start();
+
     for (let frame = 0; frame <= totalFrames; frame++) {
       const time = Math.min(frame / fps, state.totalDuration);
 
@@ -1137,7 +1373,7 @@
 
       const progress = Math.round((frame / totalFrames) * 100);
       exportProgressBar.value = progress;
-      exportProgressText.textContent = progress + '%';
+      exportProgressText.textContent = progress + '% (CPU)';
       await new Promise((r) => setTimeout(r, 0));
     }
 
@@ -1146,7 +1382,10 @@
 
     const ext = recorder.mimeType.includes('mp4') ? 'mp4' : 'webm';
     downloadBlob(new Blob(chunks, { type: recorder.mimeType }), state.projectName + '.' + ext);
+    finishExport();
+  }
 
+  function finishExport() {
     state.currentTime = 0;
     updatePlayhead();
     render();
