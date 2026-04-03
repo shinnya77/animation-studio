@@ -1065,6 +1065,220 @@
     refreshAll();
   });
 
+  // ---- Sample Project Generator ----
+  function generateSampleImage(w, h, drawFn) {
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const cx = c.getContext('2d');
+    drawFn(cx, w, h);
+    return c.toDataURL('image/png');
+  }
+
+  function loadSampleProject() {
+    // Generate sample images
+    const bgSrc = generateSampleImage(1920, 1080, (cx, w, h) => {
+      const grad = cx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#0a1628');
+      grad.addColorStop(0.5, '#1a3a5c');
+      grad.addColorStop(1, '#0d2137');
+      cx.fillStyle = grad;
+      cx.fillRect(0, 0, w, h);
+      // Stars
+      cx.fillStyle = '#fff';
+      for (let i = 0; i < 120; i++) {
+        const sx = Math.random() * w, sy = Math.random() * h * 0.7;
+        const sr = Math.random() * 2 + 0.5;
+        cx.globalAlpha = Math.random() * 0.7 + 0.3;
+        cx.beginPath();
+        cx.arc(sx, sy, sr, 0, Math.PI * 2);
+        cx.fill();
+      }
+      cx.globalAlpha = 1;
+      // Moon
+      cx.fillStyle = '#f5e6c8';
+      cx.beginPath();
+      cx.arc(1500, 180, 80, 0, Math.PI * 2);
+      cx.fill();
+      cx.fillStyle = '#0a1628';
+      cx.beginPath();
+      cx.arc(1530, 160, 70, 0, Math.PI * 2);
+      cx.fill();
+      // Ground
+      const gGrad = cx.createLinearGradient(0, h * 0.75, 0, h);
+      gGrad.addColorStop(0, '#1a3320');
+      gGrad.addColorStop(1, '#0d1a10');
+      cx.fillStyle = gGrad;
+      cx.beginPath();
+      cx.moveTo(0, h * 0.82);
+      cx.quadraticCurveTo(w * 0.25, h * 0.76, w * 0.5, h * 0.80);
+      cx.quadraticCurveTo(w * 0.75, h * 0.84, w, h * 0.78);
+      cx.lineTo(w, h); cx.lineTo(0, h);
+      cx.fill();
+    });
+
+    const charSrc = generateSampleImage(200, 300, (cx, w, h) => {
+      // Simple character silhouette
+      cx.fillStyle = '#e94560';
+      // Body
+      cx.beginPath();
+      cx.ellipse(100, 200, 45, 70, 0, 0, Math.PI * 2);
+      cx.fill();
+      // Head
+      cx.fillStyle = '#ffcba4';
+      cx.beginPath();
+      cx.arc(100, 110, 40, 0, Math.PI * 2);
+      cx.fill();
+      // Eyes
+      cx.fillStyle = '#333';
+      cx.beginPath();
+      cx.arc(85, 105, 5, 0, Math.PI * 2);
+      cx.fill();
+      cx.beginPath();
+      cx.arc(115, 105, 5, 0, Math.PI * 2);
+      cx.fill();
+      // Smile
+      cx.strokeStyle = '#333';
+      cx.lineWidth = 2;
+      cx.beginPath();
+      cx.arc(100, 115, 15, 0.1 * Math.PI, 0.9 * Math.PI);
+      cx.stroke();
+      // Cape
+      cx.fillStyle = '#3498db';
+      cx.beginPath();
+      cx.moveTo(60, 160);
+      cx.quadraticCurveTo(30, 240, 50, 290);
+      cx.lineTo(70, 250);
+      cx.quadraticCurveTo(60, 200, 75, 170);
+      cx.fill();
+      cx.beginPath();
+      cx.moveTo(140, 160);
+      cx.quadraticCurveTo(170, 240, 150, 290);
+      cx.lineTo(130, 250);
+      cx.quadraticCurveTo(140, 200, 125, 170);
+      cx.fill();
+    });
+
+    const titleSrc = generateSampleImage(800, 120, (cx, w, h) => {
+      cx.fillStyle = '#f1c40f';
+      cx.font = 'bold 72px "Segoe UI", "Meiryo", sans-serif';
+      cx.textAlign = 'center';
+      cx.textBaseline = 'middle';
+      cx.shadowColor = 'rgba(0,0,0,0.5)';
+      cx.shadowBlur = 10;
+      cx.shadowOffsetX = 3;
+      cx.shadowOffsetY = 3;
+      cx.fillText('Animation Studio', w / 2, h / 2);
+    });
+
+    const starSrc = generateSampleImage(80, 80, (cx, w, h) => {
+      cx.fillStyle = '#f1c40f';
+      cx.beginPath();
+      const cx0 = w / 2, cy0 = h / 2;
+      for (let i = 0; i < 5; i++) {
+        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const x = cx0 + 35 * Math.cos(angle);
+        const y = cy0 + 35 * Math.sin(angle);
+        if (i === 0) cx.moveTo(x, y);
+        else cx.lineTo(x, y);
+      }
+      cx.closePath();
+      cx.fill();
+      cx.shadowColor = '#f39c12';
+      cx.shadowBlur = 15;
+      cx.fill();
+    });
+
+    const cloudSrc = generateSampleImage(300, 150, (cx) => {
+      cx.fillStyle = 'rgba(255,255,255,0.15)';
+      cx.beginPath();
+      cx.arc(100, 90, 50, 0, Math.PI * 2);
+      cx.arc(160, 70, 60, 0, Math.PI * 2);
+      cx.arc(220, 85, 45, 0, Math.PI * 2);
+      cx.arc(140, 100, 40, 0, Math.PI * 2);
+      cx.fill();
+    });
+
+    const projectData = {
+      version: 2,
+      projectName: 'サンプルプロジェクト',
+      totalDuration: 8,
+      layers: [
+        {
+          id: 1, name: 'タイトル', imgSrc: titleSrc,
+          visible: true, x: 560, y: -120, w: 800, h: 120,
+          rotation: 0, opacity: 1, scaleX: 1, scaleY: 1,
+          keyframes: [
+            { time: 0, x: 560, y: -120, rotation: 0, opacity: 0, scaleX: 0.5, scaleY: 0.5, easing: 'easeOut' },
+            { time: 1.5, x: 560, y: 80, rotation: 0, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeInOut' },
+            { time: 5.5, x: 560, y: 80, rotation: 0, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeIn' },
+            { time: 7, x: 560, y: -120, rotation: -5, opacity: 0, scaleX: 0.8, scaleY: 0.8, easing: 'easeInOut' },
+          ],
+        },
+        {
+          id: 2, name: 'キャラクター', imgSrc: charSrc,
+          visible: true, x: -200, y: 600, w: 200, h: 300,
+          rotation: 0, opacity: 1, scaleX: 1, scaleY: 1,
+          keyframes: [
+            { time: 0, x: -200, y: 600, rotation: 0, opacity: 0, scaleX: 1, scaleY: 1, easing: 'easeOut' },
+            { time: 1, x: 200, y: 600, rotation: 0, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeInOut' },
+            { time: 3, x: 860, y: 580, rotation: 5, opacity: 1, scaleX: 1.1, scaleY: 1.1, easing: 'easeInOut' },
+            { time: 5, x: 1400, y: 560, rotation: -3, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeInOut' },
+            { time: 7, x: 1800, y: 500, rotation: 10, opacity: 1, scaleX: 1.2, scaleY: 1.2, easing: 'easeIn' },
+            { time: 8, x: 2100, y: 600, rotation: 0, opacity: 0, scaleX: 1, scaleY: 1, easing: 'linear' },
+          ],
+        },
+        {
+          id: 3, name: '星1', imgSrc: starSrc,
+          visible: true, x: 400, y: 300, w: 80, h: 80,
+          rotation: 0, opacity: 1, scaleX: 1, scaleY: 1,
+          keyframes: [
+            { time: 0, x: 400, y: 400, rotation: 0, opacity: 0, scaleX: 0.3, scaleY: 0.3, easing: 'easeOut' },
+            { time: 2, x: 400, y: 300, rotation: 180, opacity: 1, scaleX: 1, scaleY: 1, easing: 'easeInOut' },
+            { time: 5, x: 500, y: 250, rotation: 360, opacity: 1, scaleX: 1.2, scaleY: 1.2, easing: 'easeInOut' },
+            { time: 8, x: 600, y: 200, rotation: 720, opacity: 0, scaleX: 0.3, scaleY: 0.3, easing: 'easeIn' },
+          ],
+        },
+        {
+          id: 4, name: '星2', imgSrc: starSrc,
+          visible: true, x: 1200, y: 250, w: 60, h: 60,
+          rotation: 0, opacity: 1, scaleX: 0.7, scaleY: 0.7,
+          keyframes: [
+            { time: 0.5, x: 1200, y: 350, rotation: 0, opacity: 0, scaleX: 0.2, scaleY: 0.2, easing: 'easeOut' },
+            { time: 2.5, x: 1200, y: 250, rotation: -180, opacity: 0.8, scaleX: 0.7, scaleY: 0.7, easing: 'easeInOut' },
+            { time: 6, x: 1100, y: 200, rotation: -540, opacity: 0.8, scaleX: 0.9, scaleY: 0.9, easing: 'easeInOut' },
+            { time: 8, x: 1000, y: 150, rotation: -720, opacity: 0, scaleX: 0.2, scaleY: 0.2, easing: 'easeIn' },
+          ],
+        },
+        {
+          id: 5, name: '雲', imgSrc: cloudSrc,
+          visible: true, x: -300, y: 80, w: 300, h: 150,
+          rotation: 0, opacity: 1, scaleX: 1, scaleY: 1,
+          keyframes: [
+            { time: 0, x: -300, y: 80, rotation: 0, opacity: 0.6, scaleX: 1, scaleY: 1, easing: 'linear' },
+            { time: 8, x: 1920, y: 60, rotation: 0, opacity: 0.6, scaleX: 1.2, scaleY: 1, easing: 'linear' },
+          ],
+        },
+        {
+          id: 6, name: '背景', imgSrc: bgSrc,
+          visible: true, x: 0, y: 0, w: 1920, h: 1080,
+          rotation: 0, opacity: 1, scaleX: 1, scaleY: 1,
+          keyframes: [],
+        },
+      ],
+      bgmTracks: [],
+      sfxTracks: [],
+      voiceTracks: [],
+      nextId: 7,
+    };
+
+    loadProject(JSON.stringify(projectData));
+  }
+
+  $('#btn-load-sample').addEventListener('click', () => {
+    if (state.layers.length > 0 && !confirm('現在のプロジェクトを破棄してサンプルを読み込みますか？')) return;
+    loadSampleProject();
+  });
+
   projectNameEl.addEventListener('click', () => {
     renameInput.value = state.projectName;
     renameModal.classList.remove('hidden');
