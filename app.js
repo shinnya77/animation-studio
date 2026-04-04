@@ -51,8 +51,8 @@
       targetType: 'voice',
       targetIndex: 0,
       savedPresets: [],
+      previewSrc: null,
     },
-    vcPreviewSrc: null,
     rec: {
       mediaRecorder: null,
       stream: null,
@@ -63,6 +63,10 @@
       monitorAnimId: null,
       monitorAnalyser: null,
       monitorSrc: null,
+      monitorCanvas: null,
+      monitorCtx: null,
+      monitorDataArr: null,
+      monitorGradient: null,
       inPoint: 0,
       outPoint: 0,
       trimDragging: null,
@@ -146,6 +150,8 @@
   function makeDefaultVC() {
     return { enabled: false, pitch: 1.0, bass: 0, mid: 0, treble: 0 };
   }
+
+  const fmtDb = (v) => v > 0 ? '+' + v : String(v);
 
   // ---- Keyframe interpolation ----
   // Returns interpolated state { x, y, rotation, opacity, scaleX, scaleY } at given time
@@ -260,23 +266,21 @@
       gain.connect(aCtx.destination);
     }
     src.start(0);
-    src.onended = () => { state.vcPreviewSrc = null; updateVCPlayBtn(); };
-    state.vcPreviewSrc = src;
+    src.onended = () => { state.voiceChanger.previewSrc = null; updateVCPlayBtn(); };
+    state.voiceChanger.previewSrc = src;
     updateVCPlayBtn();
   }
 
   function stopVCTargetTrack() {
-    if (state.vcPreviewSrc) {
-      try { state.vcPreviewSrc.stop(); } catch (e) {}
-      state.vcPreviewSrc = null;
-    }
+    const ps = state.voiceChanger.previewSrc;
+    if (ps) { try { ps.stop(); } catch (e) {} state.voiceChanger.previewSrc = null; }
     updateVCPlayBtn();
   }
 
   function updateVCPlayBtn() {
     const btn = $('#vc-play-btn');
     if (!btn) return;
-    const playing = !!state.vcPreviewSrc;
+    const playing = !!state.voiceChanger.previewSrc;
     btn.textContent = playing ? '⏹ 停止' : '▶ トラック再生';
     btn.classList.toggle('vc-playing', playing);
   }
@@ -399,11 +403,11 @@
     $('#vc-pitch').value = v.pitch;
     $('#vc-pitch-val').textContent = v.pitch.toFixed(2);
     $('#vc-bass').value = v.bass;
-    $('#vc-bass-val').textContent = v.bass > 0 ? '+' + v.bass : v.bass;
+    $('#vc-bass-val').textContent = fmtDb(v.bass);
     $('#vc-mid').value = v.mid;
-    $('#vc-mid-val').textContent = v.mid > 0 ? '+' + v.mid : v.mid;
+    $('#vc-mid-val').textContent = fmtDb(v.mid);
     $('#vc-treble').value = v.treble;
-    $('#vc-treble-val').textContent = v.treble > 0 ? '+' + v.treble : v.treble;
+    $('#vc-treble-val').textContent = fmtDb(v.treble);
     $('#vc-enabled').checked = v.enabled;
 
     const presetList = $('#vc-preset-list');
@@ -431,7 +435,7 @@
   // ---- Recording ----
   function openRecordModal() {
     const rec = state.rec;
-    rec.audioBuffer = null; rec.chunks = []; rec.inPoint = 0; rec.outPoint = 0;
+    rec.audioBuffer = null; rec.chunks = []; rec.inPoint = 0; rec.outPoint = 0; rec.trimDragging = null;
     const modal = $('#record-modal');
     modal.classList.remove('hidden');
     $('#rec-step-1').classList.remove('hidden');
@@ -448,6 +452,10 @@
       if (!state.rec.stream) {
         state.rec.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       }
+      // Disconnect old nodes before creating new ones
+      if (state.rec.monitorSrc) { state.rec.monitorSrc.disconnect(); }
+      if (state.rec.monitorAnalyser) { state.rec.monitorAnalyser.disconnect(); }
+
       const aCtx = getAudioCtx();
       const src = aCtx.createMediaStreamSource(state.rec.stream);
       const analyser = aCtx.createAnalyser();
@@ -455,6 +463,17 @@
       src.connect(analyser);
       state.rec.monitorAnalyser = analyser;
       state.rec.monitorSrc = src;
+      state.rec.monitorDataArr = new Uint8Array(analyser.fftSize);
+
+      // Cache canvas refs and gradient once
+      const canvas = $('#rec-monitor');
+      const ctx = canvas.getContext('2d');
+      state.rec.monitorCanvas = canvas;
+      state.rec.monitorCtx = ctx;
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      grad.addColorStop(0, '#2ecc71'); grad.addColorStop(0.65, '#f1c40f'); grad.addColorStop(1, '#e74c3c');
+      state.rec.monitorGradient = grad;
+
       drawMonitorLoop();
     } catch (e) {
       console.warn('Mic access denied:', e);
@@ -462,23 +481,19 @@
   }
 
   function drawMonitorLoop() {
-    const canvas = $('#rec-monitor');
+    const { monitorCanvas: canvas, monitorCtx: ctx, monitorAnalyser: analyser,
+            monitorDataArr: data, monitorGradient: grad } = state.rec;
     if (!canvas || $('#record-modal').classList.contains('hidden')) {
       state.rec.monitorAnimId = null; return;
     }
-    const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    const analyser = state.rec.monitorAnalyser;
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#0d1117'; ctx.fillRect(0, 0, W, H);
 
-    if (analyser) {
-      const data = new Uint8Array(analyser.fftSize);
+    if (analyser && data) {
       analyser.getByteTimeDomainData(data);
       let maxDev = 0;
       for (let i = 0; i < data.length; i++) { const d = Math.abs(data[i] - 128) / 128; if (d > maxDev) maxDev = d; }
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, '#2ecc71'); grad.addColorStop(0.65, '#f1c40f'); grad.addColorStop(1, '#e74c3c');
       ctx.fillStyle = grad;
       ctx.fillRect(8, 8, (W - 16) * maxDev, H - 16);
     }
@@ -541,9 +556,10 @@
     const buf = state.rec.audioBuffer;
     const now = new Date();
     $('#rec-track-name').value = `録音 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-    updateTrimInfo();
-    setTimeout(() => { drawTrimWaveform(); updateTrimHandlePositions(); }, 50);
+    setTimeout(redrawTrimUI, 50);
   }
+
+  function redrawTrimUI() { drawTrimWaveform(); updateTrimHandlePositions(); }
 
   function updateTrimInfo() {
     const { inPoint, outPoint } = state.rec;
@@ -617,7 +633,7 @@
       } else {
         state.rec.outPoint = Math.min(dur, Math.max(t, state.rec.inPoint + 0.01));
       }
-      drawTrimWaveform(); updateTrimHandlePositions();
+      redrawTrimUI();
     };
     $('#rec-in-handle').addEventListener('mousedown', (e) => { e.preventDefault(); state.rec.trimDragging = 'in'; });
     $('#rec-out-handle').addEventListener('mousedown', (e) => { e.preventDefault(); state.rec.trimDragging = 'out'; });
@@ -648,10 +664,11 @@
     v.setUint16(22, ch, true); v.setUint32(24, sr, true);
     v.setUint32(28, sr * ch * 2, true); v.setUint16(32, ch * 2, true);
     v.setUint16(34, bps, true); ws(36, 'data'); v.setUint32(40, dataSize, true);
+    const channels = Array.from({ length: ch }, (_, c) => buffer.getChannelData(c));
     let off = 44;
     for (let i = 0; i < n; i++) {
       for (let c = 0; c < ch; c++) {
-        const s = Math.max(-1, Math.min(1, buffer.getChannelData(c)[i]));
+        const s = Math.max(-1, Math.min(1, channels[c][i]));
         v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true); off += 2;
       }
     }
@@ -689,11 +706,14 @@
   }
 
   function closeRecordModal() {
-    if (state.rec.monitorAnimId) { cancelAnimationFrame(state.rec.monitorAnimId); state.rec.monitorAnimId = null; }
-    if (state.rec.previewSrc) { try { state.rec.previewSrc.stop(); } catch (e) {} state.rec.previewSrc = null; }
-    state.rec.isRecording = false;
-    if (state.rec.mediaRecorder && state.rec.mediaRecorder.state !== 'inactive') {
-      try { state.rec.mediaRecorder.stop(); } catch (e) {}
+    const rec = state.rec;
+    if (rec.monitorAnimId) { cancelAnimationFrame(rec.monitorAnimId); rec.monitorAnimId = null; }
+    if (rec.monitorSrc) { rec.monitorSrc.disconnect(); rec.monitorSrc = null; }
+    if (rec.monitorAnalyser) { rec.monitorAnalyser.disconnect(); rec.monitorAnalyser = null; }
+    if (rec.previewSrc) { try { rec.previewSrc.stop(); } catch (e) {} rec.previewSrc = null; }
+    rec.isRecording = false;
+    if (rec.mediaRecorder && rec.mediaRecorder.state !== 'inactive') {
+      try { rec.mediaRecorder.stop(); } catch (e) {}
     }
     $('#record-modal').classList.add('hidden');
   }
@@ -3004,7 +3024,7 @@
       const t = getVCTrack();
       if (t?.vc) t.vc[param] = val;
       const disp = $('#vc-' + param + '-val');
-      disp.textContent = param === 'pitch' ? val.toFixed(2) : (val > 0 ? '+' + val : val);
+      disp.textContent = param === 'pitch' ? val.toFixed(2) : fmtDb(val);
     });
   });
 
@@ -3015,7 +3035,7 @@
   });
 
   $('#vc-play-btn').addEventListener('click', () => {
-    state.vcPreviewSrc ? stopVCTargetTrack() : playVCTargetTrack();
+    state.voiceChanger.previewSrc ? stopVCTargetTrack() : playVCTargetTrack();
   });
 
   $('#vc-apply-btn').addEventListener('click', () => { applyVoiceToTrack(); });
