@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <!-- 座面グラデーション -->
+    <radialGradient id="seatGrad" cx="0.4" cy="0.35" r="0.6">
+      <stop offset="0%" stop-color="#F0D8C8"/>
+      <stop offset="60%" stop-color="#E8C8B0"/>
+      <stop offset="100%" stop-color="#D0A888"/>
+    </radialGradient>
+    <!-- 座面クッションのハイライト -->
+    <radialGradient id="seatShine" cx="0.35" cy="0.3" r="0.4">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <!-- 脚グラデーション -->
+    <linearGradient id="legGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8A6030"/>
+      <stop offset="40%" stop-color="#A87840"/>
+      <stop offset="100%" stop-color="#7A5020"/>
+    </linearGradient>
+    <!-- 座面側面グラデーション -->
+    <linearGradient id="seatSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C09878"/>
+      <stop offset="100%" stop-color="#A07858"/>
+    </linearGradient>
+    <!-- 縁取り木材 -->
+    <linearGradient id="rimGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B88848"/>
+      <stop offset="100%" stop-color="#9A7030"/>
+    </linearGradient>
+    <!-- フレームシャドウ -->
+    <filter id="shadow">
+      <feDropShadow dx="3" dy="6" stdDeviation="5" flood-color="#5A3010" flood-opacity="0.35"/>
+    </filter>
+    <!-- 座面布のステッチパターン -->
+    <pattern id="stitchPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="1" fill="#C09878" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- ===== 脚 ===== -->
+  <!-- 左前脚 -->
+  <line x1="130" y1="290" x2="90" y2="480" stroke="url(#legGrad)" stroke-width="16" stroke-linecap="round"/>
+  <line x1="130" y1="290" x2="90" y2="480" stroke="#C8A060" stroke-width="5" stroke-linecap="round" opacity="0.35"/>
+  <!-- 右前脚 -->
+  <line x1="270" y1="290" x2="310" y2="480" stroke="url(#legGrad)" stroke-width="16" stroke-linecap="round"/>
+  <line x1="270" y1="290" x2="310" y2="480" stroke="#C8A060" stroke-width="5" stroke-linecap="round" opacity="0.35"/>
+  <!-- 左後脚 -->
+  <line x1="150" y1="285" x2="100" y2="470" stroke="url(#legGrad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- 右後脚 -->
+  <line x1="250" y1="285" x2="300" y2="470" stroke="url(#legGrad)" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- 脚の横桟（補強バー） -->
+  <path d="M100,380 Q200,365 300,380" stroke="#9A7030" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M100,380 Q200,365 300,380" stroke="#C8A060" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 脚の底キャップ -->
+  <ellipse cx="90" cy="480" rx="10" ry="5" fill="#6A4018"/>
+  <ellipse cx="310" cy="480" rx="10" ry="5" fill="#6A4018"/>
+  <ellipse cx="100" cy="470" rx="9" ry="4" fill="#6A4018"/>
+  <ellipse cx="300" cy="470" rx="9" ry="4" fill="#6A4018"/>
+
+  <!-- ===== 座面フレーム（木製リム） ===== -->
+  <ellipse cx="200" cy="275" rx="155" ry="42" fill="url(#rimGrad)"/>
+  <ellipse cx="200" cy="275" rx="155" ry="42" fill="none" stroke="#C8A050" stroke-width="2" opacity="0.5"/>
+  <!-- リムのハイライト -->
+  <ellipse cx="200" cy="270" rx="145" ry="32" fill="none" stroke="#D8B870" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- ===== 座面クッション ===== -->
+  <!-- クッションの膨らみ（楕円） -->
+  <ellipse cx="200" cy="252" rx="148" ry="36" fill="url(#seatGrad)"/>
+  <!-- クッションの布テクスチャ -->
+  <ellipse cx="200" cy="252" rx="148" ry="36" fill="url(#stitchPattern)" opacity="0.6"/>
+  <!-- クッションのハイライト -->
+  <ellipse cx="200" cy="252" rx="148" ry="36" fill="url(#seatShine)"/>
+
+  <!-- キルティングのステッチ -->
+  <!-- 縦方向 -->
+  <line x1="200" y1="218" x2="200" y2="285" stroke="#C09878" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+  <line x1="155" y1="222" x2="158" y2="282" stroke="#C09878" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
+  <line x1="245" y1="222" x2="242" y2="282" stroke="#C09878" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
+  <!-- 横方向 -->
+  <path d="M68,252 Q200,245 332,252" stroke="#C09878" stroke-width="1" fill="none" opacity="0.4" stroke-dasharray="3,3"/>
+  <!-- 中央飾りボタン -->
+  <circle cx="200" cy="252" r="8" fill="#C09878"/>
+  <circle cx="200" cy="252" r="5" fill="#D8B090"/>
+  <circle cx="200" cy="252" r="2.5" fill="#C09878"/>
+
+  <!-- 座面前縁の影 -->
+  <ellipse cx="200" cy="282" rx="148" ry="12" fill="#A07858" opacity="0.4"/>
+
+  </g>
+
+  <!-- 脚の影（床） -->
+  <ellipse cx="200" cy="492" rx="110" ry="10" fill="#7A5028" opacity="0.2"/>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" width="900" height="550">
+  <defs>
+    <linearGradient id="bedFrame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89868"/>
+      <stop offset="100%" stop-color="#A87848"/>
+    </linearGradient>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFAF4"/>
+      <stop offset="100%" stop-color="#F4ECE0"/>
+    </linearGradient>
+    <linearGradient id="blanket" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4E0F0"/>
+      <stop offset="60%" stop-color="#C0D4E8"/>
+      <stop offset="100%" stop-color="#B0C8E0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="450" cy="530" rx="420" ry="22" fill="rgba(80,60,30,0.10)"/>
+
+  <!-- Bed frame legs -->
+  <rect x="60" y="430" width="20" height="90" rx="3" fill="#907040"/>
+  <rect x="820" y="430" width="20" height="90" rx="3" fill="#907040"/>
+  <rect x="60" y="380" width="20" height="50" rx="3" fill="#907040"/>
+  <rect x="820" y="380" width="20" height="50" rx="3" fill="#907040"/>
+
+  <!-- Bed frame side rail -->
+  <rect x="60" y="370" width="780" height="70" rx="4" fill="url(#bedFrame)"/>
+  <rect x="64" y="372" width="772" height="10" rx="3" fill="#D8A878" opacity="0.35"/>
+
+  <!-- Headboard -->
+  <rect x="40" y="100" width="50" height="310" rx="8" fill="url(#bedFrame)"/>
+  <rect x="44" y="110" width="42" height="100" rx="6" fill="#B08858" opacity="0.3"/>
+  <rect x="44" y="230" width="42" height="100" rx="6" fill="#B08858" opacity="0.3"/>
+
+  <!-- Mattress -->
+  <rect x="90" y="240" width="730" height="140" rx="10" fill="url(#sheet)"/>
+  <!-- Mattress side -->
+  <rect x="90" y="365" width="730" height="16" rx="4" fill="#E8DDD0"/>
+
+  <!-- Sheet / fitted sheet -->
+  <rect x="100" y="250" width="710" height="120" rx="8" fill="#FFF8F0"/>
+
+  <!-- Blanket (folded back) -->
+  <path d="M300 250 Q300 240,310 240 L810 240 Q820 240,820 250 L820 370 Q820 376,810 376 L300 376 Q300 370,300 360 Z" fill="url(#blanket)"/>
+  <!-- Blanket fold -->
+  <path d="M300 250 Q500 230,810 250 L810 270 Q500 248,300 268 Z" fill="#BCD0E4" opacity="0.4"/>
+  <!-- Blanket stitch line -->
+  <line x1="320" y1="310" x2="800" y2="310" stroke="#A0B8D0" stroke-width="1.5" opacity="0.3" stroke-dasharray="8,6"/>
+
+  <!-- Pillow -->
+  <ellipse cx="180" cy="290" rx="80" ry="55" fill="#FFF8F0" stroke="#F0E4D4" stroke-width="1.5"/>
+  <ellipse cx="180" cy="282" rx="60" ry="30" fill="white" opacity="0.2"/>
+  <!-- Pillow indent -->
+  <ellipse cx="180" cy="295" rx="30" ry="12" fill="#F4EAD8" opacity="0.3"/>
+</svg>

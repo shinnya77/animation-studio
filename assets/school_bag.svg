@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <!-- バッグ本体グラデーション -->
+    <linearGradient id="bagGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4858A8"/>
+      <stop offset="25%" stop-color="#6878C8"/>
+      <stop offset="60%" stop-color="#5868B8"/>
+      <stop offset="100%" stop-color="#3848A0"/>
+    </linearGradient>
+    <!-- バッグ正面グラデーション -->
+    <linearGradient id="bagFrontGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5868C0"/>
+      <stop offset="50%" stop-color="#4858B0"/>
+      <stop offset="100%" stop-color="#3848A0"/>
+    </linearGradient>
+    <!-- ポケットグラデーション -->
+    <linearGradient id="pocketGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6878D0"/>
+      <stop offset="100%" stop-color="#4858B8"/>
+    </linearGradient>
+    <!-- ファスナーグラデーション -->
+    <linearGradient id="zipperGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#C0C0D8"/>
+      <stop offset="50%" stop-color="#E8E8F8"/>
+      <stop offset="100%" stop-color="#A8A8C8"/>
+    </linearGradient>
+    <!-- ハンドルグラデーション -->
+    <linearGradient id="handleGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7888E0"/>
+      <stop offset="100%" stop-color="#3848A8"/>
+    </linearGradient>
+    <!-- 金具グラデーション -->
+    <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D8D0B0"/>
+      <stop offset="50%" stop-color="#F0E8C0"/>
+      <stop offset="100%" stop-color="#B0A888"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="4" dy="8" stdDeviation="8" flood-color="#202848" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- ===== ショルダーストラップ ===== -->
+  <!-- 左ストラップ -->
+  <path d="
+    M120,80
+    Q100,60 90,40
+    Q85,28 92,22
+    Q100,16 108,26
+    Q120,45 130,75
+  " stroke="url(#handleGrad)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="
+    M120,80
+    Q100,60 90,40
+    Q85,28 92,22
+    Q100,16 108,26
+    Q120,45 130,75
+  " stroke="#90A8F0" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 右ストラップ -->
+  <path d="
+    M280,80
+    Q300,60 310,40
+    Q315,28 308,22
+    Q300,16 292,26
+    Q280,45 270,75
+  " stroke="url(#handleGrad)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="
+    M280,80
+    Q300,60 310,40
+    Q315,28 308,22
+    Q300,16 292,26
+    Q280,45 270,75
+  " stroke="#90A8F0" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- ハンドル中央 -->
+  <path d="M130,75 Q200,55 270,75" stroke="url(#handleGrad)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="M130,75 Q200,55 270,75" stroke="#90A8F0" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- ハンドル金具 -->
+  <rect x="112" y="72" width="20" height="14" rx="4" fill="url(#metalGrad)"/>
+  <rect x="114" y="74" width="16" height="5" rx="2" fill="#F0E8C0" opacity="0.7"/>
+  <rect x="268" y="72" width="20" height="14" rx="4" fill="url(#metalGrad)"/>
+  <rect x="270" y="74" width="16" height="5" rx="2" fill="#F0E8C0" opacity="0.7"/>
+
+  <!-- ===== バッグ本体 ===== -->
+  <!-- メイン本体 -->
+  <rect x="45" y="80" width="310" height="360" rx="18" fill="url(#bagGrad)"/>
+
+  <!-- 本体の光沢ハイライト -->
+  <path d="M55,88 Q55,95 55,300 Q55,88 65,85 Q140,75 200,78 Q200,85 200,85 Q140,82 65,92 Z" fill="#8898E0" opacity="0.25"/>
+
+  <!-- 本体の縦シワ・ステッチライン -->
+  <line x1="200" y1="82" x2="200" y2="438" stroke="#4060C0" stroke-width="1.5" opacity="0.3" stroke-dasharray="5,4"/>
+
+  <!-- 側面の立体感（右端シャドウ）-->
+  <rect x="320" y="80" width="35" height="360" rx="18" fill="#3040A0" opacity="0.4"/>
+
+  <!-- ===== 前面ポケット ===== -->
+  <!-- ポケット外形 -->
+  <rect x="75" y="140" width="250" height="160" rx="12" fill="url(#pocketGrad)"/>
+  <!-- ポケットの縫い目 -->
+  <rect x="75" y="140" width="250" height="160" rx="12" fill="none" stroke="#7888D8" stroke-width="2"/>
+  <rect x="83" y="148" width="234" height="144" rx="9" fill="none" stroke="#6878C8" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+
+  <!-- ポケットのファスナー -->
+  <rect x="75" y="138" width="250" height="12" rx="6" fill="#5060B0"/>
+  <rect x="75" y="138" width="250" height="6" rx="6" fill="url(#zipperGrad)"/>
+  <!-- ファスナーの歯 -->
+  <g fill="#D0C8E8" opacity="0.6">
+    <rect x="85" y="140" width="6" height="5" rx="1"/>
+    <rect x="97" y="140" width="6" height="5" rx="1"/>
+    <rect x="109" y="140" width="6" height="5" rx="1"/>
+    <rect x="121" y="140" width="6" height="5" rx="1"/>
+    <rect x="133" y="140" width="6" height="5" rx="1"/>
+    <rect x="145" y="140" width="6" height="5" rx="1"/>
+    <rect x="157" y="140" width="6" height="5" rx="1"/>
+    <rect x="169" y="140" width="6" height="5" rx="1"/>
+    <rect x="181" y="140" width="6" height="5" rx="1"/>
+    <rect x="193" y="140" width="6" height="5" rx="1"/>
+    <rect x="205" y="140" width="6" height="5" rx="1"/>
+    <rect x="217" y="140" width="6" height="5" rx="1"/>
+    <rect x="229" y="140" width="6" height="5" rx="1"/>
+    <rect x="241" y="140" width="6" height="5" rx="1"/>
+    <rect x="253" y="140" width="6" height="5" rx="1"/>
+    <rect x="265" y="140" width="6" height="5" rx="1"/>
+    <rect x="277" y="140" width="6" height="5" rx="1"/>
+    <rect x="289" y="140" width="6" height="5" rx="1"/>
+    <rect x="301" y="140" width="6" height="5" rx="1"/>
+    <rect x="313" y="140" width="6" height="5" rx="1"/>
+  </g>
+  <!-- ファスナータブ -->
+  <rect x="180" y="133" width="40" height="18" rx="6" fill="url(#metalGrad)"/>
+  <rect x="182" y="135" width="36" height="8" rx="4" fill="#F0E8C0" opacity="0.7"/>
+  <circle cx="200" cy="137" r="4" fill="#E0D8B0"/>
+
+  <!-- ポケット内のデザイン（星マーク）-->
+  <polygon points="200,195 207,214 228,214 212,225 219,244 200,233 181,244 188,225 172,214 193,214"
+    fill="#7888E0" opacity="0.5"/>
+
+  <!-- ===== メインファスナー（上部）===== -->
+  <!-- ファスナーレール -->
+  <rect x="65" y="80" width="270" height="14" rx="7" fill="#3848A8"/>
+  <rect x="65" y="80" width="270" height="7" rx="7" fill="url(#zipperGrad)"/>
+  <!-- ファスナーの歯（上部）-->
+  <g fill="#D0C8E8" opacity="0.5">
+    <rect x="80" y="82" width="8" height="5" rx="1"/>
+    <rect x="96" y="82" width="8" height="5" rx="1"/>
+    <rect x="112" y="82" width="8" height="5" rx="1"/>
+    <rect x="128" y="82" width="8" height="5" rx="1"/>
+    <rect x="144" y="82" width="8" height="5" rx="1"/>
+    <rect x="160" y="82" width="8" height="5" rx="1"/>
+    <rect x="176" y="82" width="8" height="5" rx="1"/>
+    <rect x="192" y="82" width="8" height="5" rx="1"/>
+    <rect x="208" y="82" width="8" height="5" rx="1"/>
+    <rect x="224" y="82" width="8" height="5" rx="1"/>
+    <rect x="240" y="82" width="8" height="5" rx="1"/>
+    <rect x="256" y="82" width="8" height="5" rx="1"/>
+    <rect x="272" y="82" width="8" height="5" rx="1"/>
+    <rect x="288" y="82" width="8" height="5" rx="1"/>
+    <rect x="304" y="82" width="8" height="5" rx="1"/>
+  </g>
+  <!-- メインファスナータブ -->
+  <rect x="295" y="74" width="44" height="22" rx="8" fill="url(#metalGrad)"/>
+  <rect x="297" y="76" width="40" height="10" rx="5" fill="#F0E8C0" opacity="0.7"/>
+  <!-- キーホルダーのリング -->
+  <circle cx="348" cy="85" r="10" fill="none" stroke="url(#metalGrad)" stroke-width="4"/>
+  <circle cx="348" cy="85" r="10" fill="none" stroke="#F0E8C0" stroke-width="1.5" opacity="0.6"/>
+  <!-- キーホルダーのチャーム -->
+  <path d="M348,95 Q340,110 342,122 Q345,130 348,130 Q351,130 354,122 Q356,110 348,95" fill="#E8A0A0"/>
+  <circle cx="348" cy="126" r="6" fill="#D87878"/>
+  <circle cx="346" cy="124" r="2" fill="#F0A0A0"/>
+
+  <!-- ===== 底部補強 ===== -->
+  <rect x="45" y="400" width="310" height="40" rx="18" fill="#3040A0"/>
+  <rect x="45" y="400" width="310" height="8" fill="#3848B0" opacity="0.6"/>
+  <!-- ゴム足 -->
+  <ellipse cx="100" cy="440" rx="22" ry="8" fill="#282840"/>
+  <ellipse cx="200" cy="442" rx="22" ry="8" fill="#282840"/>
+  <ellipse cx="300" cy="440" rx="22" ry="8" fill="#282840"/>
+
+  <!-- ===== ブランドロゴ風タグ ===== -->
+  <rect x="155" y="340" width="90" height="60" rx="5" fill="#3040A0"/>
+  <rect x="158" y="343" width="84" height="54" rx="4" fill="none" stroke="#5868C8" stroke-width="1.5"/>
+  <text x="200" y="368" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9090E0" font-weight="bold">SCHOOL</text>
+  <text x="200" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#7070C0">BAG</text>
+
+  </g>
+
+  <!-- バッグの影 -->
+  <ellipse cx="200" cy="448" rx="160" ry="14" fill="#202848" opacity="0.22"/>
+</svg>

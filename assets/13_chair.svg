@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 500" width="300" height="500">
+  <defs>
+    <linearGradient id="chairG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C49468"/>
+      <stop offset="100%" stop-color="#A07040"/>
+    </linearGradient>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="150" cy="485" rx="120" ry="14" fill="rgba(80,60,30,0.10)"/>
+  <!-- Back legs -->
+  <rect x="50" y="20" width="14" height="460" rx="3" fill="#907048"/>
+  <rect x="236" y="20" width="14" height="460" rx="3" fill="#907048"/>
+  <!-- Back panel -->
+  <rect x="50" y="30" width="200" height="200" rx="8" fill="url(#chairG)"/>
+  <rect x="64" y="44" width="172" height="82" rx="5" fill="#B48858" opacity="0.3"/>
+  <rect x="64" y="138" width="172" height="78" rx="5" fill="#B48858" opacity="0.3"/>
+  <!-- Seat -->
+  <rect x="36" y="230" width="228" height="44" rx="6" fill="#B88C5C"/>
+  <rect x="40" y="230" width="220" height="10" rx="4" fill="#C89C6C" opacity="0.3"/>
+  <!-- Front legs -->
+  <rect x="50" y="274" width="14" height="200" rx="3" fill="#907048"/>
+  <rect x="236" y="274" width="14" height="200" rx="3" fill="#907048"/>
+  <!-- Crossbar -->
+  <rect x="58" y="380" width="184" height="10" rx="2" fill="#907048"/>
+</svg>

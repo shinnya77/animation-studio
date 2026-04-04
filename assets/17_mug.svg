@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 220" width="180" height="220">
+  <defs>
+    <linearGradient id="mugG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8F0"/>
+      <stop offset="100%" stop-color="#F0E8DC"/>
+    </linearGradient>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="70" cy="200" rx="52" ry="8" fill="rgba(80,60,30,0.08)"/>
+  <!-- Body -->
+  <path d="M30 40 L24 180 Q24 200,44 200 L96 200 Q116 200,116 180 L110 40 Z" fill="url(#mugG)" stroke="#E0D4C4" stroke-width="2"/>
+  <!-- Rim -->
+  <ellipse cx="70" cy="40" rx="44" ry="10" fill="#FFF8F0" stroke="#E0D4C4" stroke-width="2"/>
+  <ellipse cx="70" cy="37" rx="36" ry="7" fill="#D4A060" opacity="0.15"/>
+  <!-- Handle -->
+  <path d="M114 76 Q152 76,152 124 Q152 172,114 172" stroke="#E0D4C4" stroke-width="8" fill="none"/>
+  <path d="M114 76 Q148 76,148 124 Q148 172,114 172" stroke="#FFF8F0" stroke-width="4" fill="none"/>
+  <!-- Heart design -->
+  <path d="M60 110 Q60 98,70 106 Q80 98,80 110 L70 124 Z" fill="#F0A0A0" opacity="0.4"/>
+</svg>

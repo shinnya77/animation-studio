@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420">
+  <defs>
+    <!-- 鉢グラデーション -->
+    <linearGradient id="potGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8878B8"/>
+      <stop offset="30%" stop-color="#B0A0D8"/>
+      <stop offset="70%" stop-color="#9888C0"/>
+      <stop offset="100%" stop-color="#6858A0"/>
+    </linearGradient>
+    <!-- 鉢の上面 -->
+    <linearGradient id="potTopGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7068A8"/>
+      <stop offset="50%" stop-color="#A098C8"/>
+      <stop offset="100%" stop-color="#6060A0"/>
+    </linearGradient>
+    <!-- 土 -->
+    <radialGradient id="soilGrad" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0%" stop-color="#8A6040"/>
+      <stop offset="70%" stop-color="#7A5030"/>
+      <stop offset="100%" stop-color="#6A4020"/>
+    </radialGradient>
+    <!-- 葉のグラデーション（大） -->
+    <linearGradient id="leafBigGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#68C858"/>
+      <stop offset="50%" stop-color="#50B040"/>
+      <stop offset="100%" stop-color="#409030"/>
+    </linearGradient>
+    <!-- 葉のグラデーション（中）-->
+    <linearGradient id="leafMidGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#78D868"/>
+      <stop offset="100%" stop-color="#48A838"/>
+    </linearGradient>
+    <!-- 葉のグラデーション（小・新芽）-->
+    <linearGradient id="leafSmallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A8E890"/>
+      <stop offset="100%" stop-color="#68C050"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="5" stdDeviation="5" flood-color="#304020" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- ===== 葉（後ろ）===== -->
+  <!-- 大きな葉（左後）-->
+  <path d="
+    M150,270
+    Q100,240 55,200
+    Q40,165 60,145
+    Q80,130 105,155
+    Q130,200 150,258
+    Z
+  " fill="#389028"/>
+  <path d="M150,268 Q100,238 62,153" stroke="#2A6818" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- 大きな葉（右後）-->
+  <path d="
+    M150,270
+    Q200,230 255,185
+    Q278,148 260,128
+    Q240,110 215,138
+    Q185,185 152,262
+    Z
+  " fill="#409830"/>
+  <path d="M150,268 Q200,228 258,130" stroke="#307020" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- ===== 茎 ===== -->
+  <!-- 左前葉の茎 -->
+  <path d="M150,270 Q130,240 95,200" stroke="#5A9840" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- 右前葉の茎 -->
+  <path d="M150,268 Q165,235 195,205" stroke="#5A9840" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- 中央茎（新芽） -->
+  <path d="M152,268 Q155,230 158,190" stroke="#6AAA48" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- 左サイド茎 -->
+  <path d="M150,270 Q118,255 82,240" stroke="#4A8838" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- 右サイド茎 -->
+  <path d="M150,270 Q182,253 218,235" stroke="#4A8838" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- ===== 葉（前・メイン）===== -->
+  <!-- 左前の葉（大）-->
+  <path d="
+    M150,270
+    Q118,252 88,228
+    Q60,198 62,170
+    Q65,145 90,148
+    Q118,155 140,210
+    Q148,238 150,268
+    Z
+  " fill="url(#leafBigGrad)"/>
+  <!-- 葉脈（左前大）-->
+  <path d="M148,268 Q105,220 72,160" stroke="#40A030" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M120,240 Q110,225 100,208" stroke="#40A030" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M108,224 Q100,210 95,195" stroke="#40A030" stroke-width="1" fill="none" opacity="0.5"/>
+  <!-- 葉のハイライト -->
+  <path d="M148,268 Q112,245 90,210 Q76,190 78,175" stroke="#90E070" stroke-width="2" fill="none" opacity="0.35"/>
+
+  <!-- 右前の葉（大）-->
+  <path d="
+    M150,270
+    Q178,250 210,225
+    Q238,195 238,168
+    Q236,142 212,145
+    Q188,150 168,208
+    Q158,238 150,268
+    Z
+  " fill="url(#leafBigGrad)"/>
+  <!-- 葉脈（右前大）-->
+  <path d="M152,268 Q190,222 228,160" stroke="#40A030" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M178,242 Q188,226 198,210" stroke="#40A030" stroke-width="1" fill="none" opacity="0.5"/>
+
+  <!-- 左の横葉（中）-->
+  <path d="
+    M148,272
+    Q115,268 80,258
+    Q55,242 52,222
+    Q50,205 70,205
+    Q95,208 125,248
+    Q140,260 148,270
+    Z
+  " fill="url(#leafMidGrad)"/>
+  <path d="M148,270 Q95,250 58,215" stroke="#48A838" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- 右の横葉（中）-->
+  <path d="
+    M152,272
+    Q185,265 220,252
+    Q245,236 248,216
+    Q250,198 230,200
+    Q205,205 175,245
+    Q162,260 152,270
+    Z
+  " fill="url(#leafMidGrad)"/>
+  <path d="M152,270 Q205,248 242,208" stroke="#48A838" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- 中央の新芽（小）-->
+  <path d="
+    M155,268
+    Q152,248 150,228
+    Q148,205 152,188
+    Q156,172 162,175
+    Q170,180 166,210
+    Q163,238 156,266
+    Z
+  " fill="url(#leafSmallGrad)"/>
+  <path d="M155,268 Q155,225 158,185" stroke="#70C050" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- ===== 鉢 ===== -->
+  <!-- 鉢の胴体（台形） -->
+  <path d="
+    M90,315
+    Q88,400 92,410
+    Q145,425 210,420
+    Q215,408 212,315
+    Z
+  " fill="url(#potGrad)"/>
+
+  <!-- 鉢の装飾ライン -->
+  <path d="M93,345 Q150,340 208,345" stroke="#C0B0E8" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M93,370 Q150,365 208,370" stroke="#C0B0E8" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+  <!-- 鉢の光沢 -->
+  <path d="M100,315 Q103,385 104,410 Q95,400 92,340 Z" fill="#C0B0E0" opacity="0.25"/>
+
+  <!-- 鉢の縁（上）-->
+  <ellipse cx="150" cy="315" rx="65" ry="15" fill="url(#potTopGrad)"/>
+  <ellipse cx="150" cy="312" rx="58" ry="11" fill="#B8A8D8" opacity="0.5"/>
+  <ellipse cx="145" cy="310" rx="28" ry="5" fill="#D0C8F0" opacity="0.3"/>
+
+  <!-- 土 -->
+  <ellipse cx="150" cy="316" rx="58" ry="12" fill="url(#soilGrad)"/>
+  <ellipse cx="150" cy="313" rx="52" ry="9" fill="#8A6040"/>
+  <!-- 土の質感（小石・粒） -->
+  <circle cx="130" cy="312" r="3" fill="#6A4828" opacity="0.7"/>
+  <circle cx="150" cy="310" r="2.5" fill="#7A5830" opacity="0.7"/>
+  <circle cx="168" cy="313" r="3" fill="#6A4828" opacity="0.7"/>
+  <circle cx="142" cy="315" r="2" fill="#7A5830" opacity="0.6"/>
+  <circle cx="160" cy="311" r="2" fill="#6A4828" opacity="0.6"/>
+  <!-- 苔 -->
+  <ellipse cx="135" cy="313" rx="8" ry="4" fill="#78A858" opacity="0.6"/>
+  <ellipse cx="165" cy="314" rx="7" ry="3.5" fill="#68A048" opacity="0.6"/>
+
+  <!-- 鉢の底の縁 -->
+  <ellipse cx="151" cy="418" rx="62" ry="10" fill="#6858A0"/>
+  <ellipse cx="151" cy="415" rx="58" ry="8" fill="#7868B0" opacity="0.7"/>
+
+  </g>
+
+  <!-- 鉢の影 -->
+  <ellipse cx="152" cy="428" rx="75" ry="10" fill="#304020" opacity="0.2"/>
+</svg>

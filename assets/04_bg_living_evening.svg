@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="ewG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8E8D4"/>
+      <stop offset="100%" stop-color="#F0D8C0"/>
+    </linearGradient>
+    <linearGradient id="efG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89868"/>
+      <stop offset="100%" stop-color="#B08050"/>
+    </linearGradient>
+    <linearGradient id="eSkyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0A860"/>
+      <stop offset="30%" stop-color="#F8C080"/>
+      <stop offset="70%" stop-color="#E8A8A0"/>
+      <stop offset="100%" stop-color="#D0A0C0"/>
+    </linearGradient>
+    <linearGradient id="eBeam" x1="0.4" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="rgba(255,180,100,0.35)"/>
+      <stop offset="100%" stop-color="rgba(255,180,100,0)"/>
+    </linearGradient>
+    <radialGradient id="eAmbient" cx="0.5" cy="0.4" r="0.7">
+      <stop offset="0%" stop-color="rgba(255,200,140,0.12)"/>
+      <stop offset="100%" stop-color="rgba(255,200,140,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Wall (warm tint) -->
+  <rect width="1920" height="680" fill="url(#ewG)"/>
+  <!-- Warm ambient overlay -->
+  <rect width="1920" height="1080" fill="url(#eAmbient)"/>
+
+  <!-- Wall trim -->
+  <line x1="0" y1="200" x2="690" y2="200" stroke="#E8D0B8" stroke-width="1" opacity="0.5"/>
+  <line x1="1230" y1="200" x2="1920" y2="200" stroke="#E8D0B8" stroke-width="1" opacity="0.5"/>
+
+  <!-- Baseboard -->
+  <rect y="660" width="1920" height="20" fill="#D8C4AC"/>
+
+  <!-- Floor -->
+  <rect y="680" width="1920" height="400" fill="url(#efG)"/>
+  <!-- Floor boards -->
+  <line x1="240" y1="680" x2="240" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="480" y1="680" x2="480" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="720" y1="680" x2="720" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="960" y1="680" x2="960" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="1200" y1="680" x2="1200" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="1440" y1="680" x2="1440" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+  <line x1="1680" y1="680" x2="1680" y2="1080" stroke="#A88050" stroke-width="1" opacity="0.2"/>
+
+  <!-- Window -->
+  <rect x="696" y="76" width="528" height="490" rx="4" fill="#D0B898" stroke="#C0A888" stroke-width="2"/>
+  <!-- Sunset sky -->
+  <rect x="710" y="90" width="245" height="228" fill="url(#eSkyG)"/>
+  <rect x="965" y="90" width="245" height="228" fill="url(#eSkyG)"/>
+  <rect x="710" y="328" width="245" height="228" fill="url(#eSkyG)"/>
+  <rect x="965" y="328" width="245" height="228" fill="url(#eSkyG)"/>
+  <!-- Sun glow -->
+  <circle cx="860" cy="200" r="40" fill="#FFD080" opacity="0.6"/>
+  <circle cx="860" cy="200" r="70" fill="#FFC060" opacity="0.15"/>
+  <!-- Clouds (sunset colored) -->
+  <ellipse cx="1050" cy="160" rx="50" ry="14" fill="#FFD0A0" opacity="0.5"/>
+  <ellipse cx="780" cy="250" rx="40" ry="10" fill="#F0C0A0" opacity="0.4"/>
+  <!-- Window cross -->
+  <rect x="696" y="314" width="528" height="8" fill="#D0B898"/>
+  <rect x="955" y="76" width="8" height="490" fill="#D0B898"/>
+
+  <!-- Curtains -->
+  <path d="M650 70 C660 200,640 400,630 580 L700 580 C710 400,700 200,700 70 Z" fill="#F4E4D4" opacity="0.9"/>
+  <path d="M1220 70 C1210 200,1230 400,1240 580 L1270 580 C1260 400,1270 200,1270 70 Z" fill="#F4E4D4" opacity="0.9"/>
+  <rect x="640" y="58" width="640" height="12" rx="6" fill="#C8B498"/>
+
+  <!-- Sunset beam -->
+  <polygon points="720,570 1200,570 1450,1080 470,1080" fill="url(#eBeam)"/>
+
+  <!-- Warm floor patch -->
+  <ellipse cx="960" cy="840" rx="380" ry="200" fill="rgba(255,200,140,0.10)"/>
+
+  <!-- Overall warm color grading -->
+  <rect width="1920" height="1080" fill="rgba(255,180,120,0.04)"/>
+</svg>

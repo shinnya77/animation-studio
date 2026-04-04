@@ -329,10 +329,21 @@
   }
 
   // ---- Layer Management ----
+  function imgToDataUrl(img) {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth;
+    c.height = img.naturalHeight;
+    c.getContext('2d').drawImage(img, 0, 0);
+    return c.toDataURL('image/png');
+  }
+
   function addLayer(name, imgSrc) {
     const id = genId();
     const img = new Image();
     img.onload = () => {
+      // Convert relative/blob URLs to data URL for portable project files
+      const storedSrc = imgSrc.startsWith('data:') ? imgSrc : imgToDataUrl(img);
+
       let w = img.naturalWidth;
       let h = img.naturalHeight;
       if (w > CANVAS_W) { h *= CANVAS_W / w; w = CANVAS_W; }
@@ -347,7 +358,7 @@
       tc.drawImage(img, (32 - tw) / 2, (32 - th) / 2, tw, th);
 
       const layer = {
-        id, name, img, imgSrc, thumbCanvas,
+        id, name, img, imgSrc: storedSrc, thumbCanvas,
         visible: true,
         x: (CANVAS_W - w) / 2, y: (CANVAS_H - h) / 2,
         w, h,
@@ -1089,6 +1100,59 @@
     addAudioTrack(file, fileAudio.dataset.audioType);
     fileAudio.value = '';
   });
+
+  // ---- Asset Browser ----
+  const assetGrid = $('#asset-grid');
+  const assetSearch = $('#asset-search');
+  let assetManifest = [];
+
+  async function loadAssetManifest() {
+    try {
+      const resp = await fetch('assets/manifest.json');
+      assetManifest = await resp.json();
+      renderAssetGrid();
+    } catch (e) {
+      assetGrid.innerHTML = '<div style="color:var(--text-muted);font-size:10px;padding:8px;">アセットを読み込めません</div>';
+    }
+  }
+
+  function renderAssetGrid(filter) {
+    assetGrid.innerHTML = '';
+    const q = (filter || '').toLowerCase();
+    const items = q ? assetManifest.filter((a) => a.name.toLowerCase().includes(q) || a.file.toLowerCase().includes(q)) : assetManifest;
+    items.forEach((asset) => {
+      const div = document.createElement('div');
+      div.className = 'asset-item';
+      div.title = asset.name + '\nクリックでレイヤー追加';
+
+      const img = document.createElement('img');
+      img.src = 'assets/' + asset.file;
+      img.alt = asset.name;
+      img.loading = 'lazy';
+
+      const name = document.createElement('div');
+      name.className = 'asset-name';
+      name.textContent = asset.name;
+
+      div.appendChild(img);
+      div.appendChild(name);
+      div.addEventListener('click', () => {
+        addLayer(asset.name, 'assets/' + asset.file);
+      });
+      assetGrid.appendChild(div);
+    });
+    if (items.length === 0) {
+      assetGrid.innerHTML = '<div style="color:var(--text-muted);font-size:10px;padding:8px;grid-column:1/-1;">該当なし</div>';
+    }
+  }
+
+  assetSearch.addEventListener('input', () => renderAssetGrid(assetSearch.value));
+
+  $('#asset-panel-toggle').addEventListener('click', () => {
+    $('#asset-panel').classList.toggle('collapsed');
+  });
+
+  loadAssetManifest();
 
   function refreshAudioLists() {
     const renderList = (tracks, listEl, type) => {

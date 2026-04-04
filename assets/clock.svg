@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <!-- 外枠グラデーション -->
+    <linearGradient id="frameGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#E8E0D0"/>
+      <stop offset="35%" stop-color="#F8F4EC"/>
+      <stop offset="65%" stop-color="#E0D8C8"/>
+      <stop offset="100%" stop-color="#C8C0B0"/>
+    </linearGradient>
+    <!-- 文字盤グラデーション -->
+    <radialGradient id="faceGrad" cx="0.4" cy="0.35" r="0.65">
+      <stop offset="0%" stop-color="#FEFEFC"/>
+      <stop offset="80%" stop-color="#F5F3ED"/>
+      <stop offset="100%" stop-color="#EDE8E0"/>
+    </radialGradient>
+    <!-- 枠の影（立体感）-->
+    <radialGradient id="frameShadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="75%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="#A09080" stop-opacity="0.4"/>
+    </radialGradient>
+    <!-- 秒針の赤 -->
+    <linearGradient id="secGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E05040"/>
+      <stop offset="100%" stop-color="#C03020"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="3" dy="5" stdDeviation="6" flood-color="#605040" flood-opacity="0.35"/>
+    </filter>
+    <!-- フェイス内のグロー -->
+    <filter id="faceGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- 外枠の影（下層）-->
+  <circle cx="150" cy="152" r="130" fill="#B0A890" opacity="0.4"/>
+
+  <!-- 外枠 -->
+  <circle cx="150" cy="150" r="130" fill="url(#frameGrad)"/>
+
+  <!-- 外枠の立体ハイライト（左上）-->
+  <path d="M60,80 Q80,55 110,45 Q80,60 65,90 Z" fill="#FFFFFF" opacity="0.4"/>
+  <path d="M55,100 Q65,75 85,62" stroke="#FFFFFF" stroke-width="8" fill="none" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- 外枠のインナーリング -->
+  <circle cx="150" cy="150" r="118" fill="none" stroke="#D8D0C0" stroke-width="3"/>
+  <circle cx="150" cy="150" r="114" fill="none" stroke="#EDE8E0" stroke-width="1.5"/>
+
+  <!-- 外枠の影（内側）-->
+  <circle cx="150" cy="150" r="130" fill="url(#frameShadow)"/>
+
+  <!-- 文字盤 -->
+  <circle cx="150" cy="150" r="112" fill="url(#faceGrad)"/>
+  <circle cx="150" cy="150" r="112" fill="none" stroke="#D8D0C0" stroke-width="1.5"/>
+
+  <!-- ===== 目盛り ===== -->
+  <!-- 時間目盛り（12箇所）-->
+  <!-- 12時 -->
+  <rect x="146" y="48" width="8" height="20" rx="3" fill="#4A4038"/>
+  <!-- 1時 -->
+  <rect x="191.5" y="59.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(30, 195.5, 69.5)"/>
+  <!-- 2時 -->
+  <rect x="225.5" y="91.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(60, 229.5, 101.5)"/>
+  <!-- 3時 -->
+  <rect x="238" y="141" width="20" height="8" rx="3" fill="#4A4038"/>
+  <!-- 4時 -->
+  <rect x="225.5" y="186.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(120, 229.5, 196.5)"/>
+  <!-- 5時 -->
+  <rect x="191.5" y="218.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(150, 195.5, 228.5)"/>
+  <!-- 6時 -->
+  <rect x="146" y="232" width="8" height="20" rx="3" fill="#4A4038"/>
+  <!-- 7時 -->
+  <rect x="100.5" y="218.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(210, 104.5, 228.5)"/>
+  <!-- 8時 -->
+  <rect x="66.5" y="186.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(240, 70.5, 196.5)"/>
+  <!-- 9時 -->
+  <rect x="42" y="141" width="20" height="8" rx="3" fill="#4A4038"/>
+  <!-- 10時 -->
+  <rect x="66.5" y="91.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(300, 70.5, 101.5)"/>
+  <!-- 11時 -->
+  <rect x="100.5" y="59.5" width="8" height="20" rx="3" fill="#4A4038" transform="rotate(330, 104.5, 69.5)"/>
+
+  <!-- 分目盛り（60箇所から時間を除いた48箇所）-->
+  <!-- 5分刻みで小目盛りを打つ (時間位置は大目盛りで代用) -->
+  <g stroke="#A09888" stroke-width="1.5" stroke-linecap="round">
+    <!-- 1分,2分,3分,4分（12時周辺）-->
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(6,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(12,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(18,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(24,150,150)"/>
+    <!-- 各5分ずつ繰り返し -->
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(36,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(42,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(48,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(54,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(66,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(72,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(78,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(84,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(96,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(102,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(108,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(114,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(126,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(132,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(138,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(144,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(156,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(162,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(168,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(174,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(186,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(192,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(198,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(204,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(216,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(222,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(228,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(234,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(246,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(252,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(258,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(264,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(276,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(282,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(288,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(294,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(306,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(312,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(318,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(324,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(336,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(342,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(348,150,150)"/>
+    <line x1="150" y1="40" x2="150" y2="48" transform="rotate(354,150,150)"/>
+  </g>
+
+  <!-- ===== 数字 ===== -->
+  <!-- シンプルなアラビア数字（丸みのある優しいフォントをパス描画）-->
+  <text x="150" y="80" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#3A3028" font-weight="bold">12</text>
+  <text x="220" y="158" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#3A3028" font-weight="bold">3</text>
+  <text x="150" y="228" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#3A3028" font-weight="bold">6</text>
+  <text x="80" y="158" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#3A3028" font-weight="bold">9</text>
+
+  <!-- ===== 針 ===== -->
+  <!-- 時針（10時10分方向）-->
+  <line x1="150" y1="150" x2="118" y2="100" stroke="#3A3028" stroke-width="7" stroke-linecap="round"/>
+  <line x1="150" y1="150" x2="165" y2="172" stroke="#3A3028" stroke-width="7" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 分針 -->
+  <line x1="150" y1="150" x2="175" y2="72" stroke="#3A3028" stroke-width="5" stroke-linecap="round"/>
+  <line x1="150" y1="150" x2="140" y2="178" stroke="#3A3028" stroke-width="5" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 秒針 -->
+  <line x1="150" y1="150" x2="200" y2="88" stroke="url(#secGrad)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="150" y1="150" x2="125" y2="192" stroke="url(#secGrad)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- 中心キャップ -->
+  <circle cx="150" cy="150" r="10" fill="#5A5048"/>
+  <circle cx="150" cy="150" r="7" fill="#7A6858"/>
+  <circle cx="150" cy="150" r="4" fill="#E05040"/>
+  <circle cx="150" cy="150" r="2" fill="#C03020"/>
+
+  </g>
+
+  <!-- 壁への吊り下げ部分 -->
+  <rect x="138" y="18" width="24" height="6" rx="3" fill="#D8D0C0"/>
+  <rect x="144" y="10" width="12" height="12" rx="6" fill="none" stroke="#C0B8A8" stroke-width="3"/>
+</svg>

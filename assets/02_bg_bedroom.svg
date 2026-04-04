@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="bwG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F0E8"/>
+      <stop offset="100%" stop-color="#F0E8DC"/>
+    </linearGradient>
+    <linearGradient id="bfG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="100%" stop-color="#C08860"/>
+    </linearGradient>
+    <linearGradient id="bskyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#90C8F0"/>
+      <stop offset="100%" stop-color="#C8E4FF"/>
+    </linearGradient>
+    <radialGradient id="warmGlow" cx="0.75" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="rgba(255,240,200,0.15)"/>
+      <stop offset="100%" stop-color="rgba(255,240,200,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Wall -->
+  <rect width="1920" height="690" fill="url(#bwG)"/>
+  <!-- Subtle wallpaper pattern (thin stripes) -->
+  <g opacity="0.06">
+    <rect x="0" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="60" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="120" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="180" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="240" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="300" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="360" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="420" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="480" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="540" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="600" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="660" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="720" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="780" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="840" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="900" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="960" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1020" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1080" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1140" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1200" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1260" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1320" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1380" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1440" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1500" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1560" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1620" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1680" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1740" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1800" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1860" y="0" width="3" height="690" fill="#C8B098"/>
+    <rect x="1920" y="0" width="3" height="690" fill="#C8B098"/>
+  </g>
+
+  <!-- Baseboard -->
+  <rect y="670" width="1920" height="20" fill="#E0D0BC"/>
+
+  <!-- Floor -->
+  <rect y="690" width="1920" height="390" fill="url(#bfG)"/>
+  <!-- Floor board lines -->
+  <line x1="240" y1="690" x2="240" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="480" y1="690" x2="480" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="720" y1="690" x2="720" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="960" y1="690" x2="960" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="1200" y1="690" x2="1200" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="1440" y1="690" x2="1440" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+  <line x1="1680" y1="690" x2="1680" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.2"/>
+
+  <!-- Small window (right side) -->
+  <rect x="1400" y="120" width="320" height="360" rx="3" fill="#D8C8B0" stroke="#C8B8A0" stroke-width="2"/>
+  <rect x="1412" y="132" width="148" height="168" fill="url(#bskyG)"/>
+  <rect x="1568" y="132" width="140" height="168" fill="url(#bskyG)"/>
+  <rect x="1412" y="308" width="148" height="164" fill="url(#bskyG)"/>
+  <rect x="1568" y="308" width="140" height="164" fill="url(#bskyG)"/>
+  <!-- clouds -->
+  <ellipse cx="1480" cy="170" rx="35" ry="12" fill="white" opacity="0.6"/>
+  <ellipse cx="1630" cy="200" rx="28" ry="10" fill="white" opacity="0.5"/>
+  <!-- cross -->
+  <rect x="1400" y="298" width="320" height="8" fill="#D8C8B0"/>
+  <rect x="1556" y="120" width="8" height="360" fill="#D8C8B0"/>
+
+  <!-- Curtain (short, bedroom style) -->
+  <path d="M1384 110 C1390 200,1382 340,1375 490 L1414 490 C1418 340,1414 200,1410 110 Z" fill="#F8F0E8" opacity="0.9"/>
+  <path d="M1726 110 C1720 200,1730 340,1735 490 L1710 490 C1706 340,1714 200,1718 110 Z" fill="#F8F0E8" opacity="0.9"/>
+  <rect x="1374" y="104" width="368" height="10" rx="5" fill="#D0C0A8"/>
+
+  <!-- Warm ambient glow -->
+  <rect width="1920" height="1080" fill="url(#warmGlow)"/>
+</svg>

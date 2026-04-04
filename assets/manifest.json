@@ -1,0 +1,130 @@
+[
+  {
+    "file": "01_bg_living_day.svg",
+    "name": "Bg Living Day"
+  },
+  {
+    "file": "02_bg_bedroom.svg",
+    "name": "Bg Bedroom"
+  },
+  {
+    "file": "03_bg_kitchen.svg",
+    "name": "Bg Kitchen"
+  },
+  {
+    "file": "04_bg_living_evening.svg",
+    "name": "Bg Living Evening"
+  },
+  {
+    "file": "05_bg_living_night.svg",
+    "name": "Bg Living Night"
+  },
+  {
+    "file": "06_sofa.svg",
+    "name": "Sofa"
+  },
+  {
+    "file": "07_low_table.svg",
+    "name": "Low Table"
+  },
+  {
+    "file": "08_tv_stand.svg",
+    "name": "Tv Stand"
+  },
+  {
+    "file": "09_bed.svg",
+    "name": "Bed"
+  },
+  {
+    "file": "10_bookshelf.svg",
+    "name": "Bookshelf"
+  },
+  {
+    "file": "11_plant.svg",
+    "name": "Plant"
+  },
+  {
+    "file": "12_desk.svg",
+    "name": "Desk"
+  },
+  {
+    "file": "13_chair.svg",
+    "name": "Chair"
+  },
+  {
+    "file": "14_fridge.svg",
+    "name": "Fridge"
+  },
+  {
+    "file": "15_counter_sink.svg",
+    "name": "Counter Sink"
+  },
+  {
+    "file": "16_stove.svg",
+    "name": "Stove"
+  },
+  {
+    "file": "17_mug.svg",
+    "name": "Mug"
+  },
+  {
+    "file": "18_clock.svg",
+    "name": "Clock"
+  },
+  {
+    "file": "19_floor_lamp.svg",
+    "name": "Floor Lamp"
+  },
+  {
+    "file": "20_rug.svg",
+    "name": "Rug"
+  },
+  {
+    "file": "21_picture_frame.svg",
+    "name": "Picture Frame"
+  },
+  {
+    "file": "22_kettle.svg",
+    "name": "Kettle"
+  },
+  {
+    "file": "bed.svg",
+    "name": "Bed"
+  },
+  {
+    "file": "bg_room.svg",
+    "name": "Bg Room"
+  },
+  {
+    "file": "bookshelf.svg",
+    "name": "Bookshelf"
+  },
+  {
+    "file": "chair.svg",
+    "name": "Chair"
+  },
+  {
+    "file": "clock.svg",
+    "name": "Clock"
+  },
+  {
+    "file": "desk.svg",
+    "name": "Desk"
+  },
+  {
+    "file": "lamp.svg",
+    "name": "Lamp"
+  },
+  {
+    "file": "plant.svg",
+    "name": "Plant"
+  },
+  {
+    "file": "school_bag.svg",
+    "name": "School Bag"
+  },
+  {
+    "file": "window.svg",
+    "name": "Window"
+  }
+]

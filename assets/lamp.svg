@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 500" width="300" height="500">
+  <defs>
+    <!-- ベースグラデーション -->
+    <linearGradient id="baseGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#707090"/>
+      <stop offset="40%" stop-color="#9898B8"/>
+      <stop offset="100%" stop-color="#505070"/>
+    </linearGradient>
+    <!-- シェードグラデーション -->
+    <linearGradient id="shadeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8B050"/>
+      <stop offset="50%" stop-color="#D89840"/>
+      <stop offset="100%" stop-color="#C08030"/>
+    </linearGradient>
+    <!-- シェード内側 -->
+    <radialGradient id="bulbGlow" cx="0.5" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#FFF8C0"/>
+      <stop offset="50%" stop-color="#FFE880"/>
+      <stop offset="100%" stop-color="#D89840" stop-opacity="0"/>
+    </radialGradient>
+    <!-- アームグラデーション -->
+    <linearGradient id="armGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#505068"/>
+      <stop offset="50%" stop-color="#8888A8"/>
+      <stop offset="100%" stop-color="#404058"/>
+    </linearGradient>
+    <!-- 光の投影 -->
+    <radialGradient id="lightCone" cx="0.5" cy="0" r="0.9">
+      <stop offset="0%" stop-color="#FFF0A0" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#FFE060" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFD040" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="3" dy="5" stdDeviation="5" flood-color="#202030" flood-opacity="0.4"/>
+    </filter>
+    <!-- グロー効果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- 光の投影（ライトの光を机に） -->
+  <ellipse cx="150" cy="490" rx="90" ry="15" fill="#FFE880" opacity="0.15"/>
+  <ellipse cx="150" cy="490" rx="60" ry="10" fill="#FFE880" opacity="0.12"/>
+
+  <g filter="url(#shadow)">
+
+  <!-- ===== ベース ===== -->
+  <!-- ベース下面 -->
+  <ellipse cx="150" cy="475" rx="85" ry="14" fill="#404058"/>
+  <ellipse cx="150" cy="470" rx="85" ry="14" fill="url(#baseGrad)"/>
+  <ellipse cx="150" cy="465" rx="78" ry="10" fill="#9898B8" opacity="0.4"/>
+  <!-- ベースのハイライト -->
+  <ellipse cx="130" cy="462" rx="30" ry="6" fill="#B8B8D8" opacity="0.3"/>
+
+  <!-- ベースの柱 -->
+  <rect x="135" y="380" width="30" height="92" rx="8" fill="url(#armGrad)"/>
+  <rect x="137" y="380" width="8" height="92" fill="#A0A0C0" opacity="0.3"/>
+
+  <!-- 関節（ベース〜アーム下）-->
+  <ellipse cx="150" cy="380" rx="22" ry="12" fill="#6868A0"/>
+  <ellipse cx="150" cy="376" rx="20" ry="10" fill="#8888B8"/>
+  <ellipse cx="150" cy="373" rx="15" ry="7" fill="#A0A0C8"/>
+
+  <!-- ===== アーム（下段）===== -->
+  <!-- 下アーム -->
+  <path d="M150,373 Q145,310 138,250" stroke="url(#armGrad)" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <path d="M150,373 Q145,310 138,250" stroke="#A0A0C0" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 関節（中央）-->
+  <ellipse cx="138" cy="248" rx="18" ry="10" fill="#6060A0"/>
+  <ellipse cx="138" cy="244" rx="16" ry="9" fill="#8080B8"/>
+  <circle cx="138" cy="241" r="8" fill="#9090C8"/>
+  <circle cx="138" cy="241" r="4" fill="#A8A8D8"/>
+
+  <!-- ===== アーム（上段）===== -->
+  <!-- 上アーム -->
+  <path d="M138,241 Q142,195 155,155" stroke="url(#armGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M138,241 Q142,195 155,155" stroke="#A0A0C0" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- 関節（シェード手前）-->
+  <ellipse cx="157" cy="153" rx="16" ry="9" fill="#6060A0"/>
+  <ellipse cx="157" cy="149" rx="14" ry="8" fill="#8080B8"/>
+  <circle cx="157" cy="146" r="7" fill="#9090C8"/>
+  <circle cx="157" cy="146" r="3.5" fill="#A8A8D8"/>
+
+  <!-- ===== シェード ===== -->
+  <!-- 光の放射（シェードの外） -->
+  <ellipse cx="157" cy="146" rx="120" ry="80" fill="url(#lightCone)" filter="url(#softGlow)"/>
+
+  <!-- シェード本体（台形） -->
+  <path d="
+    M110,80
+    Q140,55 175,65
+    L205,145
+    Q180,162 135,158
+    Z
+  " fill="url(#shadeGrad)"/>
+
+  <!-- シェード内側（光） -->
+  <path d="
+    M113,83
+    Q140,60 172,69
+    L200,143
+    Q178,158 138,154
+    Z
+  " fill="url(#bulbGlow)" filter="url(#glow)"/>
+
+  <!-- シェードの縁（上）-->
+  <path d="M110,80 Q142,55 175,65" stroke="#E8C060" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M110,80 Q142,55 175,65" stroke="#FFF0A0" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- シェードの縁（下）-->
+  <path d="M135,158 Q168,162 205,145" stroke="#C08030" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M135,158 Q168,162 205,145" stroke="#E0A040" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- シェードの縁取り装飾 -->
+  <path d="M137,160 Q168,164 203,147" stroke="#A06020" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- シェードのハイライト（光沢） -->
+  <path d="M118,90 Q135,72 158,78 L170,120 Q155,128 135,125 Z" fill="#FFFFFF" opacity="0.15"/>
+
+  <!-- 電球（シェード内）-->
+  <ellipse cx="158" cy="125" rx="14" ry="18" fill="#FFF8C0" opacity="0.9" filter="url(#softGlow)"/>
+  <ellipse cx="158" cy="125" rx="10" ry="13" fill="#FFFCE0" opacity="0.95"/>
+  <ellipse cx="154" cy="118" rx="4" ry="5" fill="#FFFFFF" opacity="0.7"/>
+
+  </g>
+
+  <!-- 電源コード -->
+  <path d="M150,473 Q155,490 170,495 Q195,500 230,498" stroke="#404058" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M150,473 Q155,490 170,495 Q195,500 230,498" stroke="#6868A0" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 240" width="500" height="240">
+  <defs>
+    <linearGradient id="rugG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8C8A0"/>
+      <stop offset="100%" stop-color="#D8B888"/>
+    </linearGradient>
+  </defs>
+  <!-- Main shape (perspective oval) -->
+  <ellipse cx="250" cy="120" rx="230" ry="100" fill="url(#rugG)"/>
+  <!-- Border -->
+  <ellipse cx="250" cy="120" rx="230" ry="100" fill="none" stroke="#C8A870" stroke-width="3.5"/>
+  <ellipse cx="250" cy="120" rx="206" ry="88" fill="none" stroke="#C8A870" stroke-width="1.8" opacity="0.5"/>
+  <!-- Pattern -->
+  <circle cx="250" cy="120" r="50" fill="none" stroke="#D0B080" stroke-width="2.5" opacity="0.4"/>
+  <circle cx="250" cy="120" r="24" fill="#D8B888" opacity="0.3"/>
+  <!-- Corner motifs -->
+  <circle cx="155" cy="95" r="12" fill="#C8A060" opacity="0.25"/>
+  <circle cx="345" cy="95" r="12" fill="#C8A060" opacity="0.25"/>
+  <circle cx="155" cy="145" r="12" fill="#C8A060" opacity="0.25"/>
+  <circle cx="345" cy="145" r="12" fill="#C8A060" opacity="0.25"/>
+  <!-- Fringe left -->
+  <line x1="26" y1="108" x2="16" y2="112" stroke="#D8B888" stroke-width="1.8"/>
+  <line x1="24" y1="120" x2="14" y2="120" stroke="#D8B888" stroke-width="1.8"/>
+  <line x1="26" y1="132" x2="16" y2="128" stroke="#D8B888" stroke-width="1.8"/>
+  <!-- Fringe right -->
+  <line x1="474" y1="108" x2="484" y2="112" stroke="#D8B888" stroke-width="1.8"/>
+  <line x1="476" y1="120" x2="486" y2="120" stroke="#D8B888" stroke-width="1.8"/>
+  <line x1="474" y1="132" x2="484" y2="128" stroke="#D8B888" stroke-width="1.8"/>
+</svg>

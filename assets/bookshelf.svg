@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 800" width="500" height="800">
+  <defs>
+    <linearGradient id="shelfBodyGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9A6A30"/>
+      <stop offset="10%" stop-color="#C48848"/>
+      <stop offset="50%" stop-color="#B87838"/>
+      <stop offset="90%" stop-color="#C48848"/>
+      <stop offset="100%" stop-color="#8A5A28"/>
+    </linearGradient>
+    <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B07838"/>
+      <stop offset="100%" stop-color="#9A6830"/>
+    </linearGradient>
+    <linearGradient id="shelfPlankGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89050"/>
+      <stop offset="40%" stop-color="#B87840"/>
+      <stop offset="100%" stop-color="#A06830"/>
+    </linearGradient>
+    <linearGradient id="topGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A860"/>
+      <stop offset="100%" stop-color="#B88840"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="4" dy="8" stdDeviation="6" flood-color="#4A2808" flood-opacity="0.4"/>
+    </filter>
+    <!-- 木目パターン -->
+    <pattern id="woodPat" x="0" y="0" width="80" height="800" patternUnits="userSpaceOnUse">
+      <rect width="80" height="800" fill="none"/>
+      <path d="M0,100 Q20,95 40,102 Q60,108 80,100" stroke="#A06030" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <path d="M0,250 Q25,246 40,252 Q60,258 80,250" stroke="#A06030" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <path d="M0,420 Q15,416 40,422 Q65,428 80,420" stroke="#A06030" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <path d="M0,590 Q22,586 40,592 Q62,598 80,590" stroke="#A06030" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <path d="M0,720 Q18,716 40,722 Q62,728 80,720" stroke="#A06030" stroke-width="0.8" fill="none" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- 背板 -->
+  <rect x="40" y="15" width="420" height="768" rx="5" fill="url(#panelGrad)"/>
+  <rect x="40" y="15" width="420" height="768" rx="5" fill="url(#woodPat)"/>
+
+  <!-- 天板 -->
+  <rect x="25" y="10" width="450" height="22" rx="5" fill="url(#topGrad)"/>
+  <rect x="25" y="10" width="450" height="8" rx="5" fill="#E0C070" opacity="0.5"/>
+  <rect x="25" y="29" width="450" height="4" fill="#906030" opacity="0.5"/>
+
+  <!-- 左側板 -->
+  <rect x="25" y="10" width="28" height="772" rx="4" fill="url(#shelfBodyGrad)"/>
+  <rect x="26" y="10" width="8" height="772" fill="#D0A060" opacity="0.3"/>
+
+  <!-- 右側板 -->
+  <rect x="447" y="10" width="28" height="772" rx="4" fill="url(#shelfBodyGrad)"/>
+  <rect x="448" y="10" width="8" height="772" fill="#D0A060" opacity="0.25"/>
+
+  <!-- 底板 -->
+  <rect x="25" y="770" width="450" height="18" rx="4" fill="url(#topGrad)"/>
+  <rect x="25" y="780" width="450" height="6" rx="3" fill="#906030" opacity="0.4"/>
+
+  <!-- ===== 棚板 ===== -->
+  <!-- 棚1（上から）y=175 -->
+  <rect x="30" y="175" width="440" height="18" rx="2" fill="url(#shelfPlankGrad)"/>
+  <rect x="30" y="175" width="440" height="5" fill="#D8A860" opacity="0.5"/>
+  <rect x="30" y="188" width="440" height="5" fill="#905828" opacity="0.35"/>
+
+  <!-- 棚2 y=360 -->
+  <rect x="30" y="360" width="440" height="18" rx="2" fill="url(#shelfPlankGrad)"/>
+  <rect x="30" y="360" width="440" height="5" fill="#D8A860" opacity="0.5"/>
+  <rect x="30" y="373" width="440" height="5" fill="#905828" opacity="0.35"/>
+
+  <!-- 棚3 y=545 -->
+  <rect x="30" y="545" width="440" height="18" rx="2" fill="url(#shelfPlankGrad)"/>
+  <rect x="30" y="545" width="440" height="5" fill="#D8A860" opacity="0.5"/>
+  <rect x="30" y="558" width="440" height="5" fill="#905828" opacity="0.35"/>
+
+  <!-- ===== 各段の本 ===== -->
+
+  <!-- 【1段目 y=30〜175】 -->
+  <rect x="58" y="42" width="28" height="128" rx="2" fill="#E8B098"/>
+  <rect x="58" y="42" width="28" height="7" fill="#D09078"/>
+  <rect x="90" y="50" width="22" height="120" rx="2" fill="#90C0E0"/>
+  <rect x="90" y="50" width="22" height="6" fill="#70A0C0"/>
+  <rect x="116" y="38" width="32" height="132" rx="2" fill="#B8D898"/>
+  <rect x="116" y="38" width="32" height="7" fill="#98B878"/>
+  <rect x="152" y="44" width="24" height="126" rx="2" fill="#F0C890"/>
+  <rect x="152" y="44" width="24" height="7" fill="#D0A870"/>
+  <!-- 小さい本 -->
+  <rect x="180" y="68" width="18" height="102" rx="2" fill="#D0A8D8"/>
+  <rect x="180" y="68" width="18" height="6" fill="#B088B8"/>
+  <rect x="202" y="55" width="26" height="115" rx="2" fill="#F0E0A8"/>
+  <rect x="202" y="55" width="26" height="7" fill="#D0C088"/>
+  <rect x="232" y="42" width="30" height="128" rx="2" fill="#98D8C8"/>
+  <rect x="232" y="42" width="30" height="7" fill="#78B8A8"/>
+  <!-- 横置き本 -->
+  <rect x="270" y="130" width="90" height="20" rx="2" fill="#F0D0C0"/>
+  <rect x="270" y="113" width="90" height="20" rx="2" fill="#D0E8F0"/>
+  <rect x="270" y="96" width="90" height="20" rx="2" fill="#E8D0E8"/>
+  <rect x="270" y="79" width="90" height="20" rx="2" fill="#D8E8C0"/>
+  <!-- 小物（ぬいぐるみ的な置物）-->
+  <ellipse cx="400" cy="155" rx="25" ry="20" fill="#F8C8D0"/>
+  <ellipse cx="388" cy="138" rx="12" ry="11" fill="#F8C8D0"/><!-- 左耳 -->
+  <ellipse cx="412" cy="138" rx="12" ry="11" fill="#F8C8D0"/><!-- 右耳 -->
+  <ellipse cx="388" cy="138" rx="7" ry="7" fill="#F0A8B8"/>
+  <ellipse cx="412" cy="138" rx="7" ry="7" fill="#F0A8B8"/>
+  <circle cx="393" cy="152" r="3" fill="#B87888"/><!-- 目 -->
+  <circle cx="407" cy="152" r="3" fill="#B87888"/>
+  <ellipse cx="400" cy="160" rx="5" ry="3" fill="#E8A0B8"/><!-- 鼻 -->
+
+  <!-- 【2段目 y=193〜360】 -->
+  <rect x="58" y="200" width="24" height="155" rx="2" fill="#E09090"/>
+  <rect x="58" y="200" width="24" height="7" fill="#C07070"/>
+  <rect x="86" y="208" width="30" height="147" rx="2" fill="#A0C0F0"/>
+  <rect x="86" y="208" width="30" height="7" fill="#80A0D0"/>
+  <rect x="120" y="195" width="22" height="160" rx="2" fill="#D8E8A8"/>
+  <rect x="120" y="195" width="22" height="7" fill="#B8C888"/>
+  <rect x="146" y="202" width="28" height="153" rx="2" fill="#F0C8A0"/>
+  <rect x="146" y="202" width="28" height="7" fill="#D0A880"/>
+  <rect x="178" y="198" width="20" height="157" rx="2" fill="#C0A8E8"/>
+  <rect x="178" y="198" width="20" height="6" fill="#A088C8"/>
+  <rect x="202" y="205" width="26" height="150" rx="2" fill="#A8D8B8"/>
+  <rect x="202" y="205" width="26" height="7" fill="#88B898"/>
+  <rect x="232" y="195" width="32" height="160" rx="2" fill="#F0D8A0"/>
+  <rect x="232" y="195" width="32" height="7" fill="#D0B880"/>
+  <!-- ブックエンド -->
+  <rect x="268" y="200" width="10" height="155" rx="2" fill="#C0B090"/>
+  <rect x="268" y="348" width="50" height="10" rx="2" fill="#C0B090"/>
+  <rect x="282" y="230" width="24" height="125" rx="2" fill="#E8C090"/>
+  <rect x="282" y="230" width="24" height="7" fill="#C8A070"/>
+  <rect x="310" y="220" width="28" height="135" rx="2" fill="#98C8D8"/>
+  <rect x="310" y="220" width="28" height="7" fill="#78A8B8"/>
+  <!-- 文庫本風小さい本 -->
+  <rect x="342" y="245" width="18" height="110" rx="2" fill="#E8E8F0"/>
+  <rect x="342" y="245" width="18" height="6" fill="#C8C8E0"/>
+  <rect x="364" y="248" width="18" height="107" rx="2" fill="#F0E8E0"/>
+  <rect x="364" y="248" width="18" height="6" fill="#D8D0C8"/>
+  <rect x="386" y="242" width="18" height="113" rx="2" fill="#E8F0E0"/>
+  <rect x="386" y="242" width="18" height="6" fill="#C8D8C0"/>
+  <!-- 写真立て -->
+  <rect x="408" y="285" width="50" height="68" rx="3" fill="#F5F0E8"/>
+  <rect x="411" y="288" width="44" height="56" rx="2" fill="#C8E0E8"/>
+  <!-- 写真の内容（小さい風景） -->
+  <rect x="411" y="288" width="44" height="30" fill="#A8D0E8"/>
+  <ellipse cx="433" cy="295" rx="8" ry="6" fill="#FFE8A0" opacity="0.8"/>
+  <rect x="411" y="318" width="44" height="26" fill="#98C878" opacity="0.8"/>
+  <rect x="408" y="350" width="50" height="5" rx="2" fill="#E0D8C8"/>
+
+  <!-- 【3段目 y=378〜545】 -->
+  <rect x="58" y="385" width="26" height="155" rx="2" fill="#F0A890"/>
+  <rect x="58" y="385" width="26" height="7" fill="#D08870"/>
+  <rect x="88" y="392" width="22" height="148" rx="2" fill="#B8D0F0"/>
+  <rect x="88" y="392" width="22" height="7" fill="#98B0D0"/>
+  <rect x="114" y="380" width="30" height="160" rx="2" fill="#D8D0A0"/>
+  <rect x="114" y="380" width="30" height="7" fill="#B8B080"/>
+  <rect x="148" y="386" width="24" height="154" rx="2" fill="#F8C0D0"/>
+  <rect x="148" y="386" width="24" height="7" fill="#D8A0B0"/>
+  <rect x="176" y="378" width="28" height="162" rx="2" fill="#A0D8A0"/>
+  <rect x="176" y="378" width="28" height="7" fill="#80B880"/>
+  <rect x="208" y="388" width="20" height="152" rx="2" fill="#E8D0A8"/>
+  <rect x="208" y="388" width="20" height="6" fill="#C8B088"/>
+  <rect x="232" y="382" width="26" height="158" rx="2" fill="#C8B8E8"/>
+  <rect x="232" y="382" width="26" height="7" fill="#A898C8"/>
+  <!-- マンガ本（薄い、たくさん）-->
+  <rect x="262" y="395" width="14" height="145" rx="1" fill="#F0F0F8"/>
+  <rect x="262" y="395" width="14" height="5" fill="#C0C0D8"/>
+  <rect x="278" y="398" width="14" height="142" rx="1" fill="#F8F0F0"/>
+  <rect x="278" y="398" width="14" height="5" fill="#D8C0C0"/>
+  <rect x="294" y="392" width="14" height="148" rx="1" fill="#F0F8F0"/>
+  <rect x="294" y="392" width="14" height="5" fill="#C0D8C0"/>
+  <rect x="310" y="400" width="14" height="140" rx="1" fill="#F8F8F0"/>
+  <rect x="310" y="400" width="14" height="5" fill="#D8D8C0"/>
+  <rect x="326" y="394" width="14" height="146" rx="1" fill="#F0F0F8"/>
+  <rect x="326" y="394" width="14" height="5" fill="#C0C0D8"/>
+  <rect x="342" y="397" width="14" height="143" rx="1" fill="#F8F0F8"/>
+  <rect x="342" y="397" width="14" height="5" fill="#D8C0D8"/>
+  <rect x="358" y="390" width="14" height="150" rx="1" fill="#F0F8F8"/>
+  <rect x="358" y="390" width="14" height="5" fill="#C0D8D8"/>
+  <!-- 観葉植物（ミニ）-->
+  <ellipse cx="420" cy="516" rx="22" ry="12" fill="#A8C890"/>
+  <rect x="408" y="516" width="24" height="20" rx="3" fill="#8080A0"/>
+  <rect x="408" y="516" width="24" height="6" rx="2" fill="#A0A0C0"/>
+  <!-- 葉 -->
+  <path d="M420,516 Q400,495 395,480 Q410,490 420,508" fill="#88C870"/>
+  <path d="M420,516 Q440,493 445,478 Q430,490 420,508" fill="#78B860"/>
+  <path d="M420,516 Q405,500 398,492" stroke="#68A850" stroke-width="2" fill="none"/>
+  <path d="M420,516 Q435,498 442,490" stroke="#68A850" stroke-width="2" fill="none"/>
+
+  <!-- 【4段目 y=563〜770】 -->
+  <rect x="58" y="570" width="30" height="195" rx="2" fill="#C8A060"/>
+  <rect x="58" y="570" width="30" height="7" fill="#E8C080"/>
+  <rect x="92" y="578" width="24" height="187" rx="2" fill="#A8C8E8"/>
+  <rect x="92" y="578" width="24" height="7" fill="#88A8C8"/>
+  <rect x="120" y="565" width="28" height="200" rx="2" fill="#E8B898"/>
+  <rect x="120" y="565" width="28" height="7" fill="#C89878"/>
+  <rect x="152" y="572" width="26" height="193" rx="2" fill="#B8D8B0"/>
+  <rect x="152" y="572" width="26" height="7" fill="#98B890"/>
+  <rect x="182" y="568" width="22" height="197" rx="2" fill="#F0C8E8"/>
+  <rect x="182" y="568" width="22" height="7" fill="#D0A8C8"/>
+  <rect x="208" y="575" width="32" height="190" rx="2" fill="#D0E8A8"/>
+  <rect x="208" y="575" width="32" height="7" fill="#B0C888"/>
+  <rect x="244" y="562" width="26" height="203" rx="2" fill="#E8D898"/>
+  <rect x="244" y="562" width="26" height="7" fill="#C8B878"/>
+  <!-- 雑貨スペース -->
+  <!-- 小さい置物（星形） -->
+  <polygon points="320,700 325,715 340,715 328,724 333,739 320,730 307,739 312,724 300,715 315,715" fill="#F0D860" opacity="0.9"/>
+  <!-- マグカップ -->
+  <rect x="355" y="700" width="36" height="40" rx="5" fill="#F0F0F0"/>
+  <rect x="355" y="700" width="36" height="10" rx="3" fill="#E0E0E0"/>
+  <path d="M391,712 Q405,712 405,720 Q405,728 391,728" stroke="#D0D0D0" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- 小物箱 -->
+  <rect x="400" y="715" width="55" height="40" rx="4" fill="#E8C898"/>
+  <rect x="400" y="715" width="55" height="12" rx="4" fill="#D8B880"/>
+  <rect x="421" y="710" width="13" height="8" rx="2" fill="#C8A868"/>
+
+  </g>
+
+  <!-- 底の影 -->
+  <ellipse cx="250" cy="790" rx="200" ry="12" fill="#4A2808" opacity="0.2"/>
+</svg>

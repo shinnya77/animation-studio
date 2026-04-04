@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <defs>
+    <linearGradient id="potG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D49C6C"/>
+      <stop offset="100%" stop-color="#B07848"/>
+    </linearGradient>
+    <radialGradient id="soilG" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0%" stop-color="#6A5040"/>
+      <stop offset="100%" stop-color="#5A4030"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="200" cy="585" rx="120" ry="16" fill="rgba(80,60,30,0.12)"/>
+
+  <!-- Pot -->
+  <path d="M120 420 L110 560 Q110 580,130 580 L270 580 Q290 580,290 560 L280 420 Z" fill="url(#potG)"/>
+  <!-- Pot rim -->
+  <ellipse cx="200" cy="420" rx="84" ry="16" fill="#D8A474"/>
+  <ellipse cx="200" cy="418" rx="80" ry="14" fill="#C89060"/>
+  <!-- Soil -->
+  <ellipse cx="200" cy="420" rx="74" ry="11" fill="url(#soilG)"/>
+  <!-- Pot highlight -->
+  <path d="M130 440 Q128 500,134 560 L142 560 Q136 500,140 440 Z" fill="#E0B080" opacity="0.25"/>
+
+  <!-- Stems -->
+  <path d="M200 420 Q195 350,180 280" stroke="#5A8050" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M200 420 Q210 340,230 260" stroke="#5A8050" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M200 420 Q185 360,160 300" stroke="#4A7040" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M200 420 Q220 350,250 290" stroke="#4A7040" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M200 420 Q200 370,200 310" stroke="#5A8050" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Leaves -->
+  <!-- Large leaves -->
+  <ellipse cx="155" cy="240" rx="55" ry="28" fill="#7CB87C" transform="rotate(-30,155,240)"/>
+  <line x1="130" y1="255" x2="180" y2="225" stroke="#5A9060" stroke-width="1.5" opacity="0.4"/>
+  
+  <ellipse cx="255" cy="220" rx="50" ry="26" fill="#70B070" transform="rotate(25,255,220)"/>
+  <line x1="230" y1="235" x2="280" y2="205" stroke="#5A9060" stroke-width="1.5" opacity="0.4"/>
+
+  <ellipse cx="140" cy="280" rx="48" ry="24" fill="#80C080" transform="rotate(-15,140,280)"/>
+  <line x1="116" y1="290" x2="164" y2="270" stroke="#5A9060" stroke-width="1.5" opacity="0.4"/>
+
+  <ellipse cx="260" cy="270" rx="45" ry="22" fill="#74B474" transform="rotate(20,260,270)"/>
+  <line x1="238" y1="280" x2="282" y2="260" stroke="#5A9060" stroke-width="1.5" opacity="0.4"/>
+
+  <ellipse cx="190" cy="200" rx="52" ry="26" fill="#68A868" transform="rotate(-20,190,200)"/>
+  <line x1="164" y1="213" x2="216" y2="187" stroke="#508050" stroke-width="1.5" opacity="0.4"/>
+
+  <ellipse cx="220" cy="190" rx="48" ry="24" fill="#7CC07C" transform="rotate(10,220,190)"/>
+  <line x1="196" y1="198" x2="244" y2="182" stroke="#5A9060" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- Top leaves (smaller, lighter) -->
+  <ellipse cx="185" cy="160" rx="40" ry="20" fill="#88C888" transform="rotate(-35,185,160)"/>
+  <ellipse cx="215" cy="150" rx="38" ry="18" fill="#80C480" transform="rotate(15,215,150)"/>
+  <ellipse cx="200" cy="130" rx="35" ry="17" fill="#90D090" transform="rotate(-5,200,130)"/>
+  
+  <!-- Drooping leaves -->
+  <path d="M140 300 Q100 330,80 340" stroke="#6AA068" stroke-width="3" fill="none"/>
+  <ellipse cx="70" cy="340" rx="35" ry="18" fill="#74B474" transform="rotate(40,70,340)"/>
+
+  <path d="M260 290 Q300 310,320 330" stroke="#6AA068" stroke-width="3" fill="none"/>
+  <ellipse cx="330" cy="330" rx="34" ry="17" fill="#7CB87C" transform="rotate(-35,330,330)"/>
+
+  <!-- Light highlight on leaves -->
+  <ellipse cx="195" cy="170" rx="20" ry="10" fill="rgba(255,255,255,0.12)" transform="rotate(-20,195,170)"/>
+</svg>

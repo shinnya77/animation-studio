@@ -26,13 +26,25 @@
     </header>
 
     <div id="main-area">
-      <!-- Left Panel: Layers -->
+      <!-- Left Panel: Layers + Assets -->
       <aside id="layer-panel">
         <div class="panel-header">
           <h2>レイヤー</h2>
           <button id="btn-add-layer" title="画像レイヤー追加">+ 画像</button>
         </div>
         <ul id="layer-list"></ul>
+        <div id="asset-panel">
+          <div class="panel-header" id="asset-panel-toggle">
+            <h2>📦 アセット</h2>
+            <span class="toggle-arrow">▼</span>
+          </div>
+          <div id="asset-content">
+            <div id="asset-filter">
+              <input type="text" id="asset-search" placeholder="検索...">
+            </div>
+            <div id="asset-grid"></div>
+          </div>
+        </div>
       </aside>
 
       <!-- Center: Canvas -->

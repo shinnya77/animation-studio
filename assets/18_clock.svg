@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Body -->
+  <circle cx="100" cy="100" r="90" fill="#FFF8F0" stroke="#D8C8B4" stroke-width="3.5"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="#E8DCD0" stroke-width="1"/>
+  <!-- Hour marks -->
+  <line x1="100" y1="18" x2="100" y2="32" stroke="#A09080" stroke-width="3"/>
+  <line x1="100" y1="168" x2="100" y2="182" stroke="#A09080" stroke-width="3"/>
+  <line x1="18" y1="100" x2="32" y2="100" stroke="#A09080" stroke-width="3"/>
+  <line x1="168" y1="100" x2="182" y2="100" stroke="#A09080" stroke-width="3"/>
+  <!-- Small marks -->
+  <line x1="54" y1="30" x2="60" y2="38" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="146" y1="30" x2="140" y2="38" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="54" y1="170" x2="60" y2="162" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="146" y1="170" x2="140" y2="162" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="30" y1="54" x2="38" y2="60" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="170" y1="54" x2="162" y2="60" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="30" y1="146" x2="38" y2="140" stroke="#C0B0A0" stroke-width="2"/>
+  <line x1="170" y1="146" x2="162" y2="140" stroke="#C0B0A0" stroke-width="2"/>
+  <!-- Hour hand -->
+  <line x1="100" y1="100" x2="100" y2="44" stroke="#605040" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Minute hand -->
+  <line x1="100" y1="100" x2="142" y2="84" stroke="#605040" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Second hand -->
+  <line x1="100" y1="100" x2="84" y2="40" stroke="#D06050" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Center -->
+  <circle cx="100" cy="100" r="5" fill="#605040"/>
+</svg>

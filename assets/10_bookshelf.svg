@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 700" width="500" height="700">
+  <defs>
+    <linearGradient id="shelfW" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B08050"/>
+      <stop offset="100%" stop-color="#A07040"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="250" cy="690" rx="240" ry="14" fill="rgba(80,60,30,0.10)"/>
+
+  <!-- Back panel -->
+  <rect x="30" y="20" width="440" height="660" rx="3" fill="#C49868" opacity="0.15"/>
+
+  <!-- Side panels -->
+  <rect x="20" y="10" width="24" height="670" rx="3" fill="url(#shelfW)"/>
+  <rect x="456" y="10" width="24" height="670" rx="3" fill="url(#shelfW)"/>
+
+  <!-- Top -->
+  <rect x="16" y="6" width="468" height="18" rx="3" fill="#B88C5C"/>
+
+  <!-- Shelves -->
+  <rect x="40" y="170" width="420" height="14" rx="2" fill="#B08050"/>
+  <rect x="40" y="334" width="420" height="14" rx="2" fill="#B08050"/>
+  <rect x="40" y="498" width="420" height="14" rx="2" fill="#B08050"/>
+  <rect x="16" y="666" width="468" height="18" rx="3" fill="#B88C5C"/>
+
+  <!-- Books Row 1 (top shelf) -->
+  <rect x="56" y="30" width="28" height="138" rx="2" fill="#D46060"/>
+  <rect x="86" y="40" width="24" height="128" rx="2" fill="#6080B0"/>
+  <rect x="112" y="34" width="30" height="134" rx="2" fill="#60A070"/>
+  <rect x="144" y="44" width="22" height="124" rx="2" fill="#E0A050"/>
+  <rect x="168" y="30" width="26" height="138" rx="2" fill="#9070B0"/>
+  <rect x="196" y="38" width="32" height="130" rx="2" fill="#D08080"/>
+  <rect x="230" y="42" width="20" height="126" rx="2" fill="#5090A0"/>
+  <rect x="252" y="30" width="28" height="138" rx="2" fill="#C0A060"/>
+  <rect x="282" y="36" width="26" height="132" rx="2" fill="#7080C0"/>
+  <!-- Small gap with a leaning book -->
+  <rect x="320" y="50" width="24" height="118" rx="2" fill="#B06060" transform="rotate(-12,332,110)"/>
+  <rect x="350" y="32" width="30" height="136" rx="2" fill="#50A080"/>
+  <rect x="382" y="40" width="22" height="128" rx="2" fill="#D0B060"/>
+  <rect x="406" y="28" width="28" height="140" rx="2" fill="#6070A0"/>
+
+  <!-- Books Row 2 -->
+  <rect x="56" y="190" width="30" height="140" rx="2" fill="#A0C070"/>
+  <rect x="88" y="200" width="26" height="130" rx="2" fill="#C07070"/>
+  <rect x="116" y="194" width="24" height="136" rx="2" fill="#7090C0"/>
+  <rect x="142" y="204" width="28" height="126" rx="2" fill="#E0C060"/>
+  <rect x="172" y="190" width="22" height="140" rx="2" fill="#8060A0"/>
+  <!-- Photo frame -->
+  <rect x="210" y="210" width="60" height="80" rx="2" fill="#D8C8B0" stroke="#B8A890" stroke-width="2"/>
+  <rect x="218" y="218" width="44" height="52" rx="1" fill="#C8D8E0"/>
+  <circle cx="240" cy="238" r="12" fill="#E8D0B0" opacity="0.5"/>
+  <!-- More books -->
+  <rect x="286" y="196" width="28" height="134" rx="2" fill="#60A0A0"/>
+  <rect x="316" y="202" width="24" height="128" rx="2" fill="#D09070"/>
+  <rect x="342" y="190" width="32" height="140" rx="2" fill="#5080B0"/>
+  <rect x="376" y="198" width="26" height="132" rx="2" fill="#B0A060"/>
+  <rect x="404" y="192" width="28" height="138" rx="2" fill="#C06080"/>
+
+  <!-- Books Row 3 -->
+  <rect x="56" y="354" width="26" height="140" rx="2" fill="#D0A050"/>
+  <rect x="84" y="360" width="30" height="134" rx="2" fill="#6090B0"/>
+  <rect x="116" y="352" width="22" height="142" rx="2" fill="#A06080"/>
+  <rect x="140" y="366" width="28" height="128" rx="2" fill="#70B070"/>
+  <!-- Small plant pot -->
+  <rect x="180" y="450" width="50" height="44" rx="4" fill="#C48C5C"/>
+  <ellipse cx="205" cy="448" rx="28" ry="6" fill="#D49C6C"/>
+  <ellipse cx="198" cy="420" rx="18" ry="22" fill="#7CB87C"/>
+  <ellipse cx="214" cy="428" rx="14" ry="18" fill="#6CA868"/>
+  <line x1="205" y1="448" x2="205" y2="430" stroke="#5A8050" stroke-width="2"/>
+  <!-- More books -->
+  <rect x="248" y="358" width="28" height="136" rx="2" fill="#B07050"/>
+  <rect x="278" y="350" width="24" height="144" rx="2" fill="#5080A0"/>
+  <rect x="304" y="362" width="30" height="132" rx="2" fill="#D0C060"/>
+  <rect x="336" y="354" width="22" height="140" rx="2" fill="#7070C0"/>
+  <rect x="360" y="368" width="26" height="126" rx="2" fill="#C08070"/>
+  <rect x="388" y="352" width="28" height="142" rx="2" fill="#60A060"/>
+  <rect x="418" y="360" width="24" height="134" rx="2" fill="#A0A0D0"/>
+
+  <!-- Books Row 4 (bottom) -->
+  <rect x="56" y="518" width="32" height="144" rx="2" fill="#8090C0"/>
+  <rect x="90" y="524" width="26" height="138" rx="2" fill="#D08060"/>
+  <rect x="118" y="516" width="28" height="146" rx="2" fill="#60B090"/>
+  <rect x="148" y="528" width="24" height="134" rx="2" fill="#C0A070"/>
+  <rect x="174" y="520" width="30" height="142" rx="2" fill="#A060A0"/>
+  <rect x="206" y="530" width="22" height="132" rx="2" fill="#70A0C0"/>
+  <rect x="230" y="516" width="28" height="146" rx="2" fill="#D06070"/>
+  <rect x="260" y="526" width="26" height="136" rx="2" fill="#80B060"/>
+  <rect x="288" y="518" width="24" height="144" rx="2" fill="#C0C0D0"/>
+  <rect x="314" y="530" width="30" height="132" rx="2" fill="#D0A080"/>
+  <rect x="346" y="520" width="22" height="142" rx="2" fill="#6080B0"/>
+  <rect x="370" y="516" width="28" height="146" rx="2" fill="#A0D070"/>
+  <rect x="400" y="524" width="26" height="138" rx="2" fill="#C07090"/>
+  <rect x="428" y="518" width="24" height="144" rx="2" fill="#7090A0"/>
+</svg>

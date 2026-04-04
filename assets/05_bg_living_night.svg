@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="nwG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D8C8B4"/>
+      <stop offset="100%" stop-color="#C8B8A0"/>
+    </linearGradient>
+    <linearGradient id="nfG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A88058"/>
+      <stop offset="100%" stop-color="#907040"/>
+    </linearGradient>
+    <linearGradient id="nSkyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2040"/>
+      <stop offset="100%" stop-color="#2A3458"/>
+    </linearGradient>
+    <radialGradient id="ceilingLight" cx="0.5" cy="0" r="0.8">
+      <stop offset="0%" stop-color="rgba(255,240,200,0.25)"/>
+      <stop offset="60%" stop-color="rgba(255,240,200,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,240,200,0)"/>
+    </radialGradient>
+    <radialGradient id="lightPool" cx="0.5" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="rgba(255,235,190,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,235,190,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Wall (darker) -->
+  <rect width="1920" height="680" fill="url(#nwG)"/>
+  <!-- Ceiling light effect -->
+  <rect width="1920" height="680" fill="url(#ceilingLight)"/>
+
+  <!-- Baseboard -->
+  <rect y="660" width="1920" height="20" fill="#B8A890"/>
+
+  <!-- Floor (darker) -->
+  <rect y="680" width="1920" height="400" fill="url(#nfG)"/>
+  <!-- Floor boards -->
+  <line x1="240" y1="680" x2="240" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="480" y1="680" x2="480" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="720" y1="680" x2="720" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="960" y1="680" x2="960" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="1200" y1="680" x2="1200" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="1440" y1="680" x2="1440" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <line x1="1680" y1="680" x2="1680" y2="1080" stroke="#806840" stroke-width="1" opacity="0.2"/>
+  <!-- Floor light pool -->
+  <ellipse cx="960" cy="830" rx="400" ry="200" fill="url(#lightPool)"/>
+
+  <!-- Window (night) -->
+  <rect x="696" y="76" width="528" height="490" rx="4" fill="#B0A088" stroke="#A09078" stroke-width="2"/>
+  <rect x="710" y="90" width="245" height="228" fill="url(#nSkyG)"/>
+  <rect x="965" y="90" width="245" height="228" fill="url(#nSkyG)"/>
+  <rect x="710" y="328" width="245" height="228" fill="url(#nSkyG)"/>
+  <rect x="965" y="328" width="245" height="228" fill="url(#nSkyG)"/>
+  <!-- Stars -->
+  <circle cx="760" cy="130" r="1.5" fill="#FFE8C0" opacity="0.7"/>
+  <circle cx="820" cy="170" r="1" fill="#FFE8C0" opacity="0.5"/>
+  <circle cx="900" cy="110" r="1.5" fill="#FFE8C0" opacity="0.6"/>
+  <circle cx="1000" cy="150" r="1" fill="#FFE8C0" opacity="0.6"/>
+  <circle cx="1060" cy="120" r="2" fill="#FFE8C0" opacity="0.7"/>
+  <circle cx="1140" cy="180" r="1" fill="#FFE8C0" opacity="0.5"/>
+  <circle cx="780" cy="380" r="1.5" fill="#FFE8C0" opacity="0.6"/>
+  <circle cx="860" cy="400" r="1" fill="#FFE8C0" opacity="0.5"/>
+  <circle cx="1020" cy="360" r="1.5" fill="#FFE8C0" opacity="0.7"/>
+  <circle cx="1100" cy="420" r="1" fill="#FFE8C0" opacity="0.5"/>
+  <circle cx="1160" cy="370" r="1.5" fill="#FFE8C0" opacity="0.6"/>
+  <!-- Moon -->
+  <circle cx="1120" cy="150" r="22" fill="#F0E8D0" opacity="0.8"/>
+  <circle cx="1128" cy="145" r="20" fill="url(#nSkyG)" opacity="0.5"/>
+  <!-- Window cross -->
+  <rect x="696" y="314" width="528" height="8" fill="#B0A088"/>
+  <rect x="955" y="76" width="8" height="490" fill="#B0A088"/>
+  <!-- Window reflection from room light -->
+  <rect x="714" y="94" width="80" height="150" fill="rgba(255,240,200,0.04)"/>
+
+  <!-- Curtains (darker tone) -->
+  <path d="M650 70 C660 200,640 400,630 580 L700 580 C710 400,700 200,700 70 Z" fill="#E0D0BC" opacity="0.9"/>
+  <path d="M1220 70 C1210 200,1230 400,1240 580 L1270 580 C1260 400,1270 200,1270 70 Z" fill="#E0D0BC" opacity="0.9"/>
+  <rect x="640" y="58" width="640" height="12" rx="6" fill="#B0A08C"/>
+
+  <!-- Ceiling light fixture -->
+  <rect x="930" y="0" width="60" height="30" rx="4" fill="#D8D0C4"/>
+  <line x1="960" y1="30" x2="960" y2="50" stroke="#C8C0B0" stroke-width="2"/>
+  <circle cx="960" cy="60" r="14" fill="#FFE8B0" opacity="0.9"/>
+  <circle cx="960" cy="60" r="30" fill="#FFE0A0" opacity="0.15"/>
+
+  <!-- Overall dim overlay -->
+  <rect width="1920" height="1080" fill="rgba(40,30,20,0.12)"/>
+</svg>

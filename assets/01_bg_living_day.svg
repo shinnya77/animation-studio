@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="wallG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8ED"/>
+      <stop offset="100%" stop-color="#FDF0DC"/>
+    </linearGradient>
+    <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="100%" stop-color="#C08860"/>
+    </linearGradient>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#88C0F0"/>
+      <stop offset="60%" stop-color="#B0D8FF"/>
+      <stop offset="100%" stop-color="#D0ECFF"/>
+    </linearGradient>
+    <linearGradient id="sunBeam" x1="0.4" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="rgba(255,248,200,0.30)"/>
+      <stop offset="100%" stop-color="rgba(255,248,200,0)"/>
+    </linearGradient>
+    <linearGradient id="curtainG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFF6F0"/>
+      <stop offset="100%" stop-color="#F0E4D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wall -->
+  <rect width="1920" height="680" fill="url(#wallG)"/>
+  <!-- Wall subtle texture lines -->
+  <line x1="0" y1="200" x2="690" y2="200" stroke="#EDE0D0" stroke-width="1" opacity="0.4"/>
+  <line x1="1230" y1="200" x2="1920" y2="200" stroke="#EDE0D0" stroke-width="1" opacity="0.4"/>
+
+  <!-- Baseboard -->
+  <rect y="660" width="1920" height="20" fill="#E0D0BC" rx="1"/>
+  <line x1="0" y1="660" x2="1920" y2="660" stroke="#D4C4AC" stroke-width="1"/>
+
+  <!-- Floor -->
+  <rect y="680" width="1920" height="400" fill="url(#floorG)"/>
+  <!-- Floor board lines (vertical) -->
+  <line x1="0" y1="680" x2="0" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="240" y1="680" x2="240" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="480" y1="680" x2="480" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="720" y1="680" x2="720" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="960" y1="680" x2="960" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="1200" y1="680" x2="1200" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="1440" y1="680" x2="1440" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <line x1="1680" y1="680" x2="1680" y2="1080" stroke="#B89060" stroke-width="1" opacity="0.25"/>
+  <!-- Floor highlight lines -->
+  <line x1="120" y1="680" x2="120" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="360" y1="680" x2="360" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="600" y1="680" x2="600" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="840" y1="680" x2="840" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="1080" y1="680" x2="1080" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="1320" y1="680" x2="1320" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="1560" y1="680" x2="1560" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <line x1="1800" y1="680" x2="1800" y2="1080" stroke="#E0BB8A" stroke-width="0.5" opacity="0.2"/>
+  <!-- Floor horizontal grain -->
+  <line x1="0" y1="760" x2="1920" y2="760" stroke="#B89060" stroke-width="0.5" opacity="0.12"/>
+  <line x1="0" y1="850" x2="1920" y2="850" stroke="#B89060" stroke-width="0.5" opacity="0.12"/>
+  <line x1="0" y1="940" x2="1920" y2="940" stroke="#B89060" stroke-width="0.5" opacity="0.12"/>
+  <line x1="0" y1="1020" x2="1920" y2="1020" stroke="#B89060" stroke-width="0.5" opacity="0.12"/>
+
+  <!-- Window outer frame -->
+  <rect x="696" y="76" width="528" height="490" rx="4" fill="#D8C8B0" stroke="#C8B8A0" stroke-width="2"/>
+  <!-- Window sky -->
+  <rect x="710" y="90" width="245" height="228" fill="url(#skyG)"/>
+  <rect x="965" y="90" width="245" height="228" fill="url(#skyG)"/>
+  <rect x="710" y="328" width="245" height="228" fill="url(#skyG)"/>
+  <rect x="965" y="328" width="245" height="228" fill="url(#skyG)"/>
+  <!-- Clouds -->
+  <ellipse cx="800" cy="140" rx="60" ry="22" fill="white" opacity="0.7"/>
+  <ellipse cx="830" cy="135" rx="40" ry="18" fill="white" opacity="0.6"/>
+  <ellipse cx="1100" cy="180" rx="50" ry="16" fill="white" opacity="0.5"/>
+  <!-- Window cross frame -->
+  <rect x="696" y="314" width="528" height="10" fill="#D8C8B0"/>
+  <rect x="955" y="76" width="10" height="490" fill="#D8C8B0"/>
+  <!-- Window inner frame lines -->
+  <rect x="706" y="86" width="504" height="4" fill="#E8D8C4" opacity="0.5"/>
+
+  <!-- Curtain rod -->
+  <rect x="640" y="58" width="640" height="12" rx="6" fill="#D0C0A8"/>
+  <circle cx="648" cy="64" r="8" fill="#C4B498"/>
+  <circle cx="1272" cy="64" r="8" fill="#C4B498"/>
+  <!-- Left curtain -->
+  <path d="M650 70 C660 200,640 400,630 580 L700 580 C710 400,700 200,700 70 Z" fill="url(#curtainG)" opacity="0.92"/>
+  <path d="M660 70 C665 250,650 420,646 580 L668 580 C672 420,675 250,672 70 Z" fill="#F0E0D0" opacity="0.25"/>
+  <path d="M680 70 C682 250,674 420,670 580 L688 580 C690 420,694 250,690 70 Z" fill="#F0E0D0" opacity="0.18"/>
+  <!-- Right curtain -->
+  <path d="M1220 70 C1210 200,1230 400,1240 580 L1270 580 C1260 400,1270 200,1270 70 Z" fill="url(#curtainG)" opacity="0.92"/>
+  <path d="M1240 70 C1235 250,1248 420,1252 580 L1258 580 C1254 420,1245 250,1248 70 Z" fill="#F0E0D0" opacity="0.25"/>
+
+  <!-- Sun beam on floor -->
+  <polygon points="720,570 1200,570 1380,1080 540,1080" fill="url(#sunBeam)"/>
+  <!-- Warm light patch on floor -->
+  <ellipse cx="960" cy="850" rx="350" ry="180" fill="rgba(255,245,210,0.12)"/>
+</svg>

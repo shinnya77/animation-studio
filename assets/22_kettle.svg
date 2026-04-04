@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140">
+  <!-- Shadow -->
+  <ellipse cx="66" cy="128" rx="50" ry="8" fill="rgba(80,60,30,0.06)"/>
+  <!-- Body -->
+  <ellipse cx="66" cy="82" rx="52" ry="46" fill="#E8E4E0" stroke="#D0CCC4" stroke-width="1.8"/>
+  <!-- Lid -->
+  <ellipse cx="66" cy="40" rx="30" ry="8" fill="#E0DCD4" stroke="#D0C8C0" stroke-width="1.2"/>
+  <circle cx="66" cy="34" r="6" fill="#D0C8C0"/>
+  <!-- Handle -->
+  <path d="M30 40 Q-4 6,66 0 Q136 6,102 40" stroke="#C0B8AC" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Spout -->
+  <path d="M116 60 Q140 48,150 32" stroke="#D8D4CC" stroke-width="7" fill="none" stroke-linecap="round"/>
+</svg>

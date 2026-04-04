@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" width="900" height="550">
+  <defs>
+    <!-- フレームグラデーション -->
+    <linearGradient id="frameGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89050"/>
+      <stop offset="40%" stop-color="#B07838"/>
+      <stop offset="100%" stop-color="#906030"/>
+    </linearGradient>
+    <!-- フレーム横 -->
+    <linearGradient id="frameSide" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8A5828"/>
+      <stop offset="30%" stop-color="#B07838"/>
+      <stop offset="100%" stop-color="#7A4818"/>
+    </linearGradient>
+    <!-- マットレス上面 -->
+    <linearGradient id="mattressTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0EBE0"/>
+      <stop offset="100%" stop-color="#E0D8CC"/>
+    </linearGradient>
+    <!-- シーツ -->
+    <linearGradient id="sheetGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFBFF"/>
+      <stop offset="40%" stop-color="#F0F2FA"/>
+      <stop offset="100%" stop-color="#E0E4F0"/>
+    </linearGradient>
+    <!-- 掛け布団 -->
+    <linearGradient id="duvetGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B8D4F0"/>
+      <stop offset="40%" stop-color="#A8C4E0"/>
+      <stop offset="100%" stop-color="#90AECE"/>
+    </linearGradient>
+    <!-- 枕 -->
+    <radialGradient id="pillowGrad" cx="0.4" cy="0.35" r="0.65">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#F5F5F8"/>
+      <stop offset="100%" stop-color="#E0E0EC"/>
+    </radialGradient>
+    <!-- 枕のハイライト -->
+    <radialGradient id="pillowShine" cx="0.3" cy="0.3" r="0.4">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <!-- ヘッドボードのパネル -->
+    <linearGradient id="headPanelGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D8A860"/>
+      <stop offset="100%" stop-color="#B88840"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="4" dy="8" stdDeviation="8" flood-color="#4A2808" flood-opacity="0.3"/>
+    </filter>
+    <!-- 布団のキルトパターン -->
+    <pattern id="quiltPat" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <rect width="60" height="60" fill="none"/>
+      <line x1="0" y1="0" x2="60" y2="60" stroke="#8AAAC8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="60" y1="0" x2="0" y2="60" stroke="#8AAAC8" stroke-width="0.8" opacity="0.4"/>
+    </pattern>
+    <!-- シーツのストライプ -->
+    <pattern id="stripePat" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#D8DCF0" stroke-width="1.5" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <g filter="url(#shadow)">
+
+  <!-- ===== フレーム（脚）===== -->
+  <!-- 左前脚 -->
+  <rect x="60" y="380" width="28" height="140" rx="5" fill="url(#frameSide)"/>
+  <rect x="61" y="380" width="8" height="140" fill="#C8A060" opacity="0.3"/>
+  <!-- 右前脚 -->
+  <rect x="812" y="380" width="28" height="140" rx="5" fill="url(#frameSide)"/>
+  <rect x="813" y="380" width="8" height="140" fill="#C8A060" opacity="0.3"/>
+  <!-- 左後脚 -->
+  <rect x="60" y="155" width="24" height="60" rx="4" fill="url(#frameSide)"/>
+  <!-- 右後脚 -->
+  <rect x="816" y="155" width="24" height="60" rx="4" fill="url(#frameSide)"/>
+
+  <!-- 脚の底キャップ -->
+  <rect x="57" y="512" width="34" height="10" rx="5" fill="#6A3810"/>
+  <rect x="809" y="512" width="34" height="10" rx="5" fill="#6A3810"/>
+
+  <!-- ===== サイドフレーム ===== -->
+  <!-- 左サイドレール -->
+  <rect x="55" y="210" width="30" height="200" rx="3" fill="url(#frameGrad)"/>
+  <rect x="56" y="210" width="8" height="200" fill="#D0A860" opacity="0.3"/>
+  <!-- 右サイドレール -->
+  <rect x="815" y="210" width="30" height="200" rx="3" fill="url(#frameGrad)"/>
+
+  <!-- ===== ヘッドボード ===== -->
+  <!-- ヘッドボード本体 -->
+  <rect x="55" y="60" width="790" height="195" rx="8" fill="url(#frameGrad)"/>
+  <rect x="55" y="60" width="790" height="16" rx="8" fill="#D8B070" opacity="0.6"/>
+
+  <!-- ヘッドボードのパネル装飾（3つ）-->
+  <!-- パネル1 -->
+  <rect x="80" y="90" width="220" height="140" rx="6" fill="url(#headPanelGrad)"/>
+  <rect x="80" y="90" width="220" height="140" rx="6" fill="none" stroke="#C8A050" stroke-width="2" opacity="0.6"/>
+  <rect x="88" y="98" width="204" height="124" rx="4" fill="#C8A050" opacity="0.2"/>
+  <!-- パネル内装飾 -->
+  <rect x="93" y="103" width="194" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+  <rect x="93" y="207" width="194" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+
+  <!-- パネル2（中央・広め）-->
+  <rect x="320" y="82" width="260" height="155" rx="6" fill="url(#headPanelGrad)"/>
+  <rect x="320" y="82" width="260" height="155" rx="6" fill="none" stroke="#C8A050" stroke-width="2" opacity="0.6"/>
+  <rect x="329" y="91" width="242" height="137" rx="4" fill="#C8A050" opacity="0.2"/>
+  <rect x="334" y="97" width="232" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+  <rect x="334" y="218" width="232" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+
+  <!-- パネル3 -->
+  <rect x="600" y="90" width="220" height="140" rx="6" fill="url(#headPanelGrad)"/>
+  <rect x="600" y="90" width="220" height="140" rx="6" fill="none" stroke="#C8A050" stroke-width="2" opacity="0.6"/>
+  <rect x="608" y="98" width="204" height="124" rx="4" fill="#C8A050" opacity="0.2"/>
+  <rect x="613" y="103" width="194" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+  <rect x="613" y="207" width="194" height="4" rx="2" fill="#D8B060" opacity="0.5"/>
+
+  <!-- ヘッドボードのハイライト（上縁）-->
+  <path d="M63,68 Q450,58 837,68" stroke="#E0C070" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- ===== マットレス ===== -->
+  <rect x="68" y="210" width="764" height="195" rx="4" fill="url(#mattressTop)"/>
+  <!-- マットレスの縁取り -->
+  <rect x="68" y="210" width="764" height="195" rx="4" fill="none" stroke="#D0C8B8" stroke-width="3"/>
+  <!-- マットレスのキルトライン -->
+  <rect x="68" y="280" width="764" height="4" fill="#D8D0C0" opacity="0.6"/>
+  <rect x="68" y="320" width="764" height="3" fill="#D8D0C0" opacity="0.5"/>
+
+  <!-- ===== シーツ（敷き布）===== -->
+  <rect x="70" y="212" width="760" height="190" rx="3" fill="url(#sheetGrad)"/>
+  <rect x="70" y="212" width="760" height="190" rx="3" fill="url(#stripePat)"/>
+  <!-- シーツの折り目 -->
+  <path d="M70,320 Q250,315 450,320 Q650,325 830,318" stroke="#D0D4E8" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- ===== 掛け布団 ===== -->
+  <!-- 布団本体 -->
+  <rect x="70" y="270" width="760" height="120" rx="6" fill="url(#duvetGrad)"/>
+  <!-- キルトパターン -->
+  <rect x="70" y="270" width="760" height="120" rx="6" fill="url(#quiltPat)"/>
+  <!-- 布団の縁 -->
+  <rect x="70" y="270" width="760" height="120" rx="6" fill="none" stroke="#90AECE" stroke-width="2"/>
+  <!-- 布団の上縁（折り返し）-->
+  <rect x="70" y="270" width="760" height="22" rx="6" fill="#C8E0F8"/>
+  <rect x="70" y="270" width="760" height="22" rx="6" fill="none" stroke="#A8C8E8" stroke-width="1.5"/>
+  <!-- 折り返しのストライプ模様 -->
+  <rect x="75" y="278" width="750" height="6" rx="3" fill="#A8C8E8" opacity="0.4"/>
+
+  <!-- 布団のキルトボタン（装飾）-->
+  <circle cx="200" cy="326" r="5" fill="#88A8C8"/>
+  <circle cx="200" cy="326" r="3" fill="#A8C8E8"/>
+  <circle cx="380" cy="326" r="5" fill="#88A8C8"/>
+  <circle cx="380" cy="326" r="3" fill="#A8C8E8"/>
+  <circle cx="560" cy="326" r="5" fill="#88A8C8"/>
+  <circle cx="560" cy="326" r="3" fill="#A8C8E8"/>
+  <circle cx="740" cy="326" r="5" fill="#88A8C8"/>
+  <circle cx="740" cy="326" r="3" fill="#A8C8E8"/>
+
+  <!-- 布団の下のシーツ見え -->
+  <rect x="70" y="388" width="760" height="14" rx="3" fill="#F0F2FA"/>
+  <path d="M70,395 Q430,390 830,395" stroke="#D0D4E8" stroke-width="1" fill="none" opacity="0.7"/>
+
+  <!-- ===== 枕（左）===== -->
+  <rect x="100" y="222" width="240" height="90" rx="18" fill="url(#pillowGrad)"/>
+  <rect x="100" y="222" width="240" height="90" rx="18" fill="url(#pillowShine)"/>
+  <rect x="100" y="222" width="240" height="90" rx="18" fill="none" stroke="#D8D8E8" stroke-width="2"/>
+  <!-- 枕のひだ -->
+  <path d="M115,235 Q220,228 325,235" stroke="#E0E0EE" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M115,302" stroke="#E0E0EE" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <!-- 枕ステッチ -->
+  <rect x="108" y="228" width="224" height="78" rx="14" fill="none" stroke="#D0D0E0" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+
+  <!-- ===== 枕（右）===== -->
+  <rect x="560" y="222" width="240" height="90" rx="18" fill="url(#pillowGrad)"/>
+  <rect x="560" y="222" width="240" height="90" rx="18" fill="url(#pillowShine)"/>
+  <rect x="560" y="222" width="240" height="90" rx="18" fill="none" stroke="#D8D8E8" stroke-width="2"/>
+  <rect x="568" y="228" width="224" height="78" rx="14" fill="none" stroke="#D0D0E0" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+
+  <!-- ===== フットボード ===== -->
+  <rect x="55" y="395" width="790" height="50" rx="5" fill="url(#frameGrad)"/>
+  <rect x="55" y="395" width="790" height="10" rx="5" fill="#D0A860" opacity="0.5"/>
+  <rect x="55" y="438" width="790" height="8" rx="4" fill="#7A5020" opacity="0.4"/>
+
+  <!-- フットボードのパネル -->
+  <rect x="80" y="405" width="330" height="28" rx="4" fill="#C8A050" opacity="0.3"/>
+  <rect x="490" y="405" width="330" height="28" rx="4" fill="#C8A050" opacity="0.3"/>
+
+  </g>
+
+  <!-- 床の影 -->
+  <ellipse cx="450" cy="528" rx="400" ry="14" fill="#4A2808" opacity="0.18"/>
+</svg>

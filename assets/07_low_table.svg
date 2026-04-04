@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="700" height="300">
+  <defs>
+    <linearGradient id="tableTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89868"/>
+      <stop offset="100%" stop-color="#B08050"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="350" cy="280" rx="320" ry="20" fill="rgba(100,70,40,0.10)"/>
+
+  <!-- Legs -->
+  <rect x="80" y="140" width="16" height="130" rx="3" fill="#987048"/>
+  <rect x="604" y="140" width="16" height="130" rx="3" fill="#987048"/>
+  <rect x="240" y="140" width="12" height="125" rx="3" fill="#987048"/>
+  <rect x="448" y="140" width="12" height="125" rx="3" fill="#987048"/>
+
+  <!-- Shelf beam -->
+  <rect x="88" y="200" width="524" height="10" rx="2" fill="#A07848"/>
+
+  <!-- Table top -->
+  <rect x="50" y="100" width="600" height="50" rx="6" fill="url(#tableTop)"/>
+  <!-- Wood grain -->
+  <line x1="100" y1="110" x2="600" y2="110" stroke="#B88858" stroke-width="0.8" opacity="0.3"/>
+  <line x1="80" y1="125" x2="620" y2="125" stroke="#B88858" stroke-width="0.6" opacity="0.2"/>
+  <line x1="120" y1="138" x2="580" y2="138" stroke="#B88858" stroke-width="0.8" opacity="0.25"/>
+  <!-- Top edge highlight -->
+  <rect x="54" y="100" width="592" height="8" rx="4" fill="#D8AC78" opacity="0.35"/>
+  <!-- Front edge shadow -->
+  <rect x="50" y="144" width="600" height="6" rx="2" fill="#987048" opacity="0.25"/>
+</svg>

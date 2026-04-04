@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 290" width="220" height="290">
+  <!-- Frame -->
+  <rect x="10" y="10" width="200" height="270" rx="3" fill="#D0C0A8" stroke="#B8A890" stroke-width="3.5"/>
+  <!-- Inner mat -->
+  <rect x="26" y="26" width="168" height="238" rx="1" fill="#F8F4EC"/>
+  <!-- Picture area -->
+  <rect x="38" y="38" width="144" height="210" fill="#D4E4F0"/>
+  <!-- Sky -->
+  <rect x="38" y="38" width="144" height="104" fill="#B8D8F0"/>
+  <!-- Hills -->
+  <path d="M38 142 Q80 94,116 128 Q148 100,182 138 L182 248 L38 248 Z" fill="#90C090"/>
+  <path d="M38 160 Q90 126,134 160 Q165 132,182 154 L182 248 L38 248 Z" fill="#78A878"/>
+  <!-- Sun -->
+  <circle cx="154" cy="70" r="16" fill="#FFE8A0" opacity="0.8"/>
+  <!-- Clouds -->
+  <ellipse cx="78" cy="66" rx="24" ry="9" fill="white" opacity="0.5"/>
+</svg>

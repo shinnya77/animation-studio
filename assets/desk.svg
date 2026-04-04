@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <!-- 天板グラデーション -->
+    <linearGradient id="topGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A96A"/>
+      <stop offset="30%" stop-color="#C89858"/>
+      <stop offset="100%" stop-color="#B88848"/>
+    </linearGradient>
+    <!-- 天板の木目 -->
+    <linearGradient id="topWood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#D0A060" stop-opacity="0"/>
+      <stop offset="15%" stop-color="#C49050" stop-opacity="0.3"/>
+      <stop offset="30%" stop-color="#D0A060" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#C49050" stop-opacity="0.25"/>
+      <stop offset="70%" stop-color="#D0A060" stop-opacity="0"/>
+      <stop offset="85%" stop-color="#BC8848" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#D0A060" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 側面グラデーション -->
+    <linearGradient id="sideGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A87840"/>
+      <stop offset="100%" stop-color="#8A6030"/>
+    </linearGradient>
+    <!-- 引き出しグラデーション -->
+    <linearGradient id="drawerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89050"/>
+      <stop offset="100%" stop-color="#B07840"/>
+    </linearGradient>
+    <!-- 脚グラデーション -->
+    <linearGradient id="legGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8A6030"/>
+      <stop offset="40%" stop-color="#A87840"/>
+      <stop offset="100%" stop-color="#7A5020"/>
+    </linearGradient>
+    <!-- 天板ハイライト -->
+    <linearGradient id="topShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 棚板グラデーション -->
+    <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C89050"/>
+      <stop offset="100%" stop-color="#A87040"/>
+    </linearGradient>
+    <!-- ドロップシャドウ -->
+    <filter id="shadow" x="-5%" y="-5%" width="120%" height="130%">
+      <feDropShadow dx="4" dy="8" stdDeviation="6" flood-color="#6A4020" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- 机全体にシャドウ -->
+  <g filter="url(#shadow)">
+
+  <!-- ===== 本棚ユニット（上部）===== -->
+  <!-- 棚の背板 -->
+  <rect x="560" y="30" width="290" height="200" rx="4" fill="#C08848"/>
+  <rect x="563" y="33" width="284" height="194" rx="2" fill="#B87838"/>
+
+  <!-- 棚板上段 -->
+  <rect x="555" y="125" width="300" height="14" rx="2" fill="url(#shelfGrad)"/>
+  <rect x="555" y="125" width="300" height="4" rx="2" fill="#D8A860" opacity="0.6"/>
+
+  <!-- 棚板下段 -->
+  <rect x="555" y="215" width="300" height="14" rx="2" fill="url(#shelfGrad)"/>
+
+  <!-- 棚の支柱（左） -->
+  <rect x="555" y="30" width="16" height="200" rx="3" fill="url(#legGrad)"/>
+  <rect x="556" y="30" width="4" height="200" fill="#B88848" opacity="0.4"/>
+
+  <!-- 棚の支柱（右） -->
+  <rect x="839" y="30" width="16" height="200" rx="3" fill="#8A6030"/>
+
+  <!-- 本（上段）-->
+  <rect x="575" y="42" width="22" height="78" rx="2" fill="#E8C090"/>
+  <rect x="575" y="42" width="22" height="6" fill="#D4A870"/>
+  <rect x="601" y="48" width="18" height="72" rx="2" fill="#90B8D8"/>
+  <rect x="601" y="48" width="18" height="5" fill="#7898B8"/>
+  <rect x="623" y="44" width="24" height="76" rx="2" fill="#E09090"/>
+  <rect x="623" y="44" width="24" height="6" fill="#C87070"/>
+  <rect x="651" y="50" width="16" height="70" rx="2" fill="#B8D8A0"/>
+  <rect x="651" y="50" width="16" height="5" fill="#98B880"/>
+  <rect x="671" y="46" width="20" height="74" rx="2" fill="#F0D090"/>
+  <rect x="671" y="46" width="20" height="6" fill="#D8B870"/>
+  <rect x="695" y="52" width="18" height="68" rx="2" fill="#C8A8D8"/>
+  <rect x="695" y="52" width="18" height="5" fill="#A888B8"/>
+  <rect x="717" y="44" width="26" height="76" rx="2" fill="#90C8C0"/>
+  <rect x="717" y="44" width="26" height="6" fill="#70A8A0"/>
+  <rect x="747" y="48" width="20" height="72" rx="2" fill="#F0B090"/>
+  <rect x="747" y="48" width="20" height="6" fill="#D89070"/>
+  <rect x="771" y="50" width="16" height="70" rx="2" fill="#A8C8E8"/>
+  <rect x="771" y="50" width="16" height="5" fill="#88A8C8"/>
+  <rect x="791" y="46" width="22" height="74" rx="2" fill="#E8D0A8"/>
+  <rect x="791" y="46" width="22" height="6" fill="#C8B088"/>
+  <rect x="817" y="54" width="14" height="66" rx="2" fill="#D0E8C0"/>
+
+  <!-- 本（下段）-->
+  <rect x="575" y="138" width="20" height="70" rx="2" fill="#F0A8A8"/>
+  <rect x="575" y="138" width="20" height="5" fill="#D88888"/>
+  <rect x="599" y="142" width="24" height="66" rx="2" fill="#A8C8F0"/>
+  <rect x="599" y="142" width="24" height="5" fill="#88A8D0"/>
+  <rect x="627" y="136" width="18" height="72" rx="2" fill="#D8E8A8"/>
+  <rect x="627" y="136" width="18" height="5" fill="#B8C888"/>
+  <rect x="649" y="140" width="22" height="68" rx="2" fill="#F0D8A0"/>
+  <rect x="649" y="140" width="22" height="5" fill="#D0B880"/>
+  <rect x="675" y="138" width="26" height="70" rx="2" fill="#C8A8D8"/>
+  <rect x="675" y="138" width="26" height="5" fill="#A888B8"/>
+  <rect x="705" y="144" width="16" height="64" rx="2" fill="#A8D8C8"/>
+  <rect x="705" y="144" width="16" height="5" fill="#88B8A8"/>
+  <rect x="725" y="136" width="20" height="72" rx="2" fill="#E8A890"/>
+  <rect x="725" y="136" width="20" height="5" fill="#C88870"/>
+  <rect x="749" y="142" width="22" height="66" rx="2" fill="#B8D0E8"/>
+  <rect x="749" y="142" width="22" height="5" fill="#98B0C8"/>
+  <rect x="775" y="138" width="18" height="70" rx="2" fill="#F0C8A8"/>
+  <rect x="775" y="138" width="18" height="5" fill="#D0A888"/>
+  <rect x="797" y="140" width="20" height="68" rx="2" fill="#C8E8B8"/>
+  <rect x="797" y="140" width="20" height="5" fill="#A8C898"/>
+  <rect x="821" y="146" width="14" height="62" rx="2" fill="#E8D8F0"/>
+
+  <!-- ===== 天板 ===== -->
+  <rect x="50" y="228" width="810" height="28" rx="5" fill="url(#topGrad)"/>
+  <rect x="50" y="228" width="810" height="28" rx="5" fill="url(#topWood)"/>
+  <rect x="50" y="228" width="810" height="12" rx="5" fill="url(#topShine)"/>
+  <!-- 天板前縁のハイライト -->
+  <rect x="50" y="250" width="810" height="3" fill="#E0B070" opacity="0.5"/>
+  <!-- 天板の影（下面） -->
+  <rect x="50" y="253" width="810" height="4" rx="2" fill="#906030" opacity="0.4"/>
+
+  <!-- ===== 引き出しユニット（右） ===== -->
+  <!-- ユニット本体 -->
+  <rect x="620" y="256" width="240" height="240" rx="4" fill="url(#sideGrad)"/>
+  <rect x="622" y="258" width="236" height="236" rx="3" fill="#B88040"/>
+
+  <!-- 引き出し1 -->
+  <rect x="628" y="265" width="228" height="65" rx="3" fill="url(#drawerGrad)"/>
+  <rect x="628" y="265" width="228" height="8" rx="3" fill="#D0A060" opacity="0.6"/>
+  <!-- 引き出し1 取手 -->
+  <rect x="722" y="290" width="40" height="12" rx="6" fill="#E8C890"/>
+  <rect x="722" y="290" width="40" height="5" rx="3" fill="#F0D8A8" opacity="0.7"/>
+  <!-- 引き出し2 -->
+  <rect x="628" y="338" width="228" height="65" rx="3" fill="url(#drawerGrad)"/>
+  <rect x="628" y="338" width="228" height="8" rx="3" fill="#D0A060" opacity="0.6"/>
+  <!-- 引き出し2 取手 -->
+  <rect x="722" y="363" width="40" height="12" rx="6" fill="#E8C890"/>
+  <rect x="722" y="363" width="40" height="5" rx="3" fill="#F0D8A8" opacity="0.7"/>
+  <!-- 引き出し3 -->
+  <rect x="628" y="411" width="228" height="80" rx="3" fill="url(#drawerGrad)"/>
+  <rect x="628" y="411" width="228" height="8" rx="3" fill="#D0A060" opacity="0.6"/>
+  <!-- 引き出し3 取手 -->
+  <rect x="722" y="443" width="40" height="12" rx="6" fill="#E8C890"/>
+  <rect x="722" y="443" width="40" height="5" rx="3" fill="#F0D8A8" opacity="0.7"/>
+
+  <!-- ===== 脚 ===== -->
+  <!-- 左前脚 -->
+  <rect x="65" y="256" width="30" height="300" rx="4" fill="url(#legGrad)"/>
+  <rect x="66" y="256" width="8" height="300" fill="#B88848" opacity="0.35"/>
+  <!-- 右前脚（引き出しユニットが兼ねる）-->
+  <!-- 右の独立脚 -->
+  <rect x="840" y="256" width="30" height="300" rx="4" fill="url(#legGrad)"/>
+  <rect x="841" y="256" width="8" height="300" fill="#B88848" opacity="0.35"/>
+
+  <!-- 脚の横桟（補強）-->
+  <rect x="65" y="440" width="555" height="14" rx="3" fill="#9A6A38"/>
+  <rect x="65" y="440" width="555" height="4" rx="2" fill="#B88050" opacity="0.5"/>
+
+  <!-- 脚の底面キャップ -->
+  <rect x="62" y="548" width="36" height="8" rx="4" fill="#7A5028"/>
+  <rect x="837" y="548" width="36" height="8" rx="4" fill="#7A5028"/>
+
+  </g><!-- end shadow group -->
+
+  <!-- 天板の上の物：ノート -->
+  <rect x="160" y="200" width="180" height="130" rx="4" fill="#F0F4FF" transform="rotate(-3, 250, 260)"/>
+  <rect x="160" y="200" width="180" height="8" rx="4" fill="#D0D8F0" transform="rotate(-3, 250, 260)"/>
+  <line x1="175" y1="220" x2="325" y2="215" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+  <line x1="175" y1="235" x2="325" y2="230" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+  <line x1="175" y1="250" x2="325" y2="245" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+  <line x1="175" y1="265" x2="325" y2="260" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+  <line x1="175" y1="280" x2="325" y2="275" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+  <line x1="175" y1="295" x2="325" y2="290" stroke="#C8D0E8" stroke-width="1.2" opacity="0.7"/>
+
+  <!-- ペン立て -->
+  <rect x="495" y="190" width="45" height="50" rx="6" fill="#A8C8D0"/>
+  <rect x="495" y="190" width="45" height="10" rx="3" fill="#C8E8F0" opacity="0.7"/>
+  <rect x="495" y="190" width="45" height="50" rx="6" fill="none" stroke="#88A8B0" stroke-width="1.5"/>
+  <!-- ペン類 -->
+  <line x1="505" y1="160" x2="507" y2="195" stroke="#E87070" stroke-width="4" stroke-linecap="round"/>
+  <line x1="514" y1="155" x2="516" y2="195" stroke="#4488CC" stroke-width="4" stroke-linecap="round"/>
+  <line x1="523" y1="158" x2="525" y2="195" stroke="#40AA60" stroke-width="4" stroke-linecap="round"/>
+  <line x1="532" y1="162" x2="530" y2="195" stroke="#222222" stroke-width="3" stroke-linecap="round"/>
+  <!-- ペン先 -->
+  <polygon points="505,156 507,156 506,149" fill="#CC5050"/>
+  <polygon points="514,151 516,151 515,143" fill="#225588"/>
+  <polygon points="523,154 525,154 524,146" fill="#228844"/>
+</svg>
