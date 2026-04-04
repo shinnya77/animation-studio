@@ -835,6 +835,7 @@ label {
   justify-content: center;
   z-index: 1000;
 }
+.hidden { display: none; }
 .modal.hidden { display: none; }
 .modal-content {
   background: var(--bg-panel);
