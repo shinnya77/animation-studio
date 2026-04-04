@@ -813,6 +813,9 @@ label {
 }
 .vc-action-btn:hover { opacity: 0.85; }
 .vc-action-btn.vc-restore { background: var(--bg-input); color: var(--text); border: 1px solid var(--border); }
+.vc-action-btn.vc-play-btn { background: #2ecc71; color: #fff; border: none; }
+.vc-action-btn.vc-play-btn:hover { opacity: 0.85; }
+.vc-action-btn.vc-play-btn.vc-playing { background: #e74c3c; }
 .vc-save-section { border-top: 1px solid var(--border); padding-top: 8px; }
 .vc-save-row { display: flex; gap: 6px; margin-bottom: 6px; }
 .vc-save-row input { flex: 1; font-size: 12px; background: var(--bg-input); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; }

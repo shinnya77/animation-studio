@@ -52,6 +52,7 @@
       targetIndex: 0,
       savedPresets: [],
     },
+    vcPreviewSrc: null,
     rec: {
       mediaRecorder: null,
       stream: null,
@@ -237,6 +238,49 @@
   }
 
   // ---- Voice Changer ----
+  function playVCTargetTrack() {
+    stopVCTargetTrack();
+    const track = getVCTrack();
+    if (!track?.audioBuffer) return;
+    const aCtx = getAudioCtx();
+    if (aCtx.state === 'suspended') aCtx.resume();
+    const src = aCtx.createBufferSource();
+    const gain = aCtx.createGain();
+    gain.gain.value = track.volume ?? 1;
+    src.buffer = track.audioBuffer;
+    const vc = track.vc;
+    if (vc?.enabled) {
+      src.playbackRate.value = Math.max(0.1, vc.pitch);
+      src.connect(gain);
+      const { inputNode, outputNode } = buildVCChain(aCtx, vc);
+      gain.connect(inputNode);
+      outputNode.connect(aCtx.destination);
+    } else {
+      src.connect(gain);
+      gain.connect(aCtx.destination);
+    }
+    src.start(0);
+    src.onended = () => { state.vcPreviewSrc = null; updateVCPlayBtn(); };
+    state.vcPreviewSrc = src;
+    updateVCPlayBtn();
+  }
+
+  function stopVCTargetTrack() {
+    if (state.vcPreviewSrc) {
+      try { state.vcPreviewSrc.stop(); } catch (e) {}
+      state.vcPreviewSrc = null;
+    }
+    updateVCPlayBtn();
+  }
+
+  function updateVCPlayBtn() {
+    const btn = $('#vc-play-btn');
+    if (!btn) return;
+    const playing = !!state.vcPreviewSrc;
+    btn.textContent = playing ? '⏹ 停止' : '▶ トラック再生';
+    btn.classList.toggle('vc-playing', playing);
+  }
+
   function getVCTrack() {
     const vc = state.voiceChanger;
     const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
@@ -245,8 +289,8 @@
   }
 
   const VC_PRESETS = {
-    female: { pitch: 1.2,  bass: -4, mid: 3,  treble: 5  },
-    male:   { pitch: 0.8,  bass: 5,  mid: -2, treble: -3 },
+    female: { pitch: 1.5,  bass: -5, mid: 4,  treble: 7  },
+    male:   { pitch: 0.88, bass: 6,  mid: -2, treble: -4 },
     default:{ pitch: 1.0,  bass: 0,  mid: 0,  treble: 0  },
   };
 
@@ -2968,6 +3012,10 @@
     const t = getVCTrack();
     if (t?.vc) t.vc.enabled = e.target.checked;
     if (state.isPlaying) { stopAudioPlayback(); startAudioPlayback(); }
+  });
+
+  $('#vc-play-btn').addEventListener('click', () => {
+    state.vcPreviewSrc ? stopVCTargetTrack() : playVCTargetTrack();
   });
 
   $('#vc-apply-btn').addEventListener('click', () => { applyVoiceToTrack(); });
