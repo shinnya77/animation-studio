@@ -1,28 +1,30 @@
 @echo off
 chcp 65001 > nul
-echo Animation Studio を起動しています...
+cd /d "%~dp0"
 
-:: Node.js が使える場合
+:: Node.js で起動
 where node >nul 2>&1
 if %errorlevel% == 0 (
-  echo http://localhost:8080 をブラウザで開いてください
+  echo Animation Studio を起動しています...
   start "" "http://localhost:8080"
-  npx --yes serve -p 8080 -s .
+  node server.js
   goto :end
 )
 
-:: Python 3 が使える場合
+:: Python 3 で起動
 where python >nul 2>&1
 if %errorlevel% == 0 (
-  echo http://localhost:8080 をブラウザで開いてください
+  echo Animation Studio を起動しています...
   start "" "http://localhost:8080"
   python -m http.server 8080
   goto :end
 )
 
-:: どちらもない場合は直接ファイルを開く（録音機能は使えません）
-echo Node.js / Python が見つかりません。ブラウザで直接開きます。
-echo 注意: 録音機能は localhost 経由でのみ使えます。
+:: どちらもない場合
+echo Node.js が見つかりません。
+echo https://nodejs.org からインストールしてください。
+echo.
+echo 今回は直接ファイルを開きます（録音機能は使えません）。
 start "" "%~dp0index.html"
 
 :end
