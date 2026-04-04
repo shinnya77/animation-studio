@@ -3066,3 +3066,10 @@
 
   init();
 })();
+
+// Service Worker 登録（localhost / HTTPS 環境のみ）
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
