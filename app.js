@@ -48,14 +48,24 @@
     // Analyser nodes for voice vibration: trackId -> { analyser, dataArray }
     activeAnalysers: new Map(),
     voiceChanger: {
-      enabled: false,
       targetType: 'voice',
       targetIndex: 0,
-      pitch: 1.0,
-      bass: 0,
-      mid: 0,
-      treble: 0,
       savedPresets: [],
+    },
+    rec: {
+      mediaRecorder: null,
+      stream: null,
+      chunks: [],
+      audioBuffer: null,
+      isRecording: false,
+      recStartMs: 0,
+      monitorAnimId: null,
+      monitorAnalyser: null,
+      monitorSrc: null,
+      inPoint: 0,
+      outPoint: 0,
+      trimDragging: null,
+      previewSrc: null,
     },
   };
 
@@ -129,7 +139,11 @@
   }
 
   function serializeAudioTrack(t) {
-    return { id: t.id, name: t.name, dataUrl: t.dataUrl, startTime: t.startTime, volume: t.volume, duration: t.duration };
+    return { id: t.id, name: t.name, dataUrl: t.dataUrl, startTime: t.startTime, volume: t.volume, duration: t.duration, vc: t.vc };
+  }
+
+  function makeDefaultVC() {
+    return { enabled: false, pitch: 1.0, bass: 0, mid: 0, treble: 0 };
   }
 
   // ---- Keyframe interpolation ----
@@ -223,6 +237,13 @@
   }
 
   // ---- Voice Changer ----
+  function getVCTrack() {
+    const vc = state.voiceChanger;
+    const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
+    if (!tracks || vc.targetIndex >= tracks.length) return null;
+    return tracks[vc.targetIndex];
+  }
+
   const VC_PRESETS = {
     female: { pitch: 1.2,  bass: -4, mid: 3,  treble: 5  },
     male:   { pitch: 0.8,  bass: 5,  mid: -2, treble: -3 },
@@ -266,14 +287,12 @@
   }
 
   async function applyVoiceToTrack() {
-    const vc = state.voiceChanger;
-    const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
-    if (!tracks || vc.targetIndex >= tracks.length) { alert('対象トラックが見つかりません'); return; }
-    const track = tracks[vc.targetIndex];
-    if (!track.audioBuffer) { alert('音声データがありません'); return; }
+    const track = getVCTrack();
+    if (!track) { alert('対象トラックが見つかりません'); return; }
+    if (!track.audioBuffer || !track.vc) { alert('音声データがありません'); return; }
     if (!track.originalAudioBuffer) track.originalAudioBuffer = track.audioBuffer;
     try {
-      const processed = await applyVoiceChangeToBuffer(track.originalAudioBuffer, vc);
+      const processed = await applyVoiceChangeToBuffer(track.originalAudioBuffer, track.vc);
       track.audioBuffer = processed;
       track.duration = processed.duration;
       refreshAll();
@@ -284,10 +303,8 @@
   }
 
   function restoreOriginalAudio() {
-    const vc = state.voiceChanger;
-    const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
-    if (!tracks || vc.targetIndex >= tracks.length) return;
-    const track = tracks[vc.targetIndex];
+    const track = getVCTrack();
+    if (!track) return;
     if (track.originalAudioBuffer) {
       track.audioBuffer = track.originalAudioBuffer;
       track.originalAudioBuffer = null;
@@ -308,7 +325,7 @@
   }
 
   function refreshVoiceChangerUI() {
-    const vc = state.voiceChanger;
+    const vcState = state.voiceChanger;
     const sel = $('#vc-target-select');
     if (!sel) return;
 
@@ -330,35 +347,311 @@
         sel.appendChild(opt);
       });
       const cur = sel.value.split(':');
-      vc.targetType = cur[0]; vc.targetIndex = parseInt(cur[1]) || 0;
+      vcState.targetType = cur[0]; vcState.targetIndex = parseInt(cur[1]) || 0;
     }
 
-    $('#vc-pitch').value = vc.pitch;
-    $('#vc-pitch-val').textContent = vc.pitch.toFixed(2);
-    $('#vc-bass').value = vc.bass;
-    $('#vc-bass-val').textContent = vc.bass > 0 ? '+' + vc.bass : vc.bass;
-    $('#vc-mid').value = vc.mid;
-    $('#vc-mid-val').textContent = vc.mid > 0 ? '+' + vc.mid : vc.mid;
-    $('#vc-treble').value = vc.treble;
-    $('#vc-treble-val').textContent = vc.treble > 0 ? '+' + vc.treble : vc.treble;
-    $('#vc-enabled').checked = vc.enabled;
+    const track = getVCTrack();
+    const v = track?.vc || makeDefaultVC();
+    $('#vc-pitch').value = v.pitch;
+    $('#vc-pitch-val').textContent = v.pitch.toFixed(2);
+    $('#vc-bass').value = v.bass;
+    $('#vc-bass-val').textContent = v.bass > 0 ? '+' + v.bass : v.bass;
+    $('#vc-mid').value = v.mid;
+    $('#vc-mid-val').textContent = v.mid > 0 ? '+' + v.mid : v.mid;
+    $('#vc-treble').value = v.treble;
+    $('#vc-treble-val').textContent = v.treble > 0 ? '+' + v.treble : v.treble;
+    $('#vc-enabled').checked = v.enabled;
 
     const presetList = $('#vc-preset-list');
     presetList.innerHTML = '';
-    vc.savedPresets.forEach((p, i) => {
+    vcState.savedPresets.forEach((p, i) => {
       const row = document.createElement('div');
       row.className = 'vc-saved-row';
       const loadBtn = document.createElement('button');
       loadBtn.className = 'vc-saved-load';
       loadBtn.textContent = p.name;
-      loadBtn.onclick = () => { Object.assign(vc, { pitch: p.pitch, bass: p.bass, mid: p.mid, treble: p.treble }); refreshVoiceChangerUI(); };
+      loadBtn.onclick = () => {
+        const t = getVCTrack();
+        if (t?.vc) Object.assign(t.vc, { pitch: p.pitch, bass: p.bass, mid: p.mid, treble: p.treble });
+        refreshVoiceChangerUI();
+      };
       const delBtn = document.createElement('button');
       delBtn.className = 'vc-saved-del';
       delBtn.textContent = '✕';
-      delBtn.onclick = () => { vc.savedPresets.splice(i, 1); saveVCPresetsToStorage(); refreshVoiceChangerUI(); };
+      delBtn.onclick = () => { vcState.savedPresets.splice(i, 1); saveVCPresetsToStorage(); refreshVoiceChangerUI(); };
       row.appendChild(loadBtn); row.appendChild(delBtn);
       presetList.appendChild(row);
     });
+  }
+
+  // ---- Recording ----
+  function openRecordModal() {
+    const rec = state.rec;
+    rec.audioBuffer = null; rec.chunks = []; rec.inPoint = 0; rec.outPoint = 0;
+    const modal = $('#record-modal');
+    modal.classList.remove('hidden');
+    $('#rec-step-1').classList.remove('hidden');
+    $('#rec-step-2').classList.add('hidden');
+    $('#rec-start-btn').disabled = false;
+    $('#rec-stop-btn').disabled = true;
+    $('#rec-timer').textContent = '00:00.0';
+    $('#rec-timing-sec').value = state.currentTime.toFixed(1);
+    startMicMonitor();
+  }
+
+  async function startMicMonitor() {
+    try {
+      if (!state.rec.stream) {
+        state.rec.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      }
+      const aCtx = getAudioCtx();
+      const src = aCtx.createMediaStreamSource(state.rec.stream);
+      const analyser = aCtx.createAnalyser();
+      analyser.fftSize = 256;
+      src.connect(analyser);
+      state.rec.monitorAnalyser = analyser;
+      state.rec.monitorSrc = src;
+      drawMonitorLoop();
+    } catch (e) {
+      console.warn('Mic access denied:', e);
+    }
+  }
+
+  function drawMonitorLoop() {
+    const canvas = $('#rec-monitor');
+    if (!canvas || $('#record-modal').classList.contains('hidden')) {
+      state.rec.monitorAnimId = null; return;
+    }
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const analyser = state.rec.monitorAnalyser;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0d1117'; ctx.fillRect(0, 0, W, H);
+
+    if (analyser) {
+      const data = new Uint8Array(analyser.fftSize);
+      analyser.getByteTimeDomainData(data);
+      let maxDev = 0;
+      for (let i = 0; i < data.length; i++) { const d = Math.abs(data[i] - 128) / 128; if (d > maxDev) maxDev = d; }
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, '#2ecc71'); grad.addColorStop(0.65, '#f1c40f'); grad.addColorStop(1, '#e74c3c');
+      ctx.fillStyle = grad;
+      ctx.fillRect(8, 8, (W - 16) * maxDev, H - 16);
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+    ctx.strokeRect(8, 8, W - 16, H - 16);
+
+    if (state.rec.isRecording) {
+      ctx.fillStyle = '#e74c3c';
+      ctx.beginPath(); ctx.arc(W - 14, H / 2, 5, 0, Math.PI * 2); ctx.fill();
+    }
+    state.rec.monitorAnimId = requestAnimationFrame(drawMonitorLoop);
+  }
+
+  function startRecording() {
+    if (!state.rec.stream) { alert('マイクへのアクセスが必要です'); return; }
+    state.rec.chunks = [];
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+    const mr = new MediaRecorder(state.rec.stream, { mimeType });
+    mr.ondataavailable = (e) => { if (e.data.size > 0) state.rec.chunks.push(e.data); };
+    mr.onstop = async () => {
+      try {
+        const blob = new Blob(state.rec.chunks, { type: mr.mimeType });
+        const ab = await blob.arrayBuffer();
+        const audioBuffer = await getAudioCtx().decodeAudioData(ab);
+        state.rec.audioBuffer = audioBuffer;
+        state.rec.inPoint = 0;
+        state.rec.outPoint = audioBuffer.duration;
+        showRecStep2();
+      } catch (e) { alert('録音データの処理に失敗しました: ' + e.message); }
+    };
+    mr.start(100);
+    state.rec.mediaRecorder = mr;
+    state.rec.isRecording = true;
+    state.rec.recStartMs = Date.now();
+    $('#rec-start-btn').disabled = true;
+    $('#rec-stop-btn').disabled = false;
+    updateRecTimer();
+  }
+
+  function updateRecTimer() {
+    if (!state.rec.isRecording) return;
+    const el = (Date.now() - state.rec.recStartMs) / 1000;
+    const m = String(Math.floor(el / 60)).padStart(2, '0');
+    const s = (el % 60).toFixed(1).padStart(4, '0');
+    const timerEl = $('#rec-timer');
+    if (timerEl) timerEl.textContent = m + ':' + s;
+    setTimeout(updateRecTimer, 100);
+  }
+
+  function stopRecording() {
+    if (state.rec.mediaRecorder && state.rec.isRecording) {
+      state.rec.isRecording = false;
+      state.rec.mediaRecorder.stop();
+    }
+  }
+
+  function showRecStep2() {
+    $('#rec-step-1').classList.add('hidden');
+    $('#rec-step-2').classList.remove('hidden');
+    const buf = state.rec.audioBuffer;
+    const now = new Date();
+    $('#rec-track-name').value = `録音 ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+    updateTrimInfo();
+    setTimeout(() => { drawTrimWaveform(); updateTrimHandlePositions(); }, 50);
+  }
+
+  function updateTrimInfo() {
+    const { inPoint, outPoint } = state.rec;
+    const inEl = $('#rec-in-val'), outEl = $('#rec-out-val'), lenEl = $('#rec-len-val');
+    if (inEl) inEl.textContent = inPoint.toFixed(3);
+    if (outEl) outEl.textContent = outPoint.toFixed(3);
+    if (lenEl) lenEl.textContent = (outPoint - inPoint).toFixed(3);
+  }
+
+  function drawTrimWaveform() {
+    const canvas = $('#rec-waveform');
+    const buf = state.rec.audioBuffer;
+    if (!canvas || !buf) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0d1117'; ctx.fillRect(0, 0, W, H);
+
+    const data = buf.getChannelData(0);
+    const step = Math.max(1, Math.floor(data.length / W));
+    ctx.strokeStyle = '#4a9eda'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      let mn = 1, mx = -1;
+      for (let i = x * step; i < (x + 1) * step && i < data.length; i++) {
+        if (data[i] < mn) mn = data[i]; if (data[i] > mx) mx = data[i];
+      }
+      const y1 = ((1 - mx) / 2) * H, y2 = ((1 - mn) / 2) * H;
+      ctx.moveTo(x + 0.5, y1); ctx.lineTo(x + 0.5, y2);
+    }
+    ctx.stroke();
+
+    // selection overlay
+    const dur = buf.duration;
+    const inX = (state.rec.inPoint / dur) * W;
+    const outX = (state.rec.outPoint / dur) * W;
+    ctx.fillStyle = 'rgba(74,158,218,0.12)'; ctx.fillRect(inX, 0, outX - inX, H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+  }
+
+  function updateTrimHandlePositions() {
+    const buf = state.rec.audioBuffer;
+    const canvas = $('#rec-waveform');
+    if (!buf || !canvas) return;
+    const W = canvas.offsetWidth || canvas.width;
+    const dur = buf.duration;
+    const inX = (state.rec.inPoint / dur) * W;
+    const outX = (state.rec.outPoint / dur) * W;
+    const inH = $('#rec-in-handle'), outH = $('#rec-out-handle');
+    const sel = $('#rec-selection');
+    if (inH) inH.style.left = inX + 'px';
+    if (outH) outH.style.left = outX + 'px';
+    if (sel) { sel.style.left = inX + 'px'; sel.style.width = (outX - inX) + 'px'; }
+    updateTrimInfo();
+  }
+
+  function setupTrimDrag() {
+    const wrap = document.querySelector('.rec-waveform-wrap');
+    if (!wrap) return;
+    const getRatio = (e) => {
+      const rect = wrap.getBoundingClientRect();
+      return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    };
+    const onMove = (e) => {
+      if (!state.rec.trimDragging || !state.rec.audioBuffer) return;
+      const dur = state.rec.audioBuffer.duration;
+      const t = getRatio(e) * dur;
+      if (state.rec.trimDragging === 'in') {
+        state.rec.inPoint = Math.max(0, Math.min(t, state.rec.outPoint - 0.01));
+      } else {
+        state.rec.outPoint = Math.min(dur, Math.max(t, state.rec.inPoint + 0.01));
+      }
+      drawTrimWaveform(); updateTrimHandlePositions();
+    };
+    $('#rec-in-handle').addEventListener('mousedown', (e) => { e.preventDefault(); state.rec.trimDragging = 'in'; });
+    $('#rec-out-handle').addEventListener('mousedown', (e) => { e.preventDefault(); state.rec.trimDragging = 'out'; });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', () => { state.rec.trimDragging = null; });
+  }
+
+  function trimAudioBuffer(buffer, inTime, outTime) {
+    const sr = buffer.sampleRate, ch = buffer.numberOfChannels;
+    const s0 = Math.floor(inTime * sr), s1 = Math.ceil(outTime * sr);
+    const len = Math.max(1, s1 - s0);
+    const aCtx = getAudioCtx();
+    const out = aCtx.createBuffer(ch, len, sr);
+    for (let c = 0; c < ch; c++) {
+      const src = buffer.getChannelData(c), dst = out.getChannelData(c);
+      for (let i = 0; i < len; i++) dst[i] = src[s0 + i] || 0;
+    }
+    return out;
+  }
+
+  function audioBufferToWavDataUrl(buffer) {
+    const ch = buffer.numberOfChannels, sr = buffer.sampleRate, n = buffer.length;
+    const bps = 16, dataSize = n * ch * 2, ab = new ArrayBuffer(44 + dataSize);
+    const v = new DataView(ab);
+    const ws = (off, s) => { for (let i = 0; i < s.length; i++) v.setUint8(off + i, s.charCodeAt(i)); };
+    ws(0, 'RIFF'); v.setUint32(4, 36 + dataSize, true); ws(8, 'WAVE');
+    ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+    v.setUint16(22, ch, true); v.setUint32(24, sr, true);
+    v.setUint32(28, sr * ch * 2, true); v.setUint16(32, ch * 2, true);
+    v.setUint16(34, bps, true); ws(36, 'data'); v.setUint32(40, dataSize, true);
+    let off = 44;
+    for (let i = 0; i < n; i++) {
+      for (let c = 0; c < ch; c++) {
+        const s = Math.max(-1, Math.min(1, buffer.getChannelData(c)[i]));
+        v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true); off += 2;
+      }
+    }
+    const u8 = new Uint8Array(ab);
+    let bin = '';
+    for (let i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
+    return 'data:audio/wav;base64,' + btoa(bin);
+  }
+
+  function previewTrimmed() {
+    if (!state.rec.audioBuffer) return;
+    if (state.rec.previewSrc) { try { state.rec.previewSrc.stop(); } catch (e) {} state.rec.previewSrc = null; }
+    const aCtx = getAudioCtx();
+    const trimmed = trimAudioBuffer(state.rec.audioBuffer, state.rec.inPoint, state.rec.outPoint);
+    const src = aCtx.createBufferSource();
+    src.buffer = trimmed; src.connect(aCtx.destination); src.start();
+    state.rec.previewSrc = src;
+  }
+
+  function saveRecording() {
+    const buf = state.rec.audioBuffer;
+    if (!buf) return;
+    const trimmed = trimAudioBuffer(buf, state.rec.inPoint, state.rec.outPoint);
+    const trackName = ($('#rec-track-name').value || '').trim() || ('録音 ' + new Date().toLocaleTimeString());
+    const useTiming = $('#rec-use-timing').checked;
+    const startTime = useTiming ? (parseFloat($('#rec-timing-sec').value) || 0) : 0;
+    const dataUrl = audioBufferToWavDataUrl(trimmed);
+    const track = {
+      id: genId(), name: trackName, audioBuffer: trimmed, dataUrl,
+      startTime, volume: 1, duration: trimmed.duration, vc: makeDefaultVC(),
+    };
+    state.voiceTracks.push(track);
+    closeRecordModal();
+    refreshAll();
+  }
+
+  function closeRecordModal() {
+    if (state.rec.monitorAnimId) { cancelAnimationFrame(state.rec.monitorAnimId); state.rec.monitorAnimId = null; }
+    if (state.rec.previewSrc) { try { state.rec.previewSrc.stop(); } catch (e) {} state.rec.previewSrc = null; }
+    state.rec.isRecording = false;
+    if (state.rec.mediaRecorder && state.rec.mediaRecorder.state !== 'inactive') {
+      try { state.rec.mediaRecorder.stop(); } catch (e) {}
+    }
+    $('#record-modal').classList.add('hidden');
   }
 
   // ---- Audio Context ----
@@ -1101,15 +1394,15 @@
       gain.gain.value = track.volume ?? 1;
       src.buffer = track.audioBuffer;
 
-      const vc = state.voiceChanger;
-      const isVCTarget = vc.enabled && vc.targetType === sourceType && vc.targetIndex === sourceIndex;
-      if (isVCTarget) src.playbackRate.value = Math.max(0.1, vc.pitch);
+      const trackVC = track.vc;
+      const isVCActive = trackVC && trackVC.enabled;
+      if (isVCActive) src.playbackRate.value = Math.max(0.1, trackVC.pitch);
 
       src.connect(gain);
 
       let chainEnd = gain;
-      if (isVCTarget) {
-        const { inputNode, outputNode } = buildVCChain(aCtx, vc);
+      if (isVCActive) {
+        const { inputNode, outputNode } = buildVCChain(aCtx, trackVC);
         gain.connect(inputNode);
         chainEnd = outputNode;
       }
@@ -1282,6 +1575,7 @@
           startTime: 0,
           volume: 1,
           duration: audioBuffer.duration,
+          vc: makeDefaultVC(),
         };
         state[AUDIO_TRACK_KEYS[type]].push(track);
         refreshAll();
@@ -1367,7 +1661,7 @@
   function refreshAudioLists() {
     const renderList = (tracks, listEl, type) => {
       listEl.innerHTML = '';
-      tracks.forEach((t) => {
+      tracks.forEach((t, idx) => {
         const li = document.createElement('li');
         const name = document.createElement('span');
         name.className = 'audio-name';
@@ -1389,6 +1683,12 @@
         volInput.title = '音量';
         volInput.addEventListener('input', () => { t.volume = parseFloat(volInput.value); });
 
+        const vcBtn = document.createElement('button');
+        vcBtn.className = 'audio-vc-btn' + (t.vc?.enabled ? ' active' : '');
+        vcBtn.title = 'ボイスチェンジャー設定';
+        vcBtn.textContent = 'VC';
+        vcBtn.onclick = () => openVCPanelForTrack(type, idx);
+
         const rm = document.createElement('span');
         rm.className = 'audio-remove';
         rm.textContent = '✕';
@@ -1401,6 +1701,7 @@
         li.appendChild(name);
         li.appendChild(timeInput);
         li.appendChild(volInput);
+        li.appendChild(vcBtn);
         li.appendChild(rm);
         listEl.appendChild(li);
       });
@@ -1841,9 +2142,9 @@
           const resp = await fetch(td.dataUrl);
           const buf = await resp.arrayBuffer();
           const audioBuffer = await aCtx.decodeAudioData(buf);
-          return { ...td, audioBuffer };
+          return { ...td, audioBuffer, vc: td.vc || makeDefaultVC() };
         } catch (e) {
-          return { ...td, audioBuffer: null };
+          return { ...td, audioBuffer: null, vc: td.vc || makeDefaultVC() };
         }
       };
 
@@ -2335,13 +2636,13 @@
       const gain = offlineCtx.createGain();
       gain.gain.value = t.volume ?? 1;
       src.buffer = t.audioBuffer;
-      const vc = state.voiceChanger;
-      const isVCTarget = vc.enabled && vc.targetType === sourceType && vc.targetIndex === sourceIndex;
-      if (isVCTarget) src.playbackRate.value = Math.max(0.1, vc.pitch);
+      const trackVC = t.vc;
+      const isVCActive = trackVC && trackVC.enabled;
+      if (isVCActive) src.playbackRate.value = Math.max(0.1, trackVC.pitch);
       src.connect(gain);
       let chainEnd = gain;
-      if (isVCTarget) {
-        const { inputNode, outputNode } = buildVCChain(offlineCtx, vc);
+      if (isVCActive) {
+        const { inputNode, outputNode } = buildVCChain(offlineCtx, trackVC);
         gain.connect(inputNode);
         chainEnd = outputNode;
       }
@@ -2600,6 +2901,27 @@
     $('#audio-panel').classList.toggle('collapsed');
   });
 
+  // ---- Recording Events ----
+  $('#btn-add-recording').addEventListener('click', () => openRecordModal());
+  $('#rec-close').addEventListener('click', () => closeRecordModal());
+  $('#rec-start-btn').addEventListener('click', () => startRecording());
+  $('#rec-stop-btn').addEventListener('click', () => stopRecording());
+  $('#rec-preview-btn').addEventListener('click', () => previewTrimmed());
+  $('#rec-rerecord-btn').addEventListener('click', () => {
+    if (state.rec.previewSrc) { try { state.rec.previewSrc.stop(); } catch (e) {} state.rec.previewSrc = null; }
+    $('#rec-step-2').classList.add('hidden');
+    $('#rec-step-1').classList.remove('hidden');
+    $('#rec-start-btn').disabled = false;
+    $('#rec-stop-btn').disabled = true;
+    $('#rec-timer').textContent = '00:00.0';
+    drawMonitorLoop();
+  });
+  $('#rec-save-btn').addEventListener('click', () => saveRecording());
+  $('#rec-use-timing').addEventListener('change', (e) => {
+    $('#rec-timing-sec').disabled = !e.target.checked;
+  });
+  setupTrimDrag();
+
   // ---- Voice Changer Events ----
   $('#vc-panel-toggle').addEventListener('click', () => { $('#vc-panel').classList.toggle('collapsed'); });
 
@@ -2607,36 +2929,44 @@
     const [type, idx] = e.target.value.split(':');
     state.voiceChanger.targetType = type;
     state.voiceChanger.targetIndex = parseInt(idx) || 0;
+    refreshVoiceChangerUI();
   });
 
+  function openVCPanelForTrack(type, index) {
+    state.voiceChanger.targetType = type;
+    state.voiceChanger.targetIndex = index;
+    const panel = $('#vc-panel');
+    panel.classList.remove('collapsed');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    refreshVoiceChangerUI();
+  }
+
   $('#vc-preset-female').addEventListener('click', () => {
-    Object.assign(state.voiceChanger, VC_PRESETS.female);
+    const t = getVCTrack(); if (t?.vc) Object.assign(t.vc, VC_PRESETS.female);
     refreshVoiceChangerUI();
   });
   $('#vc-preset-male').addEventListener('click', () => {
-    Object.assign(state.voiceChanger, VC_PRESETS.male);
+    const t = getVCTrack(); if (t?.vc) Object.assign(t.vc, VC_PRESETS.male);
     refreshVoiceChangerUI();
   });
   $('#vc-preset-reset').addEventListener('click', () => {
-    Object.assign(state.voiceChanger, VC_PRESETS.default);
+    const t = getVCTrack(); if (t?.vc) Object.assign(t.vc, VC_PRESETS.default);
     refreshVoiceChangerUI();
   });
 
   ['pitch', 'bass', 'mid', 'treble'].forEach((param) => {
     $('#vc-' + param).addEventListener('input', (e) => {
       const val = parseFloat(e.target.value);
-      state.voiceChanger[param] = val;
+      const t = getVCTrack();
+      if (t?.vc) t.vc[param] = val;
       const disp = $('#vc-' + param + '-val');
-      if (param === 'pitch') {
-        disp.textContent = val.toFixed(2);
-      } else {
-        disp.textContent = val > 0 ? '+' + val : val;
-      }
+      disp.textContent = param === 'pitch' ? val.toFixed(2) : (val > 0 ? '+' + val : val);
     });
   });
 
   $('#vc-enabled').addEventListener('change', (e) => {
-    state.voiceChanger.enabled = e.target.checked;
+    const t = getVCTrack();
+    if (t?.vc) t.vc.enabled = e.target.checked;
     if (state.isPlaying) { stopAudioPlayback(); startAudioPlayback(); }
   });
 

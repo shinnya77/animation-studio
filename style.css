@@ -680,6 +680,84 @@ label {
 }
 .audio-section li .audio-remove:hover { opacity: 1; }
 
+/* === Audio section buttons === */
+.audio-section-btns { display: flex; gap: 4px; margin-bottom: 4px; }
+.audio-section-btns button { font-size: 11px; padding: 3px 8px; }
+#btn-add-recording { background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+#btn-add-recording:hover { opacity: 0.85; }
+.audio-vc-btn {
+  font-size: 10px; padding: 1px 5px;
+  background: var(--bg-input); border: 1px solid var(--border);
+  color: var(--text-muted); border-radius: 3px; cursor: pointer;
+}
+.audio-vc-btn:hover { color: var(--text); border-color: var(--accent); }
+.audio-vc-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* === Recording Modal === */
+.rec-modal { max-width: 540px; padding: 20px 24px; }
+.rec-modal h2 { margin-bottom: 14px; font-size: 16px; }
+#rec-monitor { display: block; width: 100%; border-radius: 6px; margin-bottom: 10px; }
+.rec-timing-row {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 12px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.rec-timing-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.rec-timing-hint { display: flex; align-items: center; gap: 4px; color: var(--text-muted); }
+.rec-timing-hint input[type=number] {
+  width: 64px; background: var(--bg-input); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; font-size: 12px;
+}
+.rec-ctrl-row { display: flex; align-items: center; gap: 10px; }
+.rec-timer { font-size: 18px; font-variant-numeric: tabular-nums; min-width: 80px; letter-spacing: 1px; }
+.rec-btn-rec {
+  padding: 7px 16px; border-radius: 6px; border: none;
+  background: #e74c3c; color: #fff; font-size: 13px; cursor: pointer;
+}
+.rec-btn-rec:disabled { opacity: 0.4; cursor: default; }
+.rec-btn-rec:not(:disabled):hover { background: #c0392b; }
+.rec-btn-stop {
+  padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg-input); color: var(--text); font-size: 13px; cursor: pointer;
+}
+.rec-btn-stop:disabled { opacity: 0.3; cursor: default; }
+.rec-btn-stop:not(:disabled):hover { background: var(--selection); }
+.rec-name-input {
+  width: 100%; box-sizing: border-box; margin-bottom: 10px;
+  background: var(--bg-input); color: var(--text); border: 1px solid var(--border);
+  border-radius: 4px; padding: 5px 10px; font-size: 13px;
+}
+.rec-waveform-wrap {
+  position: relative; user-select: none; border-radius: 6px; overflow: hidden; margin-bottom: 8px;
+}
+#rec-waveform { display: block; width: 100%; border-radius: 6px; }
+.rec-handle {
+  position: absolute; top: 0; width: 6px; height: 100%;
+  cursor: ew-resize; z-index: 3; transform: translateX(-3px);
+  border-radius: 2px;
+}
+.rec-in-h { background: #2ecc71; }
+.rec-out-h { background: #e74c3c; }
+.rec-sel {
+  position: absolute; top: 0; height: 100%;
+  background: rgba(74,158,218,0.1); pointer-events: none; z-index: 1;
+}
+.rec-trim-info {
+  display: flex; gap: 16px; font-size: 11px; color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.rec-trim-info b { color: var(--accent); }
+.rec-trim-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.rec-trim-btns button {
+  padding: 5px 12px; border-radius: 5px; font-size: 12px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg-input); color: var(--text);
+}
+.rec-trim-btns button:hover { background: var(--selection); }
+.rec-btn-save {
+  background: var(--accent) !important; color: #fff !important;
+  border-color: var(--accent) !important;
+}
+.rec-btn-save:hover { opacity: 0.85; }
+
 /* === Voice Changer Panel === */
 #vc-panel {
   background: var(--bg-panel);
