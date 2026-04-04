@@ -34,6 +34,9 @@
     bgmTracks: [],
     sfxTracks: [],
     voiceTracks: [],
+    // Each subtitle: { id, text, startTime, endTime, x, y, fontSize, color, bgColor, bgOpacity, outlineColor, outlineWidth, speaker, position }
+    subtitles: [],
+    selectedSubtitleId: null,
     canvasScale: 1,
     isDragging: false,
     dragOffsetX: 0,
@@ -60,6 +63,8 @@
   const totalDurationInput = $('#total-duration');
   const canvasContainer = $('#canvas-container');
   const timelineContainer = $('#timeline-tracks-container');
+  const subtitleListEl = $('#subtitle-list');
+  const subtitleCountEl = $('#subtitle-count');
   const bgmListEl = $('#bgm-list');
   const sfxListEl = $('#sfx-list');
   const voiceListEl = $('#voice-list');
@@ -318,6 +323,9 @@
         ctx.restore();
       }
     }
+
+    // Render subtitles on top of everything
+    renderSubtitles(ctx, state.currentTime, 1, 1);
   }
 
   // ---- Layer Management ----
@@ -779,6 +787,31 @@
       timelineTracks.appendChild(track);
     });
 
+    // Subtitle tracks
+    state.subtitles.forEach((sub) => {
+      const track = document.createElement('div');
+      track.className = 'timeline-track';
+      const label = document.createElement('div');
+      label.className = 'track-label';
+      label.textContent = '💬 ' + (sub.speaker || sub.text).slice(0, 10);
+      label.onclick = () => { state.selectedSubtitleId = sub.id; state.currentTime = sub.startTime; updatePlayhead(); refreshSubtitleList(); render(); };
+      const content = document.createElement('div');
+      content.className = 'track-content';
+      const bar = document.createElement('div');
+      bar.className = 'keyframe-bar subtitle-bar';
+      bar.style.left = (sub.startTime * TIMELINE_PX_PER_SEC) + 'px';
+      bar.style.width = (Math.max(0, sub.endTime - sub.startTime) * TIMELINE_PX_PER_SEC) + 'px';
+      bar.style.background = sub.bgColor !== 'transparent' ? sub.bgColor : '#9b59b6';
+      bar.style.color = sub.color;
+      bar.style.opacity = '0.85';
+      bar.textContent = sub.text.slice(0, 15);
+      bar.title = sub.text;
+      content.appendChild(bar);
+      track.appendChild(label);
+      track.appendChild(content);
+      timelineTracks.appendChild(track);
+    });
+
     updatePlayhead();
   }
 
@@ -1103,6 +1136,354 @@
     renderList(state.voiceTracks, voiceListEl, 'voice');
   }
 
+  // ---- Subtitles ----
+  const SUBTITLE_PRESETS = [
+    { name: 'ポップピンク', color: '#ffffff', bgColor: '#e94560', outlineColor: '#c0392b' },
+    { name: 'サイバーブルー', color: '#ffffff', bgColor: '#3498db', outlineColor: '#2980b9' },
+    { name: 'ネオングリーン', color: '#000000', bgColor: '#2ecc71', outlineColor: '#27ae60' },
+    { name: 'サンシャイン', color: '#000000', bgColor: '#f1c40f', outlineColor: '#f39c12' },
+    { name: 'パープルドリーム', color: '#ffffff', bgColor: '#9b59b6', outlineColor: '#8e44ad' },
+    { name: 'オレンジポップ', color: '#ffffff', bgColor: '#e67e22', outlineColor: '#d35400' },
+    { name: 'シンプル白', color: '#ffffff', bgColor: 'transparent', outlineColor: '#000000' },
+  ];
+
+  function createSubtitle(overrides = {}) {
+    return {
+      id: state.nextId++,
+      text: '字幕テキスト',
+      startTime: state.currentTime,
+      endTime: Math.min(state.currentTime + 2, state.totalDuration),
+      x: CANVAS_W / 2,
+      y: CANVAS_H - 120,
+      fontSize: 48,
+      color: '#ffffff',
+      bgColor: '#e94560',
+      bgOpacity: 0.85,
+      outlineColor: '#c0392b',
+      outlineWidth: 3,
+      speaker: '',
+      position: 'bottom', // 'top', 'center', 'bottom', 'custom'
+      ...overrides,
+    };
+  }
+
+  function getVisibleSubtitles(time) {
+    return state.subtitles.filter((s) => time >= s.startTime && time < s.endTime);
+  }
+
+  function renderSubtitles(targetCtx, time, scaleX, scaleY) {
+    const visible = getVisibleSubtitles(time);
+    if (visible.length === 0) return;
+
+    // Stack subtitles by position to avoid overlap
+    const stacks = { top: [], center: [], bottom: [], custom: [] };
+    visible.forEach((s) => stacks[s.position || 'bottom'].push(s));
+
+    const drawSub = (sub, yPos) => {
+      const fs = sub.fontSize * scaleY;
+      targetCtx.save();
+      targetCtx.font = `bold ${fs}px "Segoe UI", "Meiryo", "Hiragino Sans", sans-serif`;
+      targetCtx.textAlign = 'center';
+      targetCtx.textBaseline = 'top';
+
+      const text = sub.text;
+      const metrics = targetCtx.measureText(text);
+      const textW = metrics.width;
+      const textH = fs * 1.3;
+      const padX = 16 * scaleX;
+      const padY = 8 * scaleY;
+      const cx = sub.x * scaleX;
+
+      // Draw background
+      if (sub.bgColor && sub.bgColor !== 'transparent') {
+        targetCtx.fillStyle = sub.bgColor;
+        targetCtx.globalAlpha = sub.bgOpacity ?? 0.85;
+        const r = 8 * scaleX;
+        const bx = cx - textW / 2 - padX;
+        const by = yPos - padY;
+        const bw = textW + padX * 2;
+        const bh = textH + padY * 2;
+        targetCtx.beginPath();
+        targetCtx.moveTo(bx + r, by);
+        targetCtx.lineTo(bx + bw - r, by);
+        targetCtx.quadraticCurveTo(bx + bw, by, bx + bw, by + r);
+        targetCtx.lineTo(bx + bw, by + bh - r);
+        targetCtx.quadraticCurveTo(bx + bw, by + bh, bx + bw - r, by + bh);
+        targetCtx.lineTo(bx + r, by + bh);
+        targetCtx.quadraticCurveTo(bx, by + bh, bx, by + bh - r);
+        targetCtx.lineTo(bx, by + r);
+        targetCtx.quadraticCurveTo(bx, by, bx + r, by);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.globalAlpha = 1;
+      }
+
+      // Draw outline
+      if (sub.outlineWidth > 0 && sub.outlineColor) {
+        targetCtx.strokeStyle = sub.outlineColor;
+        targetCtx.lineWidth = sub.outlineWidth * scaleX;
+        targetCtx.lineJoin = 'round';
+        targetCtx.strokeText(text, cx, yPos);
+      }
+
+      // Draw text
+      targetCtx.fillStyle = sub.color;
+      targetCtx.fillText(text, cx, yPos);
+      targetCtx.restore();
+
+      return textH + padY * 2;
+    };
+
+    // Bottom stack (from bottom up)
+    let bottomY = (CANVAS_H - 80) * scaleY;
+    for (let i = stacks.bottom.length - 1; i >= 0; i--) {
+      const h = drawSub(stacks.bottom[i], bottomY - stacks.bottom[i].fontSize * scaleY * 1.3);
+      bottomY -= h + 4 * scaleY;
+    }
+
+    // Top stack (from top down)
+    let topY = 40 * scaleY;
+    stacks.top.forEach((s) => {
+      const h = drawSub(s, topY);
+      topY += h + 4 * scaleY;
+    });
+
+    // Center stack
+    const totalCenterH = stacks.center.reduce((sum, s) => sum + s.fontSize * scaleY * 1.3 + 16 * scaleY, 0);
+    let centerY = (CANVAS_H * scaleY - totalCenterH) / 2;
+    stacks.center.forEach((s) => {
+      const h = drawSub(s, centerY);
+      centerY += h + 4 * scaleY;
+    });
+
+    // Custom position
+    stacks.custom.forEach((s) => {
+      drawSub(s, s.y * scaleY);
+    });
+  }
+
+  function refreshSubtitleList() {
+    subtitleListEl.innerHTML = '';
+    subtitleCountEl.textContent = state.subtitles.length > 0 ? `${state.subtitles.length}件` : '';
+
+    state.subtitles.forEach((sub) => {
+      const item = document.createElement('div');
+      item.className = 'subtitle-item' + (sub.id === state.selectedSubtitleId ? ' active' : '');
+      item.onclick = (e) => {
+        if (e.target.closest('.sub-delete')) return;
+        state.selectedSubtitleId = sub.id;
+        state.currentTime = sub.startTime;
+        updatePlayhead();
+        refreshSubtitleList();
+        render();
+      };
+
+      // Row 1: preview badge + speaker + delete
+      const row1 = document.createElement('div');
+      row1.className = 'sub-row';
+
+      const badge = document.createElement('span');
+      badge.className = 'sub-preview-badge';
+      badge.style.background = sub.bgColor !== 'transparent' ? sub.bgColor : '#333';
+      badge.style.color = sub.color;
+      badge.style.border = `2px solid ${sub.outlineColor}`;
+      badge.textContent = sub.speaker ? `[${sub.speaker}] ${sub.text}` : sub.text;
+      badge.title = sub.text;
+
+      const timing = document.createElement('span');
+      timing.className = 'sub-timing';
+      timing.textContent = `${sub.startTime.toFixed(1)}s → ${sub.endTime.toFixed(1)}s`;
+
+      const del = document.createElement('span');
+      del.className = 'sub-delete';
+      del.textContent = '✕';
+      del.onclick = () => {
+        state.subtitles = state.subtitles.filter((s) => s.id !== sub.id);
+        if (state.selectedSubtitleId === sub.id) state.selectedSubtitleId = null;
+        refreshSubtitleList();
+        refreshTimeline();
+        render();
+      };
+
+      row1.appendChild(badge);
+      row1.appendChild(timing);
+      row1.appendChild(del);
+
+      // Row 2: text + speaker input (shown only when selected)
+      if (sub.id === state.selectedSubtitleId) {
+        const row2 = document.createElement('div');
+        row2.className = 'sub-row';
+        const textLabel = document.createElement('label');
+        textLabel.textContent = 'テキスト:';
+        const textInput = document.createElement('input');
+        textInput.type = 'text';
+        textInput.value = sub.text;
+        textInput.onchange = () => { sub.text = textInput.value; refreshSubtitleList(); render(); };
+        textInput.oninput = () => { sub.text = textInput.value; badge.textContent = sub.speaker ? `[${sub.speaker}] ${sub.text}` : sub.text; render(); };
+        row2.appendChild(textLabel);
+        row2.appendChild(textInput);
+
+        const row2b = document.createElement('div');
+        row2b.className = 'sub-row';
+        const spkLabel = document.createElement('label');
+        spkLabel.textContent = '話者:';
+        const spkInput = document.createElement('input');
+        spkInput.type = 'text';
+        spkInput.value = sub.speaker || '';
+        spkInput.placeholder = '（任意）';
+        spkInput.style.maxWidth = '80px';
+        spkInput.onchange = () => { sub.speaker = spkInput.value; refreshSubtitleList(); render(); };
+        row2b.appendChild(spkLabel);
+        row2b.appendChild(spkInput);
+
+        // Position
+        const posLabel = document.createElement('label');
+        posLabel.textContent = '位置:';
+        const posSel = document.createElement('select');
+        ['bottom', 'top', 'center', 'custom'].forEach((v) => {
+          const o = document.createElement('option');
+          o.value = v;
+          o.textContent = { bottom: '下', top: '上', center: '中央', custom: 'カスタム' }[v];
+          if (v === sub.position) o.selected = true;
+          posSel.appendChild(o);
+        });
+        posSel.onchange = () => { sub.position = posSel.value; render(); };
+        row2b.appendChild(posLabel);
+        row2b.appendChild(posSel);
+
+        // Font size
+        const fsLabel = document.createElement('label');
+        fsLabel.textContent = 'サイズ:';
+        const fsInput = document.createElement('input');
+        fsInput.type = 'number';
+        fsInput.value = sub.fontSize;
+        fsInput.min = 12;
+        fsInput.max = 120;
+        fsInput.step = 2;
+        fsInput.onchange = () => { sub.fontSize = parseInt(fsInput.value) || 48; render(); };
+        row2b.appendChild(fsLabel);
+        row2b.appendChild(fsInput);
+
+        // Row 3: timing
+        const row3 = document.createElement('div');
+        row3.className = 'sub-row';
+        const stLabel = document.createElement('label');
+        stLabel.textContent = '開始:';
+        const stInput = document.createElement('input');
+        stInput.type = 'number';
+        stInput.value = sub.startTime;
+        stInput.min = 0;
+        stInput.max = state.totalDuration;
+        stInput.step = 0.1;
+        stInput.onchange = () => { sub.startTime = parseFloat(stInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
+        const etLabel = document.createElement('label');
+        etLabel.textContent = '終了:';
+        const etInput = document.createElement('input');
+        etInput.type = 'number';
+        etInput.value = sub.endTime;
+        etInput.min = 0;
+        etInput.max = state.totalDuration;
+        etInput.step = 0.1;
+        etInput.onchange = () => { sub.endTime = parseFloat(etInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
+
+        const setStartBtn = document.createElement('button');
+        setStartBtn.textContent = '◀ 現在位置';
+        setStartBtn.style.fontSize = '10px';
+        setStartBtn.onclick = () => { sub.startTime = state.currentTime; stInput.value = sub.startTime; refreshSubtitleList(); refreshTimeline(); render(); };
+        const setEndBtn = document.createElement('button');
+        setEndBtn.textContent = '現在位置 ▶';
+        setEndBtn.style.fontSize = '10px';
+        setEndBtn.onclick = () => { sub.endTime = state.currentTime; etInput.value = sub.endTime; refreshSubtitleList(); refreshTimeline(); render(); };
+
+        row3.appendChild(stLabel);
+        row3.appendChild(stInput);
+        row3.appendChild(setStartBtn);
+        row3.appendChild(etLabel);
+        row3.appendChild(etInput);
+        row3.appendChild(setEndBtn);
+
+        // Row 4: colors
+        const row4 = document.createElement('div');
+        row4.className = 'sub-row';
+
+        const addColorPicker = (label, prop) => {
+          const g = document.createElement('div');
+          g.className = 'sub-color-group';
+          const s = document.createElement('span');
+          s.textContent = label;
+          const c = document.createElement('input');
+          c.type = 'color';
+          c.value = sub[prop] && sub[prop] !== 'transparent' ? sub[prop] : '#000000';
+          c.onchange = () => { sub[prop] = c.value; refreshSubtitleList(); render(); };
+          g.appendChild(s);
+          g.appendChild(c);
+          row4.appendChild(g);
+        };
+        addColorPicker('文字', 'color');
+        addColorPicker('背景', 'bgColor');
+        addColorPicker('縁', 'outlineColor');
+
+        const bgOpLabel = document.createElement('span');
+        bgOpLabel.style.cssText = 'font-size:9px;color:var(--text-muted);';
+        bgOpLabel.textContent = '透過:';
+        const bgOpInput = document.createElement('input');
+        bgOpInput.type = 'range';
+        bgOpInput.value = sub.bgOpacity;
+        bgOpInput.min = 0; bgOpInput.max = 1; bgOpInput.step = 0.05;
+        bgOpInput.style.width = '50px';
+        bgOpInput.oninput = () => { sub.bgOpacity = parseFloat(bgOpInput.value); render(); };
+        row4.appendChild(bgOpLabel);
+        row4.appendChild(bgOpInput);
+
+        // Row 5: presets
+        const row5 = document.createElement('div');
+        row5.className = 'sub-row';
+        const presetLabel = document.createElement('span');
+        presetLabel.style.cssText = 'font-size:9px;color:var(--text-muted);';
+        presetLabel.textContent = 'プリセット:';
+        row5.appendChild(presetLabel);
+        SUBTITLE_PRESETS.forEach((p) => {
+          const btn = document.createElement('button');
+          btn.style.cssText = `font-size:9px;padding:2px 6px;background:${p.bgColor === 'transparent' ? '#333' : p.bgColor};color:${p.color};border:1px solid ${p.outlineColor};`;
+          btn.textContent = p.name;
+          btn.title = p.name;
+          btn.onclick = () => {
+            sub.color = p.color;
+            sub.bgColor = p.bgColor;
+            sub.outlineColor = p.outlineColor;
+            refreshSubtitleList();
+            render();
+          };
+          row5.appendChild(btn);
+        });
+
+        item.appendChild(row1);
+        item.appendChild(row2);
+        item.appendChild(row2b);
+        item.appendChild(row3);
+        item.appendChild(row4);
+        item.appendChild(row5);
+      } else {
+        item.appendChild(row1);
+      }
+
+      subtitleListEl.appendChild(item);
+    });
+  }
+
+  $('#btn-add-subtitle').addEventListener('click', () => {
+    const sub = createSubtitle();
+    state.subtitles.push(sub);
+    state.selectedSubtitleId = sub.id;
+    refreshSubtitleList();
+    refreshTimeline();
+    render();
+  });
+
+  $('#subtitle-panel-toggle').addEventListener('click', () => {
+    $('#subtitle-panel').classList.toggle('collapsed');
+  });
+
   // ---- Project Save / Load ----
   function serializeProject() {
     return JSON.stringify({
@@ -1121,6 +1502,13 @@
       bgmTracks: state.bgmTracks.map(serializeAudioTrack),
       sfxTracks: state.sfxTracks.map(serializeAudioTrack),
       voiceTracks: state.voiceTracks.map(serializeAudioTrack),
+      subtitles: state.subtitles.map((s) => ({
+        id: s.id, text: s.text, startTime: s.startTime, endTime: s.endTime,
+        x: s.x, y: s.y, fontSize: s.fontSize,
+        color: s.color, bgColor: s.bgColor, bgOpacity: s.bgOpacity,
+        outlineColor: s.outlineColor, outlineWidth: s.outlineWidth,
+        speaker: s.speaker, position: s.position,
+      })),
       nextId: state.nextId,
     });
   }
@@ -1138,7 +1526,9 @@
       state.lastTotalDuration = null;
       state.nextId = data.nextId || 1;
       state.selectedLayerId = null;
+      state.selectedSubtitleId = null;
       state.currentTime = 0;
+      state.subtitles = (data.subtitles || []).map((s) => createSubtitle(s));
 
       state.layers = [];
       const layerPromises = (data.layers || []).map((ld) => {
@@ -1223,6 +1613,7 @@
     state.lastTotalDuration = null;
     state.currentTime = 0;
     state.bgmTracks = []; state.sfxTracks = []; state.voiceTracks = [];
+    state.subtitles = []; state.selectedSubtitleId = null;
     state.nextId = 1;
     totalDurationInput.value = 10;
     projectNameEl.textContent = state.projectName;
@@ -1442,7 +1833,41 @@
       bgmTracks: [],
       sfxTracks: [],
       voiceTracks: [],
-      nextId: 7,
+      subtitles: [
+        {
+          id: 100, text: 'Animation Studio へようこそ！', speaker: 'ナレーター',
+          startTime: 0.5, endTime: 3.0,
+          x: 960, y: 900, fontSize: 52,
+          color: '#ffffff', bgColor: '#e94560', bgOpacity: 0.9,
+          outlineColor: '#c0392b', outlineWidth: 3,
+          position: 'bottom',
+        },
+        {
+          id: 101, text: 'レイヤーを自由に動かせます', speaker: '',
+          startTime: 3.2, endTime: 5.5,
+          x: 960, y: 900, fontSize: 44,
+          color: '#000000', bgColor: '#f1c40f', bgOpacity: 0.9,
+          outlineColor: '#f39c12', outlineWidth: 2,
+          position: 'bottom',
+        },
+        {
+          id: 102, text: '字幕も複数表示できます！', speaker: 'キャラA',
+          startTime: 4.5, endTime: 6.5,
+          x: 960, y: 100, fontSize: 36,
+          color: '#ffffff', bgColor: '#3498db', bgOpacity: 0.85,
+          outlineColor: '#2980b9', outlineWidth: 2,
+          position: 'top',
+        },
+        {
+          id: 103, text: '色もポップに設定可能 🎨', speaker: '',
+          startTime: 6.0, endTime: 8.0,
+          x: 960, y: 900, fontSize: 48,
+          color: '#ffffff', bgColor: '#9b59b6', bgOpacity: 0.9,
+          outlineColor: '#8e44ad', outlineWidth: 3,
+          position: 'bottom',
+        },
+      ],
+      nextId: 200,
     };
 
     loadProject(JSON.stringify(projectData));
@@ -1746,7 +2171,14 @@
       ? (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1') ? 'video/mp4;codecs=avc1' : 'video/webm;codecs=vp9')
       : 'video/webm;codecs=vp9';
 
-    const stream = glr.canvas.captureStream(0); // manual frame capture
+    // Compositing canvas: GL layers + 2D subtitle overlay
+    const compCanvas = document.createElement('canvas');
+    compCanvas.width = width; compCanvas.height = height;
+    const compCtx = compCanvas.getContext('2d');
+    const scaleX = width / CANVAS_W;
+    const scaleY = height / CANVAS_H;
+
+    const stream = compCanvas.captureStream(0);
     if (renderedAudioBuffer) {
       const aCtx = getAudioCtx();
       const liveAudioCtx = new AudioContext({ sampleRate: aCtx.sampleRate });
@@ -1776,6 +2208,11 @@
         vibOffsets.set(layer.id, getExportVibrationOffset(layer, frame, vibAmpMap));
       });
       glr.renderFrame(time, vibOffsets);
+
+      // Composite: GL output + subtitle overlay
+      compCtx.clearRect(0, 0, width, height);
+      compCtx.drawImage(glr.canvas, 0, 0);
+      renderSubtitles(compCtx, time, scaleX, scaleY);
 
       // Request frame capture from stream
       if (videoTrack.requestFrame) videoTrack.requestFrame();
@@ -1839,6 +2276,7 @@
         const vibOffset = getExportVibrationOffset(state.layers[i], frame, vibAmpMap);
         renderLayer(offCtx, state.layers[i], time, scaleX, scaleY, vibOffset);
       }
+      renderSubtitles(offCtx, time, scaleX, scaleY);
 
       const progress = Math.round((frame / totalFrames) * 100);
       exportProgressBar.value = progress;
@@ -1895,6 +2333,7 @@
     refreshProperties();
     refreshTimeline();
     refreshAudioLists();
+    refreshSubtitleList();
     render();
   }
 

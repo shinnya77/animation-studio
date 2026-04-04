@@ -453,6 +453,116 @@ label {
   clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
 
+/* === Subtitle Panel === */
+#subtitle-panel {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+}
+#subtitle-panel-toggle { cursor: pointer; }
+#subtitle-panel.collapsed .toggle-arrow { transform: rotate(-90deg); }
+#subtitle-panel.collapsed #subtitle-content { display: none; }
+
+#subtitle-content {
+  padding: 6px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+#subtitle-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+#subtitle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtitle-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  padding: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size: 11px;
+  transition: border-color 0.15s;
+}
+.subtitle-item:hover { border-color: var(--border); }
+.subtitle-item.active { border-color: var(--accent); background: var(--selection); }
+
+.sub-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.sub-row label {
+  font-size: 10px;
+  color: var(--text-muted);
+  min-width: 32px;
+}
+.sub-row input[type="text"] {
+  flex: 1;
+  min-width: 100px;
+  font-size: 12px;
+}
+.sub-row input[type="number"] {
+  width: 55px;
+  font-size: 11px;
+}
+.sub-row input[type="color"] {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  background: transparent;
+}
+.sub-row select {
+  font-size: 10px;
+  max-width: 80px;
+}
+
+.sub-color-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.sub-color-group span {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.sub-preview-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sub-delete {
+  cursor: pointer;
+  color: var(--accent);
+  opacity: 0.5;
+  font-size: 12px;
+  margin-left: auto;
+}
+.sub-delete:hover { opacity: 1; }
+
+.sub-timing {
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
 /* === Audio Panel === */
 #audio-panel {
   background: var(--bg-panel);
