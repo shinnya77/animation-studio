@@ -680,6 +680,72 @@ label {
 }
 .audio-section li .audio-remove:hover { opacity: 1; }
 
+/* === Voice Changer Panel === */
+#vc-panel {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+}
+#vc-panel-toggle { cursor: pointer; }
+#vc-panel.collapsed .toggle-arrow { transform: rotate(-90deg); }
+#vc-panel.collapsed #vc-content { display: none; }
+
+#vc-content {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.vc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.vc-row label { color: var(--text-muted); white-space: nowrap; }
+.vc-row select { flex: 1; font-size: 12px; background: var(--bg-input); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; }
+.vc-presets { display: flex; gap: 6px; }
+.vc-preset-btn {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  cursor: pointer;
+}
+.vc-preset-btn:hover { background: var(--selection); }
+.vc-female { border-color: #e91e8c; color: #e91e8c; }
+.vc-male   { border-color: #3498db; color: #3498db; }
+.vc-params { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.vc-param { display: flex; flex-direction: column; gap: 2px; font-size: 11px; }
+.vc-param label { color: var(--text-muted); display: flex; justify-content: space-between; }
+.vc-param label span { color: var(--accent); font-weight: bold; }
+.vc-param input[type=range] { width: 100%; accent-color: var(--accent); }
+.vc-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.vc-toggle-label { font-size: 12px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.vc-action-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+.vc-action-btn:hover { opacity: 0.85; }
+.vc-action-btn.vc-restore { background: var(--bg-input); color: var(--text); border: 1px solid var(--border); }
+.vc-save-section { border-top: 1px solid var(--border); padding-top: 8px; }
+.vc-save-row { display: flex; gap: 6px; margin-bottom: 6px; }
+.vc-save-row input { flex: 1; font-size: 12px; background: var(--bg-input); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; }
+.vc-save-row button { font-size: 12px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); cursor: pointer; }
+.vc-save-row button:hover { background: var(--selection); }
+.vc-saved-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.vc-saved-load { flex: 1; text-align: left; font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); cursor: pointer; }
+.vc-saved-load:hover { background: var(--selection); }
+.vc-saved-del { font-size: 11px; padding: 3px 6px; border: none; background: none; color: var(--accent); cursor: pointer; opacity: 0.6; }
+.vc-saved-del:hover { opacity: 1; }
+
 /* === Modals === */
 .modal {
   position: fixed;

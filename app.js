@@ -47,6 +47,16 @@
     lastTotalDuration: null,
     // Analyser nodes for voice vibration: trackId -> { analyser, dataArray }
     activeAnalysers: new Map(),
+    voiceChanger: {
+      enabled: false,
+      targetType: 'voice',
+      targetIndex: 0,
+      pitch: 1.0,
+      bass: 0,
+      mid: 0,
+      treble: 0,
+      savedPresets: [],
+    },
   };
 
   // ---- DOM refs ----
@@ -210,6 +220,145 @@
     layer.opacity = kf.opacity;
     layer.scaleX = kf.scaleX;
     layer.scaleY = kf.scaleY;
+  }
+
+  // ---- Voice Changer ----
+  const VC_PRESETS = {
+    female: { pitch: 1.2,  bass: -4, mid: 3,  treble: 5  },
+    male:   { pitch: 0.8,  bass: 5,  mid: -2, treble: -3 },
+    default:{ pitch: 1.0,  bass: 0,  mid: 0,  treble: 0  },
+  };
+
+  function buildVCChain(audioCtx, settings) {
+    const bass = audioCtx.createBiquadFilter();
+    bass.type = 'lowshelf';
+    bass.frequency.value = 200;
+    bass.gain.value = settings.bass;
+
+    const mid = audioCtx.createBiquadFilter();
+    mid.type = 'peaking';
+    mid.frequency.value = 1200;
+    mid.Q.value = 1;
+    mid.gain.value = settings.mid;
+
+    const treble = audioCtx.createBiquadFilter();
+    treble.type = 'highshelf';
+    treble.frequency.value = 5000;
+    treble.gain.value = settings.treble;
+
+    bass.connect(mid);
+    mid.connect(treble);
+    return { inputNode: bass, outputNode: treble };
+  }
+
+  async function applyVoiceChangeToBuffer(audioBuffer, settings) {
+    const rate = Math.max(0.1, settings.pitch);
+    const outLen = Math.ceil(audioBuffer.length / rate);
+    const offCtx = new OfflineAudioContext(audioBuffer.numberOfChannels, outLen, audioBuffer.sampleRate);
+    const src = offCtx.createBufferSource();
+    src.buffer = audioBuffer;
+    src.playbackRate.value = rate;
+    const { inputNode, outputNode } = buildVCChain(offCtx, settings);
+    src.connect(inputNode);
+    outputNode.connect(offCtx.destination);
+    src.start(0);
+    return offCtx.startRendering();
+  }
+
+  async function applyVoiceToTrack() {
+    const vc = state.voiceChanger;
+    const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
+    if (!tracks || vc.targetIndex >= tracks.length) { alert('対象トラックが見つかりません'); return; }
+    const track = tracks[vc.targetIndex];
+    if (!track.audioBuffer) { alert('音声データがありません'); return; }
+    if (!track.originalAudioBuffer) track.originalAudioBuffer = track.audioBuffer;
+    try {
+      const processed = await applyVoiceChangeToBuffer(track.originalAudioBuffer, vc);
+      track.audioBuffer = processed;
+      track.duration = processed.duration;
+      refreshAll();
+    } catch (e) {
+      console.error(e);
+      alert('処理中にエラーが発生しました: ' + e.message);
+    }
+  }
+
+  function restoreOriginalAudio() {
+    const vc = state.voiceChanger;
+    const tracks = state[AUDIO_TRACK_KEYS[vc.targetType]];
+    if (!tracks || vc.targetIndex >= tracks.length) return;
+    const track = tracks[vc.targetIndex];
+    if (track.originalAudioBuffer) {
+      track.audioBuffer = track.originalAudioBuffer;
+      track.originalAudioBuffer = null;
+      track.duration = track.audioBuffer.duration;
+      refreshAll();
+    }
+  }
+
+  function saveVCPresetsToStorage() {
+    try { localStorage.setItem('animStudio_vcPresets', JSON.stringify(state.voiceChanger.savedPresets)); } catch (e) {}
+  }
+
+  function loadVCPresetsFromStorage() {
+    try {
+      const s = localStorage.getItem('animStudio_vcPresets');
+      if (s) state.voiceChanger.savedPresets = JSON.parse(s);
+    } catch (e) {}
+  }
+
+  function refreshVoiceChangerUI() {
+    const vc = state.voiceChanger;
+    const sel = $('#vc-target-select');
+    if (!sel) return;
+
+    const prev = sel.value;
+    sel.innerHTML = '';
+    const allTracks = [
+      ...state.bgmTracks.map((t, i) => ({ label: 'BGM: ' + t.name, type: 'bgm', index: i })),
+      ...state.sfxTracks.map((t, i) => ({ label: 'SFX: ' + t.name, type: 'sfx', index: i })),
+      ...state.voiceTracks.map((t, i) => ({ label: '音声: ' + t.name, type: 'voice', index: i })),
+    ];
+    if (allTracks.length === 0) {
+      const opt = document.createElement('option'); opt.textContent = 'トラックなし'; sel.appendChild(opt);
+    } else {
+      allTracks.forEach((t) => {
+        const opt = document.createElement('option');
+        opt.textContent = t.label;
+        opt.value = t.type + ':' + t.index;
+        if (t.type + ':' + t.index === prev) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      const cur = sel.value.split(':');
+      vc.targetType = cur[0]; vc.targetIndex = parseInt(cur[1]) || 0;
+    }
+
+    $('#vc-pitch').value = vc.pitch;
+    $('#vc-pitch-val').textContent = vc.pitch.toFixed(2);
+    $('#vc-bass').value = vc.bass;
+    $('#vc-bass-val').textContent = vc.bass > 0 ? '+' + vc.bass : vc.bass;
+    $('#vc-mid').value = vc.mid;
+    $('#vc-mid-val').textContent = vc.mid > 0 ? '+' + vc.mid : vc.mid;
+    $('#vc-treble').value = vc.treble;
+    $('#vc-treble-val').textContent = vc.treble > 0 ? '+' + vc.treble : vc.treble;
+    $('#vc-enabled').checked = vc.enabled;
+
+    const presetList = $('#vc-preset-list');
+    presetList.innerHTML = '';
+    vc.savedPresets.forEach((p, i) => {
+      const row = document.createElement('div');
+      row.className = 'vc-saved-row';
+      const loadBtn = document.createElement('button');
+      loadBtn.className = 'vc-saved-load';
+      loadBtn.textContent = p.name;
+      loadBtn.onclick = () => { Object.assign(vc, { pitch: p.pitch, bass: p.bass, mid: p.mid, treble: p.treble }); refreshVoiceChangerUI(); };
+      const delBtn = document.createElement('button');
+      delBtn.className = 'vc-saved-del';
+      delBtn.textContent = '✕';
+      delBtn.onclick = () => { vc.savedPresets.splice(i, 1); saveVCPresetsToStorage(); refreshVoiceChangerUI(); };
+      row.appendChild(loadBtn); row.appendChild(delBtn);
+      presetList.appendChild(row);
+    });
   }
 
   // ---- Audio Context ----
@@ -951,12 +1100,24 @@
       const gain = aCtx.createGain();
       gain.gain.value = track.volume ?? 1;
       src.buffer = track.audioBuffer;
+
+      const vc = state.voiceChanger;
+      const isVCTarget = vc.enabled && vc.targetType === sourceType && vc.targetIndex === sourceIndex;
+      if (isVCTarget) src.playbackRate.value = Math.max(0.1, vc.pitch);
+
       src.connect(gain);
+
+      let chainEnd = gain;
+      if (isVCTarget) {
+        const { inputNode, outputNode } = buildVCChain(aCtx, vc);
+        gain.connect(inputNode);
+        chainEnd = outputNode;
+      }
 
       // Create analyser for vibration detection
       const analyser = aCtx.createAnalyser();
       analyser.fftSize = 256;
-      gain.connect(analyser);
+      chainEnd.connect(analyser);
       analyser.connect(aCtx.destination);
 
       const dataArray = new Uint8Array(analyser.fftSize);
@@ -2168,16 +2329,28 @@
     if (!hasAudio) return null;
     const aCtx = getAudioCtx();
     const offlineCtx = new OfflineAudioContext(2, Math.ceil(state.totalDuration * aCtx.sampleRate), aCtx.sampleRate);
-    [...state.bgmTracks, ...state.sfxTracks, ...state.voiceTracks].forEach((t) => {
+    const addTrack = (t, sourceType, sourceIndex) => {
       if (!t.audioBuffer) return;
       const src = offlineCtx.createBufferSource();
       const gain = offlineCtx.createGain();
       gain.gain.value = t.volume ?? 1;
       src.buffer = t.audioBuffer;
+      const vc = state.voiceChanger;
+      const isVCTarget = vc.enabled && vc.targetType === sourceType && vc.targetIndex === sourceIndex;
+      if (isVCTarget) src.playbackRate.value = Math.max(0.1, vc.pitch);
       src.connect(gain);
-      gain.connect(offlineCtx.destination);
+      let chainEnd = gain;
+      if (isVCTarget) {
+        const { inputNode, outputNode } = buildVCChain(offlineCtx, vc);
+        gain.connect(inputNode);
+        chainEnd = outputNode;
+      }
+      chainEnd.connect(offlineCtx.destination);
       src.start(t.startTime || 0);
-    });
+    };
+    state.bgmTracks.forEach((t, i) => addTrack(t, 'bgm', i));
+    state.sfxTracks.forEach((t, i) => addTrack(t, 'sfx', i));
+    state.voiceTracks.forEach((t, i) => addTrack(t, 'voice', i));
     return offlineCtx.startRendering();
   }
 
@@ -2427,6 +2600,60 @@
     $('#audio-panel').classList.toggle('collapsed');
   });
 
+  // ---- Voice Changer Events ----
+  $('#vc-panel-toggle').addEventListener('click', () => { $('#vc-panel').classList.toggle('collapsed'); });
+
+  $('#vc-target-select').addEventListener('change', (e) => {
+    const [type, idx] = e.target.value.split(':');
+    state.voiceChanger.targetType = type;
+    state.voiceChanger.targetIndex = parseInt(idx) || 0;
+  });
+
+  $('#vc-preset-female').addEventListener('click', () => {
+    Object.assign(state.voiceChanger, VC_PRESETS.female);
+    refreshVoiceChangerUI();
+  });
+  $('#vc-preset-male').addEventListener('click', () => {
+    Object.assign(state.voiceChanger, VC_PRESETS.male);
+    refreshVoiceChangerUI();
+  });
+  $('#vc-preset-reset').addEventListener('click', () => {
+    Object.assign(state.voiceChanger, VC_PRESETS.default);
+    refreshVoiceChangerUI();
+  });
+
+  ['pitch', 'bass', 'mid', 'treble'].forEach((param) => {
+    $('#vc-' + param).addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      state.voiceChanger[param] = val;
+      const disp = $('#vc-' + param + '-val');
+      if (param === 'pitch') {
+        disp.textContent = val.toFixed(2);
+      } else {
+        disp.textContent = val > 0 ? '+' + val : val;
+      }
+    });
+  });
+
+  $('#vc-enabled').addEventListener('change', (e) => {
+    state.voiceChanger.enabled = e.target.checked;
+    if (state.isPlaying) { stopAudioPlayback(); startAudioPlayback(); }
+  });
+
+  $('#vc-apply-btn').addEventListener('click', () => { applyVoiceToTrack(); });
+
+  $('#vc-restore-btn').addEventListener('click', () => { restoreOriginalAudio(); });
+
+  $('#vc-save-btn').addEventListener('click', () => {
+    const name = $('#vc-preset-name').value.trim();
+    if (!name) { alert('プリセット名を入力してください'); return; }
+    const vc = state.voiceChanger;
+    state.voiceChanger.savedPresets.push({ name, pitch: vc.pitch, bass: vc.bass, mid: vc.mid, treble: vc.treble });
+    saveVCPresetsToStorage();
+    $('#vc-preset-name').value = '';
+    refreshVoiceChangerUI();
+  });
+
   // Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
@@ -2447,11 +2674,13 @@
     refreshTimeline();
     refreshAudioLists();
     refreshSubtitleList();
+    refreshVoiceChangerUI();
     render();
   }
 
   // ---- Init ----
   function init() {
+    loadVCPresetsFromStorage();
     resizeCanvas();
     window.addEventListener('resize', () => { resizeCanvas(); render(); });
     refreshAll();

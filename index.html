@@ -127,6 +127,55 @@
         </div>
       </div>
     </div>
+
+    <!-- Voice Changer Panel -->
+    <div id="vc-panel" class="collapsed">
+      <div class="panel-header" id="vc-panel-toggle">
+        <h2>🎤 ボイスチェンジャー</h2>
+        <span class="toggle-arrow">▼</span>
+      </div>
+      <div id="vc-content">
+        <div class="vc-row">
+          <label>対象トラック</label>
+          <select id="vc-target-select"></select>
+        </div>
+        <div class="vc-presets">
+          <button class="vc-preset-btn vc-female" id="vc-preset-female">👩 女性</button>
+          <button class="vc-preset-btn vc-male" id="vc-preset-male">👨 男性</button>
+          <button class="vc-preset-btn" id="vc-preset-reset">↺ リセット</button>
+        </div>
+        <div class="vc-params">
+          <div class="vc-param">
+            <label>ピッチ <span id="vc-pitch-val">1.00</span>x</label>
+            <input type="range" id="vc-pitch" min="0.5" max="2.0" step="0.01" value="1.0">
+          </div>
+          <div class="vc-param">
+            <label>低音 <span id="vc-bass-val">0</span>dB</label>
+            <input type="range" id="vc-bass" min="-12" max="12" step="1" value="0">
+          </div>
+          <div class="vc-param">
+            <label>中音 <span id="vc-mid-val">0</span>dB</label>
+            <input type="range" id="vc-mid" min="-12" max="12" step="1" value="0">
+          </div>
+          <div class="vc-param">
+            <label>高音 <span id="vc-treble-val">0</span>dB</label>
+            <input type="range" id="vc-treble" min="-12" max="12" step="1" value="0">
+          </div>
+        </div>
+        <div class="vc-actions">
+          <label class="vc-toggle-label"><input type="checkbox" id="vc-enabled"> プレビュー有効</label>
+          <button id="vc-apply-btn" class="vc-action-btn">✨ 音声に適用</button>
+          <button id="vc-restore-btn" class="vc-action-btn vc-restore">↩ 元に戻す</button>
+        </div>
+        <div class="vc-save-section">
+          <div class="vc-save-row">
+            <input type="text" id="vc-preset-name" placeholder="プリセット名...">
+            <button id="vc-save-btn">💾 保存</button>
+          </div>
+          <div id="vc-preset-list"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Hidden file inputs -->
