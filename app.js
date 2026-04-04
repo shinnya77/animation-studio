@@ -393,11 +393,44 @@
   }
 
   // ---- Layer List UI ----
+  let dragSrcId = null;
+
   function refreshLayerList() {
     layerList.innerHTML = '';
-    state.layers.forEach((layer) => {
+    state.layers.forEach((layer, idx) => {
       const li = document.createElement('li');
       li.className = 'layer-item' + (layer.id === state.selectedLayerId ? ' selected' : '');
+      li.draggable = true;
+      li.dataset.layerId = layer.id;
+
+      // Drag-and-drop handlers
+      li.addEventListener('dragstart', (e) => {
+        dragSrcId = layer.id;
+        li.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      li.addEventListener('dragend', () => {
+        dragSrcId = null;
+        document.querySelectorAll('.layer-item').forEach((el) => {
+          el.classList.remove('dragging', 'drag-over');
+        });
+      });
+      li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (dragSrcId !== layer.id) li.classList.add('drag-over');
+      });
+      li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        li.classList.remove('drag-over');
+        if (!dragSrcId || dragSrcId === layer.id) return;
+        const srcIdx = state.layers.findIndex((l) => l.id === dragSrcId);
+        const dstIdx = state.layers.findIndex((l) => l.id === layer.id);
+        const [moved] = state.layers.splice(srcIdx, 1);
+        state.layers.splice(dstIdx, 0, moved);
+        refreshAll();
+      });
 
       const thumb = document.createElement('canvas');
       thumb.className = 'layer-thumb';
@@ -425,6 +458,20 @@
       vis.textContent = layer.visible ? '👁' : '🚫';
       vis.onclick = (e) => { e.stopPropagation(); layer.visible = !layer.visible; refreshAll(); };
 
+      const btnUp = document.createElement('button');
+      btnUp.className = 'layer-order-btn';
+      btnUp.textContent = '▲';
+      btnUp.title = '前面へ';
+      btnUp.disabled = idx === 0;
+      btnUp.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, -1); };
+
+      const btnDown = document.createElement('button');
+      btnDown.className = 'layer-order-btn';
+      btnDown.textContent = '▼';
+      btnDown.title = '背面へ';
+      btnDown.disabled = idx === state.layers.length - 1;
+      btnDown.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, 1); };
+
       const del = document.createElement('span');
       del.className = 'layer-delete';
       del.textContent = '✕';
@@ -444,6 +491,8 @@
       li.appendChild(thumb);
       li.appendChild(nameSpan);
       li.appendChild(vis);
+      li.appendChild(btnUp);
+      li.appendChild(btnDown);
       li.appendChild(del);
       layerList.appendChild(li);
     });

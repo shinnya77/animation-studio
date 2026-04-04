@@ -147,6 +147,20 @@ label {
   color: var(--accent);
 }
 .layer-item .layer-delete:hover { opacity: 1; }
+.layer-item .layer-order-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+  font-size: 9px;
+  padding: 0 1px;
+  line-height: 1;
+  opacity: 0.5;
+}
+.layer-item .layer-order-btn:hover:not(:disabled) { opacity: 1; color: var(--text); }
+.layer-item .layer-order-btn:disabled { opacity: 0.2; cursor: default; }
+.layer-item.dragging { opacity: 0.4; }
+.layer-item.drag-over { border-color: var(--accent); background: rgba(255,255,255,0.08); }
 
 /* === Asset Panel === */
 #asset-panel {
