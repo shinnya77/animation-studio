@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="roomBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#080b15"/>
+      <stop offset="100%" stop-color="#0e1020"/>
+    </linearGradient>
+    <!-- Candle warm radial glow — center-left area -->
+    <radialGradient id="candleRadial" cx="38%" cy="72%" r="55%">
+      <stop offset="0%" stop-color="#ffb347" stop-opacity="0.95"/>
+      <stop offset="20%" stop-color="#e07820" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#7a3500" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Floor gradient -->
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1408"/>
+      <stop offset="100%" stop-color="#080608"/>
+    </linearGradient>
+    <!-- Ceiling gradient -->
+    <linearGradient id="ceilGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#060810"/>
+      <stop offset="100%" stop-color="#0c0f18"/>
+    </linearGradient>
+    <!-- Chalkboard gradient -->
+    <linearGradient id="boardGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0a1a10"/>
+      <stop offset="40%" stop-color="#0e2018"/>
+      <stop offset="100%" stop-color="#08150e"/>
+    </linearGradient>
+    <!-- Corner darkness -->
+    <radialGradient id="cornerDark" cx="0%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cornerDarkR" cx="100%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Warm glow filter -->
+    <filter id="warmGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="25" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Perspective wall lines -->
+    <linearGradient id="wallLeft" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#05080f"/>
+      <stop offset="100%" stop-color="#0c1020"/>
+    </linearGradient>
+    <linearGradient id="wallRight" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0c1020"/>
+      <stop offset="100%" stop-color="#05080f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background fill -->
+  <rect width="1920" height="1080" fill="url(#roomBg)"/>
+
+  <!-- Ceiling -->
+  <rect x="0" y="0" width="1920" height="180" fill="url(#ceilGrad)"/>
+  <!-- Ceiling fluorescent light fixtures (off/dark) -->
+  <rect x="400" y="20" width="200" height="18" fill="#0c1020" rx="5"/>
+  <rect x="720" y="20" width="200" height="18" fill="#0c1020" rx="5"/>
+  <rect x="1040" y="20" width="200" height="18" fill="#0c1020" rx="5"/>
+  <rect x="1360" y="20" width="200" height="18" fill="#0c1020" rx="5"/>
+  <!-- Light housing support wires -->
+  <line x1="500" y1="0" x2="500" y2="20" stroke="#080c18" stroke-width="2"/>
+  <line x1="820" y1="0" x2="820" y2="20" stroke="#080c18" stroke-width="2"/>
+  <line x1="1140" y1="0" x2="1140" y2="20" stroke="#080c18" stroke-width="2"/>
+  <line x1="1460" y1="0" x2="1460" y2="20" stroke="#080c18" stroke-width="2"/>
+
+  <!-- Back wall -->
+  <rect x="0" y="180" width="1920" height="500" fill="#090c18"/>
+
+  <!-- Chalkboard at front (left side back wall) -->
+  <rect x="80" y="200" width="700" height="380" fill="#0a1a12" rx="4"/>
+  <rect x="80" y="200" width="700" height="380" fill="url(#boardGrad)" rx="4"/>
+  <!-- Chalkboard frame -->
+  <rect x="75" y="195" width="710" height="390" fill="none" stroke="#3a2a15" stroke-width="8" rx="5"/>
+  <!-- Chalkboard rail -->
+  <rect x="80" y="575" width="700" height="18" fill="#2a1e0a" rx="2"/>
+  <!-- Faint chalk marks on board (barely visible) -->
+  <line x1="120" y1="300" x2="350" y2="300" stroke="#1a2a1a" stroke-width="1.5" opacity="0.4"/>
+  <line x1="120" y1="340" x2="280" y2="340" stroke="#1a2a1a" stroke-width="1.5" opacity="0.3"/>
+  <text x="200" y="440" font-family="serif" font-size="22" fill="#1a2a1a" opacity="0.25" transform="rotate(-2, 200, 440)">算数</text>
+
+  <!-- Bulletin board / display area right of chalkboard -->
+  <rect x="820" y="210" width="350" height="280" fill="#0d100a" rx="3"/>
+  <rect x="820" y="210" width="350" height="280" fill="none" stroke="#1a1508" stroke-width="4" rx="3"/>
+  <!-- Some paper on bulletin board (barely visible) -->
+  <rect x="840" y="230" width="90" height="110" fill="#0e120c" rx="2" opacity="0.7"/>
+  <rect x="945" y="230" width="90" height="110" fill="#0f130d" rx="2" opacity="0.7"/>
+  <rect x="1050" y="230" width="90" height="110" fill="#0e120c" rx="2" opacity="0.7"/>
+
+  <!-- Windows on right wall (with night darkness outside) -->
+  <rect x="1280" y="210" width="140" height="200" fill="#060a10" rx="3" opacity="0.9"/>
+  <rect x="1280" y="210" width="140" height="200" fill="none" stroke="#1a1a28" stroke-width="5" rx="3"/>
+  <!-- Window cross bar -->
+  <line x1="1350" y1="210" x2="1350" y2="410" stroke="#1a1a28" stroke-width="3"/>
+  <line x1="1280" y1="310" x2="1420" y2="310" stroke="#1a1a28" stroke-width="3"/>
+
+  <rect x="1460" y="210" width="140" height="200" fill="#060a10" rx="3" opacity="0.9"/>
+  <rect x="1460" y="210" width="140" height="200" fill="none" stroke="#1a1a28" stroke-width="5" rx="3"/>
+  <line x1="1530" y1="210" x2="1530" y2="410" stroke="#1a1a28" stroke-width="3"/>
+  <line x1="1460" y1="310" x2="1600" y2="310" stroke="#1a1a28" stroke-width="3"/>
+
+  <rect x="1640" y="210" width="140" height="200" fill="#060a10" rx="3" opacity="0.9"/>
+  <rect x="1640" y="210" width="140" height="200" fill="none" stroke="#1a1a28" stroke-width="5" rx="3"/>
+  <line x1="1710" y1="210" x2="1710" y2="410" stroke="#1a1a28" stroke-width="3"/>
+  <line x1="1640" y1="310" x2="1780" y2="310" stroke="#1a1a28" stroke-width="3"/>
+
+  <!-- Blackboard eraser tray and chalk bits -->
+  <rect x="85" y="574" width="40" height="10" fill="#1a1810" rx="2"/>
+
+  <!-- Floor perspective line -->
+  <polygon points="0,680 1920,680 1920,1080 0,1080" fill="url(#floorGrad)"/>
+  <!-- Floor boards -->
+  <line x1="0" y1="730" x2="1920" y2="730" stroke="#14110a" stroke-width="1" opacity="0.5"/>
+  <line x1="0" y1="800" x2="1920" y2="800" stroke="#12100a" stroke-width="1" opacity="0.5"/>
+  <line x1="0" y1="880" x2="1920" y2="880" stroke="#12100a" stroke-width="1" opacity="0.5"/>
+  <line x1="0" y1="960" x2="1920" y2="960" stroke="#10100a" stroke-width="1" opacity="0.5"/>
+  <line x1="0" y1="1040" x2="1920" y2="1040" stroke="#100f09" stroke-width="1" opacity="0.5"/>
+
+  <!-- Teacher's desk at front center -->
+  <rect x="320" y="660" width="280" height="100" fill="#1a1208" rx="4"/>
+  <rect x="320" y="660" width="280" height="16" fill="#221808" rx="2"/>
+  <!-- Desk legs -->
+  <rect x="330" y="758" width="20" height="40" fill="#140e06"/>
+  <rect x="560" y="758" width="20" height="40" fill="#140e06"/>
+
+  <!-- Student desks and chairs — rows in shadow -->
+  <!-- Row 1 (closest, lit by candle glow) -->
+  <rect x="550" y="700" width="120" height="80" fill="#1e1508" rx="3" opacity="0.9"/>
+  <rect x="550" y="700" width="120" height="12" fill="#281c0a" rx="2"/>
+  <!-- Chair -->
+  <rect x="560" y="775" width="100" height="60" fill="#1a1206" rx="2" opacity="0.7"/>
+
+  <rect x="720" y="700" width="120" height="80" fill="#1c1408" rx="3" opacity="0.9"/>
+  <rect x="720" y="700" width="120" height="12" fill="#221808" rx="2"/>
+  <rect x="730" y="775" width="100" height="60" fill="#181006" rx="2" opacity="0.7"/>
+
+  <rect x="890" y="700" width="120" height="80" fill="#1a1308" rx="3" opacity="0.8"/>
+  <rect x="890" y="700" width="120" height="12" fill="#201608" rx="2"/>
+  <rect x="900" y="775" width="100" height="60" fill="#160f05" rx="2" opacity="0.7"/>
+
+  <rect x="1060" y="700" width="120" height="80" fill="#18120a" rx="3" opacity="0.75"/>
+  <rect x="1060" y="700" width="120" height="12" fill="#1e1608" rx="2"/>
+
+  <rect x="1230" y="700" width="120" height="80" fill="#141008" rx="3" opacity="0.65"/>
+  <rect x="1230" y="700" width="120" height="12" fill="#1a1408" rx="2"/>
+
+  <!-- Row 2 (mid-ground) -->
+  <rect x="540" y="810" width="120" height="80" fill="#161008" rx="3" opacity="0.7"/>
+  <rect x="720" y="810" width="120" height="80" fill="#14100a" rx="3" opacity="0.65"/>
+  <rect x="900" y="810" width="120" height="80" fill="#120e08" rx="3" opacity="0.6"/>
+  <rect x="1080" y="810" width="120" height="80" fill="#100c08" rx="3" opacity="0.55"/>
+  <rect x="1260" y="810" width="120" height="80" fill="#0e0a06" rx="3" opacity="0.5"/>
+  <rect x="1440" y="810" width="120" height="80" fill="#0c0a06" rx="3" opacity="0.45"/>
+
+  <!-- Row 3 (background, barely visible) -->
+  <rect x="530" y="900" width="120" height="80" fill="#0e0c08" rx="3" opacity="0.5"/>
+  <rect x="710" y="900" width="120" height="80" fill="#0c0a06" rx="3" opacity="0.45"/>
+  <rect x="890" y="900" width="120" height="80" fill="#0a0906" rx="3" opacity="0.4"/>
+  <rect x="1070" y="900" width="120" height="80" fill="#090806" rx="3" opacity="0.35"/>
+  <rect x="1250" y="900" width="120" height="80" fill="#080706" rx="3" opacity="0.3"/>
+
+  <!-- Warm candle glow emanating from center-left floor area -->
+  <ellipse cx="730" cy="750" rx="600" ry="420" fill="url(#candleRadial)" opacity="0.85"/>
+  <!-- Secondary glow halo -->
+  <ellipse cx="730" cy="750" rx="350" ry="250" fill="#ff9020" opacity="0.12" filter="url(#warmGlow)"/>
+
+  <!-- Wall at back lit by candle warmth -->
+  <ellipse cx="550" cy="450" rx="400" ry="280" fill="#7a3800" opacity="0.06"/>
+
+  <!-- Dark corner vignettes -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#cornerDark)" opacity="0.6"/>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#cornerDarkR)" opacity="0.5"/>
+  <!-- Bottom edge darkness -->
+  <rect x="0" y="900" width="1920" height="180" fill="#000000" opacity="0.55"/>
+  <!-- Top edge darkness -->
+  <rect x="0" y="0" width="1920" height="100" fill="#000000" opacity="0.6"/>
+  <!-- Side darkness -->
+  <rect x="0" y="0" width="200" height="1080" fill="#000000" opacity="0.4"/>
+  <rect x="1720" y="0" width="200" height="1080" fill="#000000" opacity="0.4"/>
+</svg>

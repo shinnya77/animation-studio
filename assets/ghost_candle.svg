@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 300" width="120" height="300">
+  <defs>
+    <!-- Candle body gradient -->
+    <linearGradient id="candleBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d0cfc8"/>
+      <stop offset="30%" stop-color="#f0efe8"/>
+      <stop offset="60%" stop-color="#e8e7e0"/>
+      <stop offset="85%" stop-color="#c8c7c0"/>
+      <stop offset="100%" stop-color="#b0afa8"/>
+    </linearGradient>
+    <!-- Candle top (melted wax) gradient -->
+    <radialGradient id="candleTop" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f5f4ec"/>
+      <stop offset="60%" stop-color="#e0dfd5"/>
+      <stop offset="100%" stop-color="#c8c7bc"/>
+    </radialGradient>
+    <!-- Flame outer gradient -->
+    <radialGradient id="flameOuter" cx="50%" cy="70%" r="50%">
+      <stop offset="0%" stop-color="#ff4400" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#ff8800" stop-opacity="0.8"/>
+      <stop offset="70%" stop-color="#ffaa00" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffdd00" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Flame inner gradient (bright core) -->
+    <radialGradient id="flameInner" cx="50%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#fff8e0"/>
+      <stop offset="60%" stop-color="#ffcc44"/>
+      <stop offset="100%" stop-color="#ff8800" stop-opacity="0.8"/>
+    </radialGradient>
+    <!-- Warm glow emanating from flame -->
+    <radialGradient id="warmGlow" cx="50%" cy="75%" r="50%">
+      <stop offset="0%" stop-color="#ffaa33" stop-opacity="0.7"/>
+      <stop offset="40%" stop-color="#ff7700" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#ff4400" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#ff2200" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Melted wax drips gradient -->
+    <linearGradient id="waxDrip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0efe8"/>
+      <stop offset="100%" stop-color="#d8d7d0"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="flameGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="flameBloom" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="outerHalo" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer warm glow halo (radiates from flame area) -->
+  <ellipse cx="60" cy="60" rx="80" ry="80" fill="url(#warmGlow)" opacity="0.7" filter="url(#outerHalo)"/>
+  <ellipse cx="60" cy="65" rx="55" ry="55" fill="#ff9900" opacity="0.15" filter="url(#outerHalo)"/>
+
+  <!-- Candle body shadow (to give it roundness / 3D feel) -->
+  <rect x="22" y="95" width="76" height="200" rx="4" fill="#a8a7a0" opacity="0.3"/>
+
+  <!-- Candle body — main rectangle (white/cream, fat and solid) -->
+  <rect x="24" y="97" width="72" height="196" rx="4" fill="url(#candleBody)"/>
+
+  <!-- Candle body highlight -->
+  <rect x="30" y="97" width="18" height="196" rx="3" fill="#ffffff" opacity="0.22"/>
+
+  <!-- Candle top surface (melted, slightly concave) -->
+  <ellipse cx="60" cy="97" rx="36" ry="8" fill="url(#candleTop)"/>
+  <!-- Small pool of melted wax in center dip -->
+  <ellipse cx="60" cy="97" rx="22" ry="5" fill="#f0efe0" opacity="0.8"/>
+
+  <!-- Wax drips on side -->
+  <!-- Drip 1 left side -->
+  <path d="M36,110 Q32,130 34,148 Q36,152 38,148 Q40,130 38,110 Z" fill="url(#waxDrip)" opacity="0.9"/>
+  <!-- Drip 2 right side -->
+  <path d="M78,120 Q82,145 80,165 Q78,170 76,165 Q74,145 74,120 Z" fill="url(#waxDrip)" opacity="0.85"/>
+  <!-- Drip 3 smaller -->
+  <path d="M55,105 Q52,118 53,128 Q55,132 57,128 Q58,118 57,105 Z" fill="#eeede5" opacity="0.75"/>
+
+  <!-- Wax texture — horizontal bands for candle rings -->
+  <line x1="26" y1="140" x2="94" y2="140" stroke="#c8c7bf" stroke-width="1" opacity="0.4"/>
+  <line x1="26" y1="180" x2="94" y2="180" stroke="#c0bfb7" stroke-width="1" opacity="0.35"/>
+  <line x1="26" y1="220" x2="94" y2="220" stroke="#b8b7af" stroke-width="0.8" opacity="0.3"/>
+  <line x1="26" y1="255" x2="94" y2="255" stroke="#b0afa7" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- Wick -->
+  <line x1="60" y1="97" x2="62" y2="68" stroke="#2a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Wick top glow (tiny ember) -->
+  <circle cx="62" cy="68" r="3" fill="#ff4400" opacity="0.9"/>
+  <circle cx="62" cy="68" r="1.5" fill="#ffcc00" opacity="0.95"/>
+
+  <!-- Flame outer glow (large, soft) -->
+  <ellipse cx="62" cy="42" rx="38" ry="45" fill="url(#flameOuter)" opacity="0.9" filter="url(#flameGlow)"/>
+
+  <!-- Flame shape — teardrop/flickering -->
+  <!-- Outer flame (orange/red) -->
+  <path d="M62,75 C48,68 38,52 42,32 C45,18 55,8 62,5 C69,8 79,18 82,32 C86,52 76,68 62,75 Z"
+    fill="#ff6600" opacity="0.85" filter="url(#flameBloom)"/>
+
+  <!-- Middle flame layer (yellow) -->
+  <path d="M62,72 C50,65 42,50 45,33 C47,20 55,11 62,9 C69,11 77,20 79,33 C82,50 74,65 62,72 Z"
+    fill="#ffaa00" opacity="0.9"/>
+
+  <!-- Inner bright core (white/pale yellow) -->
+  <path d="M62,68 C54,62 48,50 50,37 C52,26 57,18 62,16 C67,18 72,26 74,37 C76,50 70,62 62,68 Z"
+    fill="url(#flameInner)" opacity="0.95"/>
+
+  <!-- Flame tip bright white -->
+  <ellipse cx="62" cy="20" rx="6" ry="9" fill="#ffffff" opacity="0.85"/>
+  <ellipse cx="62" cy="22" rx="3" ry="5" fill="#ffffff" opacity="0.95"/>
+
+  <!-- Small flame flicker (slightly off-center, like wind caught it) -->
+  <path d="M60,70 C55,64 52,53 55,43 C56,38 59,34 61,33"
+    fill="none" stroke="#ffcc44" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- Smoke wisps (faint, at top of flame) -->
+  <path d="M62,5 C64,0 58,-8 63,-14" fill="none" stroke="#888880" stroke-width="1.5" opacity="0.2" stroke-linecap="round"/>
+  <path d="M65,7 C67,2 72,-5 68,-12" fill="none" stroke="#888880" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+</svg>

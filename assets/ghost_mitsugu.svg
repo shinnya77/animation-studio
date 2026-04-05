@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 450" width="200" height="450">
+  <defs>
+    <!-- Skin tone -->
+    <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0c890"/>
+      <stop offset="100%" stop-color="#d8a870"/>
+    </linearGradient>
+    <!-- Hair (dark) -->
+    <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1410"/>
+      <stop offset="100%" stop-color="#2a2018"/>
+    </linearGradient>
+    <!-- White shirt -->
+    <linearGradient id="shirtGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d8d8d0"/>
+      <stop offset="40%" stop-color="#f0f0e8"/>
+      <stop offset="100%" stop-color="#c8c8c0"/>
+    </linearGradient>
+    <!-- Dark shorts -->
+    <linearGradient id="shortsGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a1e2a"/>
+      <stop offset="50%" stop-color="#2a2e3a"/>
+      <stop offset="100%" stop-color="#1a1e2a"/>
+    </linearGradient>
+    <!-- Leg skin -->
+    <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8c080"/>
+      <stop offset="100%" stop-color="#c8a060"/>
+    </linearGradient>
+    <!-- Shoes (dark) -->
+    <radialGradient id="shoeGrad" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#2a2010"/>
+      <stop offset="100%" stop-color="#0a0a08"/>
+    </radialGradient>
+    <!-- Slight shadow under character -->
+    <radialGradient id="dropShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Drop shadow -->
+  <ellipse cx="100" cy="442" rx="55" ry="10" fill="url(#dropShadow)"/>
+
+  <!-- === LEGS === -->
+  <!-- Left leg -->
+  <rect x="71" y="295" width="26" height="100" rx="8" fill="url(#legGrad)"/>
+  <!-- Right leg -->
+  <rect x="103" y="295" width="26" height="100" rx="8" fill="url(#legGrad)"/>
+  <!-- Knee caps hint -->
+  <ellipse cx="84" cy="338" rx="13" ry="10" fill="#d8a870" opacity="0.5"/>
+  <ellipse cx="116" cy="338" rx="13" ry="10" fill="#d8a870" opacity="0.5"/>
+
+  <!-- === SHOES === -->
+  <!-- Left shoe -->
+  <ellipse cx="84" cy="398" rx="18" ry="9" fill="url(#shoeGrad)"/>
+  <rect x="67" y="390" width="34" height="14" rx="4" fill="#181410"/>
+  <!-- Right shoe -->
+  <ellipse cx="116" cy="398" rx="18" ry="9" fill="url(#shoeGrad)"/>
+  <rect x="99" y="390" width="34" height="14" rx="4" fill="#181410"/>
+  <!-- Shoe lace hints -->
+  <path d="M72,393 L96,393" stroke="#555550" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
+  <path d="M104,393 L128,393" stroke="#555550" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
+
+  <!-- === SHORTS === -->
+  <rect x="65" y="260" width="70" height="48" rx="6" fill="url(#shortsGrad)"/>
+  <!-- Shorts waistband -->
+  <rect x="65" y="258" width="70" height="10" rx="3" fill="#12161e"/>
+  <!-- Shorts center seam -->
+  <line x1="100" y1="268" x2="100" y2="308" stroke="#1a1e28" stroke-width="2" opacity="0.6"/>
+  <!-- Shorts leg creases -->
+  <path d="M70,290 Q78,298 82,306" fill="none" stroke="#141820" stroke-width="1.5" opacity="0.4"/>
+  <path d="M130,290 Q122,298 118,306" fill="none" stroke="#141820" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- === SHIRT === -->
+  <!-- Shirt body -->
+  <rect x="60" y="170" width="80" height="100" rx="8" fill="url(#shirtGrad)"/>
+  <!-- Collar -->
+  <path d="M85,175 L100,190 L115,175" fill="none" stroke="#c0c0b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Shirt button line -->
+  <line x1="100" y1="188" x2="100" y2="265" stroke="#c8c8c0" stroke-width="1.5" opacity="0.5"/>
+  <!-- Shirt buttons (3 small circles) -->
+  <circle cx="100" cy="205" r="2.5" fill="#b0b0a8" opacity="0.8"/>
+  <circle cx="100" cy="225" r="2.5" fill="#b0b0a8" opacity="0.8"/>
+  <circle cx="100" cy="245" r="2.5" fill="#b0b0a8" opacity="0.8"/>
+  <!-- Shirt front pocket -->
+  <rect x="65" y="192" width="22" height="18" rx="2" fill="none" stroke="#c0c0b5" stroke-width="1.5" opacity="0.6"/>
+  <!-- Shirt shadow under arms -->
+  <path d="M62,175 Q58,195 60,220" fill="#c8c8be" opacity="0.3"/>
+  <path d="M138,175 Q142,195 140,220" fill="#c8c8be" opacity="0.3"/>
+  <!-- Shirt back tail -->
+  <rect x="60" y="255" width="80" height="10" rx="4" fill="#d8d8d0" opacity="0.5"/>
+
+  <!-- === ARMS === -->
+  <!-- Left arm (straight down, slightly forward — cautious pose) -->
+  <rect x="40" y="175" width="22" height="75" rx="10" fill="url(#legGrad)"/>
+  <!-- Left elbow bend hint -->
+  <path d="M40,220 Q36,238 42,255" fill="url(#legGrad)" stroke="url(#legGrad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- Left hand -->
+  <ellipse cx="43" cy="258" rx="12" ry="10" fill="url(#skinGrad)"/>
+  <!-- Finger hints left -->
+  <rect x="33" y="255" width="8" height="12" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+  <rect x="43" y="253" width="8" height="14" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+  <rect x="52" y="254" width="7" height="13" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+
+  <!-- Right arm (slightly bent, hand near side — wary posture) -->
+  <rect x="138" y="175" width="22" height="70" rx="10" fill="url(#legGrad)"/>
+  <path d="M160,218 Q165,235 158,252" fill="url(#legGrad)" stroke="url(#legGrad)" stroke-width="14" stroke-linecap="round"/>
+  <!-- Right hand -->
+  <ellipse cx="157" cy="255" rx="12" ry="10" fill="url(#skinGrad)"/>
+  <!-- Finger hints right -->
+  <rect x="148" y="252" width="7" height="13" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+  <rect x="157" y="250" width="8" height="14" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+  <rect x="166" y="252" width="7" height="12" rx="4" fill="url(#skinGrad)" opacity="0.9"/>
+
+  <!-- Shirt sleeves over upper arms -->
+  <rect x="40" y="173" width="23" height="30" rx="6" fill="url(#shirtGrad)" opacity="0.9"/>
+  <rect x="137" y="173" width="23" height="30" rx="6" fill="url(#shirtGrad)" opacity="0.9"/>
+
+  <!-- === NECK === -->
+  <rect x="90" y="148" width="20" height="30" rx="6" fill="url(#skinGrad)"/>
+
+  <!-- === HEAD === -->
+  <!-- Head shape — slightly rounded square, boyish -->
+  <ellipse cx="100" cy="120" rx="42" ry="46" fill="url(#skinGrad)"/>
+
+  <!-- === HAIR === -->
+  <!-- Main hair mass -->
+  <ellipse cx="100" cy="88" rx="43" ry="26" fill="url(#hairGrad)"/>
+  <!-- Side hair over ear (left) -->
+  <ellipse cx="62" cy="108" rx="12" ry="18" fill="url(#hairGrad)"/>
+  <!-- Side hair over ear (right) -->
+  <ellipse cx="138" cy="108" rx="12" ry="18" fill="url(#hairGrad)"/>
+  <!-- Hair detail/fringe -->
+  <path d="M60,90 Q70,78 84,82 Q92,76 100,78 Q108,76 116,82 Q130,78 140,90" fill="url(#hairGrad)"/>
+  <!-- Hair highlight -->
+  <path d="M85,82 Q95,74 108,80" fill="none" stroke="#3a3028" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- === FACE === -->
+  <!-- Eyebrows (serious/slightly worried) -->
+  <path d="M76,104 Q84,99 92,103" fill="none" stroke="#2a1e14" stroke-width="3" stroke-linecap="round"/>
+  <path d="M108,103 Q116,99 124,104" fill="none" stroke="#2a1e14" stroke-width="3" stroke-linecap="round"/>
+  <!-- Slight inner brow furrowing -->
+  <path d="M88,103 Q92,100 96,103" fill="none" stroke="#2a1e14" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M104,103 Q108,100 112,103" fill="none" stroke="#2a1e14" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Eyes — cautious, focused, slightly narrowed -->
+  <!-- Left eye -->
+  <ellipse cx="84" cy="114" rx="10" ry="9" fill="#2a2010"/>
+  <ellipse cx="84" cy="114" rx="7" ry="7" fill="#2a1808"/>
+  <ellipse cx="84" cy="114" rx="4.5" ry="5" fill="#0a0806"/>
+  <!-- Eye shine (alert) -->
+  <circle cx="88" cy="111" r="2.5" fill="#ffffff" opacity="0.85"/>
+  <circle cx="80" cy="115" r="1" fill="#ffffff" opacity="0.4"/>
+  <!-- Right eye -->
+  <ellipse cx="116" cy="114" rx="10" ry="9" fill="#2a2010"/>
+  <ellipse cx="116" cy="114" rx="7" ry="7" fill="#2a1808"/>
+  <ellipse cx="116" cy="114" rx="4.5" ry="5" fill="#0a0806"/>
+  <circle cx="120" cy="111" r="2.5" fill="#ffffff" opacity="0.85"/>
+  <circle cx="112" cy="115" r="1" fill="#ffffff" opacity="0.4"/>
+  <!-- Upper eyelids (slightly lowered — cautious) -->
+  <path d="M74,110 Q84,107 94,110" fill="#e8c080" stroke="none"/>
+  <path d="M106,110 Q116,107 126,110" fill="#e8c080" stroke="none"/>
+
+  <!-- Nose -->
+  <path d="M97,125 Q100,132 103,125" fill="none" stroke="#c09060" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="97" cy="127" r="2" fill="#c09060" opacity="0.4"/>
+  <circle cx="103" cy="127" r="2" fill="#c09060" opacity="0.4"/>
+
+  <!-- Mouth — serious, thin line / slight downturn at ends -->
+  <path d="M88,140 Q100,143 112,140" fill="none" stroke="#c07840" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Slight worry line at mouth corners -->
+  <path d="M88,140 Q86,143 88,145" fill="none" stroke="#b06030" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M112,140 Q114,143 112,145" fill="none" stroke="#b06030" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Ears -->
+  <ellipse cx="58" cy="120" rx="9" ry="13" fill="url(#skinGrad)"/>
+  <path d="M62,113 Q66,120 62,127" fill="none" stroke="#d0a068" stroke-width="1.5" opacity="0.6"/>
+  <ellipse cx="142" cy="120" rx="9" ry="13" fill="url(#skinGrad)"/>
+  <path d="M138,113 Q134,120 138,127" fill="none" stroke="#d0a068" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Face shadow/depth -->
+  <ellipse cx="100" cy="130" rx="35" ry="20" fill="#c8a060" opacity="0.1"/>
+  <!-- Cheek blush (subtle) -->
+  <ellipse cx="72" cy="128" rx="12" ry="7" fill="#e0a070" opacity="0.2"/>
+  <ellipse cx="128" cy="128" rx="12" ry="7" fill="#e0a070" opacity="0.2"/>
+</svg>

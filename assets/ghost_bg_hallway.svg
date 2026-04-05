@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="hallBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#050810"/>
+      <stop offset="50%" stop-color="#080c18"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+    <!-- Deep corridor perspective gradient (vanishing into black) -->
+    <radialGradient id="corridorDepth" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#0a1020" stop-opacity="0.3"/>
+      <stop offset="30%" stop-color="#050810" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.98"/>
+    </radialGradient>
+    <!-- Emergency light green glow (far end) -->
+    <radialGradient id="emergencyGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff60" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#00aa30" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#001500" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Ceiling gradient -->
+    <linearGradient id="hallCeil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04060e"/>
+      <stop offset="100%" stop-color="#080c18"/>
+    </linearGradient>
+    <!-- Floor reflection -->
+    <linearGradient id="hallFloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e18"/>
+      <stop offset="100%" stop-color="#040608"/>
+    </linearGradient>
+    <!-- Locker gradient -->
+    <linearGradient id="lockerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#080c18"/>
+      <stop offset="50%" stop-color="#0c1020"/>
+      <stop offset="100%" stop-color="#080c18"/>
+    </linearGradient>
+    <filter id="greenGlow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="tinyGlow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Side wall gradients (vanishing perspective) -->
+    <linearGradient id="leftWall" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#060912"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="rightWall" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#060912"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base dark background -->
+  <rect width="1920" height="1080" fill="#040608"/>
+
+  <!-- Ceiling -->
+  <polygon points="0,0 1920,0 1920,200 0,200" fill="url(#hallCeil)"/>
+
+  <!-- Perspective corridor walls -->
+  <!-- Left wall perspective (converging to vanishing point ~960,500) -->
+  <polygon points="0,0 960,400 960,700 0,1080" fill="url(#leftWall)" opacity="0.98"/>
+  <!-- Right wall perspective -->
+  <polygon points="1920,0 960,400 960,700 1920,1080" fill="url(#rightWall)" opacity="0.98"/>
+
+  <!-- Floor perspective -->
+  <polygon points="0,1080 1920,1080 960,680" fill="url(#hallFloor)" opacity="0.98"/>
+
+  <!-- Ceiling center corridor line -->
+  <line x1="960" y1="0" x2="960" y2="400" stroke="#0c1225" stroke-width="1" opacity="0.4"/>
+
+  <!-- Corridor walls - painted dark with horizontal dado rail -->
+  <!-- Left wall surface -->
+  <polygon points="0,0 800,420 800,680 0,1080" fill="#070a16"/>
+  <!-- Dado rail on left wall (converging) -->
+  <line x1="0" y1="480" x2="810" y2="530" stroke="#0e1228" stroke-width="4" opacity="0.7"/>
+  <line x1="0" y1="490" x2="810" y2="540" stroke="#0c1020" stroke-width="2" opacity="0.5"/>
+  <!-- Upper part of left wall (lighter) -->
+  <polygon points="0,0 810,420 810,530 0,480" fill="#090d1c" opacity="0.5"/>
+  <!-- Lower part of left wall (dado - slightly different tone) -->
+  <polygon points="0,480 810,530 810,680 0,1080" fill="#070912" opacity="0.4"/>
+
+  <!-- Right wall surface -->
+  <polygon points="1920,0 1120,420 1120,680 1920,1080" fill="#070a16"/>
+  <!-- Dado rail on right -->
+  <line x1="1110" y1="530" x2="1920" y2="480" stroke="#0e1228" stroke-width="4" opacity="0.7"/>
+  <line x1="1110" y1="540" x2="1920" y2="490" stroke="#0c1020" stroke-width="2" opacity="0.5"/>
+  <polygon points="1110,420 1920,0 1920,480 1110,530" fill="#090d1c" opacity="0.5"/>
+  <polygon points="1110,530 1920,480 1920,1080 1110,680" fill="#070912" opacity="0.4"/>
+
+  <!-- Left side lockers / shoe cabinets (in perspective) -->
+  <!-- Far lockers (tiny, near vanishing point) -->
+  <rect x="760" y="430" width="12" height="60" fill="#0a0e1c" rx="1"/>
+  <rect x="748" y="430" width="12" height="60" fill="#080c18" rx="1"/>
+  <rect x="736" y="430" width="12" height="60" fill="#0a0e1c" rx="1"/>
+  <rect x="724" y="430" width="12" height="60" fill="#080c18" rx="1"/>
+  <!-- Mid lockers -->
+  <rect x="620" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <rect x="598" y="445" width="22" height="90" fill="#080c16" rx="1"/>
+  <rect x="576" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <rect x="554" y="445" width="22" height="90" fill="#080c16" rx="1"/>
+  <rect x="532" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <!-- Near lockers (larger) -->
+  <rect x="350" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="305" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="260" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="215" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="170" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="125" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="80" y="455" width="45" height="148" fill="#0c1020" rx="2"/>
+  <rect x="35" y="450" width="45" height="155" fill="#0a0e1c" rx="2"/>
+  <rect x="0" y="445" width="35" height="162" fill="#0c1020" rx="2"/>
+  <!-- Locker handles (tiny dots) -->
+  <circle cx="375" cy="530" r="3" fill="#141830" opacity="0.6"/>
+  <circle cx="330" cy="530" r="3" fill="#141830" opacity="0.6"/>
+  <circle cx="285" cy="530" r="3" fill="#141830" opacity="0.6"/>
+
+  <!-- Right side lockers (mirror) -->
+  <rect x="1148" y="430" width="12" height="60" fill="#0a0e1c" rx="1"/>
+  <rect x="1160" y="430" width="12" height="60" fill="#080c18" rx="1"/>
+  <rect x="1172" y="430" width="12" height="60" fill="#0a0e1c" rx="1"/>
+  <rect x="1184" y="430" width="12" height="60" fill="#080c18" rx="1"/>
+  <rect x="1278" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <rect x="1300" y="445" width="22" height="90" fill="#080c16" rx="1"/>
+  <rect x="1322" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <rect x="1344" y="445" width="22" height="90" fill="#080c16" rx="1"/>
+  <rect x="1366" y="445" width="22" height="90" fill="#0a0e1a" rx="1"/>
+  <rect x="1525" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="1570" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="1615" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="1660" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="1705" y="460" width="45" height="140" fill="#0c1020" rx="2"/>
+  <rect x="1750" y="460" width="45" height="140" fill="#0a0e1c" rx="2"/>
+  <rect x="1795" y="455" width="45" height="148" fill="#0c1020" rx="2"/>
+  <rect x="1840" y="450" width="45" height="155" fill="#0a0e1c" rx="2"/>
+  <rect x="1885" y="445" width="35" height="162" fill="#0c1020" rx="2"/>
+
+  <!-- Emergency exit lights at far end (very dim green) -->
+  <!-- Main emergency sign glow far ahead -->
+  <rect x="920" y="480" width="80" height="30" fill="#003010" rx="3" opacity="0.8" filter="url(#tinyGlow)"/>
+  <rect x="927" y="484" width="66" height="22" fill="#004a18" rx="2"/>
+  <text x="960" y="498" font-family="sans-serif" font-size="10" fill="#00cc40" text-anchor="middle" opacity="0.7">EXIT</text>
+  <!-- Tiny green glow emanating from sign -->
+  <ellipse cx="960" cy="500" rx="80" ry="40" fill="url(#emergencyGlow)" opacity="0.3" filter="url(#greenGlow)"/>
+
+  <!-- Second emergency light further right -->
+  <rect x="1035" y="488" width="50" height="20" fill="#002a10" rx="2" opacity="0.6" filter="url(#tinyGlow)"/>
+  <ellipse cx="1060" cy="498" rx="30" ry="15" fill="#00aa30" opacity="0.15" filter="url(#tinyGlow)"/>
+
+  <!-- Ceiling fluorescent lights in corridor (all dark/off) -->
+  <rect x="870" y="5" width="180" height="15" fill="#080c18" rx="4" opacity="0.8"/>
+  <!-- Near ceiling lights larger -->
+  <rect x="650" y="8" width="200" height="18" fill="#080c16" rx="4" opacity="0.8"/>
+  <rect x="1070" y="8" width="200" height="18" fill="#080c16" rx="4" opacity="0.8"/>
+  <rect x="300" y="12" width="240" height="20" fill="#080c16" rx="4" opacity="0.8"/>
+  <rect x="1380" y="12" width="240" height="20" fill="#080c16" rx="4" opacity="0.8"/>
+  <!-- Light cords/wires -->
+  <line x1="960" y1="0" x2="960" y2="8" stroke="#06080e" stroke-width="2"/>
+  <line x1="750" y1="0" x2="750" y2="10" stroke="#06080e" stroke-width="2"/>
+  <line x1="1170" y1="0" x2="1170" y2="10" stroke="#06080e" stroke-width="2"/>
+
+  <!-- Classroom doors on left wall (dark, closed) -->
+  <!-- Far door 1 -->
+  <rect x="730" y="432" width="30" height="55" fill="#060910" rx="1"/>
+  <!-- Near door 1 -->
+  <rect x="480" y="448" width="55" height="90" fill="#070a14" rx="2"/>
+  <rect x="492" y="460" width="10" height="6" fill="#0c1020" rx="1" opacity="0.8"/>
+  <!-- Near door 2 -->
+  <rect x="220" y="455" width="65" height="110" fill="#070a14" rx="2"/>
+  <rect x="234" y="468" width="12" height="8" fill="#0c1020" rx="1" opacity="0.8"/>
+  <!-- Right wall door -->
+  <rect x="1175" y="432" width="30" height="55" fill="#060910" rx="1"/>
+  <rect x="1390" y="448" width="55" height="90" fill="#070a14" rx="2"/>
+  <rect x="1402" y="460" width="10" height="6" fill="#0c1020" rx="1" opacity="0.8"/>
+
+  <!-- Dark corridor depth overlay — makes corridor disappear into black -->
+  <radialGradient id="corridorDepth2" cx="50%" cy="47%" r="40%">
+    <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="60%" stop-color="#000000" stop-opacity="0.3"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="0.97"/>
+  </radialGradient>
+  <rect width="1920" height="1080" fill="url(#corridorDepth2)"/>
+
+  <!-- Edge vignette sides -->
+  <rect x="0" y="0" width="320" height="1080" fill="#000000" opacity="0.6"/>
+  <rect x="1600" y="0" width="320" height="1080" fill="#000000" opacity="0.6"/>
+  <!-- Floor bottom edge dark -->
+  <rect x="0" y="950" width="1920" height="130" fill="#000000" opacity="0.7"/>
+  <!-- Top ceiling dark -->
+  <rect x="0" y="0" width="1920" height="80" fill="#000000" opacity="0.7"/>
+
+  <!-- Very faint ambient floor reflection from the emergency light -->
+  <ellipse cx="960" cy="750" rx="300" ry="80" fill="#003010" opacity="0.06"/>
+</svg>

@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Overall gym darkness -->
+    <linearGradient id="gymBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="50%" stop-color="#050810"/>
+      <stop offset="100%" stop-color="#080c14"/>
+    </linearGradient>
+    <!-- High ceiling gradient -->
+    <linearGradient id="gymCeil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020408"/>
+      <stop offset="100%" stop-color="#060a14"/>
+    </linearGradient>
+    <!-- Court floor gradient -->
+    <linearGradient id="courtFloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0e08"/>
+      <stop offset="60%" stop-color="#0a0b07"/>
+      <stop offset="100%" stop-color="#050606"/>
+    </linearGradient>
+    <!-- Center ambient glow (very faint) -->
+    <radialGradient id="centerGlow" cx="50%" cy="60%" r="35%">
+      <stop offset="0%" stop-color="#1a1a28" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#0d0d1a" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Emergency exit sign glow green -->
+    <radialGradient id="exitGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ee55" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#00aa33" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#002200" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Emergency light red -->
+    <radialGradient id="redGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2200" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#880000" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#110000" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Bleacher shadow -->
+    <linearGradient id="bleacherGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#050810"/>
+      <stop offset="40%" stop-color="#080c18"/>
+      <stop offset="100%" stop-color="#020408"/>
+    </linearGradient>
+    <filter id="exitBloom" x="-300%" y="-300%" width="700%" height="700%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="redBloom" x="-300%" y="-300%" width="700%" height="700%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="30" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.9"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Base background -->
+  <rect width="1920" height="1080" fill="url(#gymBg)"/>
+
+  <!-- High ceiling (lost in darkness above) -->
+  <rect x="0" y="0" width="1920" height="300" fill="url(#gymCeil)"/>
+
+  <!-- Ceiling structural beams (barely visible) -->
+  <!-- Main horizontal truss beam -->
+  <rect x="0" y="80" width="1920" height="15" fill="#060810" opacity="0.7"/>
+  <rect x="0" y="140" width="1920" height="10" fill="#050710" opacity="0.6"/>
+  <!-- Vertical beam supports from ceiling -->
+  <rect x="240" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="480" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="720" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="960" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="1200" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="1440" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <rect x="1680" y="0" width="12" height="300" fill="#050810" opacity="0.5"/>
+  <!-- Basketball backboards (dark shapes hanging from ceiling) -->
+  <rect x="160" y="250" width="120" height="80" fill="#040608" rx="3" opacity="0.8"/>
+  <line x1="220" y1="250" x2="220" y2="200" stroke="#040608" stroke-width="8" opacity="0.8"/>
+  <rect x="185" y="280" width="70" height="45" fill="#050810" rx="2" opacity="0.8"/>
+  <rect x="1640" y="250" width="120" height="80" fill="#040608" rx="3" opacity="0.8"/>
+  <line x1="1700" y1="250" x2="1700" y2="200" stroke="#040608" stroke-width="8" opacity="0.8"/>
+  <rect x="1665" y="280" width="70" height="45" fill="#050810" rx="2" opacity="0.8"/>
+
+  <!-- Gym floor -->
+  <polygon points="0,520 1920,520 1920,1080 0,1080" fill="url(#courtFloor)"/>
+
+  <!-- Basketball court floor lines (very faint) -->
+  <!-- Center circle -->
+  <circle cx="960" cy="800" r="160" fill="none" stroke="#1a1808" stroke-width="2.5" opacity="0.45"/>
+  <circle cx="960" cy="800" r="8" fill="#1a1808" opacity="0.4"/>
+  <!-- Center line -->
+  <line x1="0" y1="800" x2="1920" y2="800" stroke="#1a1808" stroke-width="2" opacity="0.35"/>
+  <!-- Court outline -->
+  <rect x="100" y="540" width="1720" height="520" fill="none" stroke="#181806" stroke-width="2.5" opacity="0.4"/>
+  <!-- Free throw lanes -->
+  <rect x="100" y="670" width="380" height="390" fill="none" stroke="#161604" stroke-width="2" opacity="0.3"/>
+  <rect x="1440" y="670" width="380" height="390" fill="none" stroke="#161604" stroke-width="2" opacity="0.3"/>
+  <!-- Free throw circles -->
+  <circle cx="480" cy="800" r="90" fill="none" stroke="#161604" stroke-width="2" opacity="0.3"/>
+  <circle cx="1440" cy="800" r="90" fill="none" stroke="#161604" stroke-width="2" opacity="0.3"/>
+  <!-- Three point lines (arcs) -->
+  <path d="M 100 570 Q 100 940 480 980" fill="none" stroke="#141404" stroke-width="2" opacity="0.25"/>
+  <path d="M 1820 570 Q 1820 940 1440 980" fill="none" stroke="#141404" stroke-width="2" opacity="0.25"/>
+  <!-- Floor boards horizontal lines -->
+  <line x1="0" y1="560" x2="1920" y2="560" stroke="#121206" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="600" x2="1920" y2="600" stroke="#121206" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="640" x2="1920" y2="640" stroke="#121206" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="680" x2="1920" y2="680" stroke="#121206" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="720" x2="1920" y2="720" stroke="#121206" stroke-width="1" opacity="0.2"/>
+  <line x1="0" y1="760" x2="1920" y2="760" stroke="#121206" stroke-width="1" opacity="0.2"/>
+  <line x1="0" y1="840" x2="1920" y2="840" stroke="#121206" stroke-width="1" opacity="0.2"/>
+  <line x1="0" y1="900" x2="1920" y2="900" stroke="#0e0e04" stroke-width="1" opacity="0.18"/>
+  <line x1="0" y1="960" x2="1920" y2="960" stroke="#0e0e04" stroke-width="1" opacity="0.18"/>
+  <line x1="0" y1="1020" x2="1920" y2="1020" stroke="#0c0c04" stroke-width="1" opacity="0.15"/>
+
+  <!-- Walls (side walls visible as dark surfaces) -->
+  <!-- Left wall -->
+  <rect x="0" y="0" width="100" height="1080" fill="#040610" opacity="0.9"/>
+  <!-- Right wall -->
+  <rect x="1820" y="0" width="100" height="1080" fill="#040610" opacity="0.9"/>
+
+  <!-- Bleachers on right side (dark stepped shapes) -->
+  <!-- Row 1 (lowest) -->
+  <polygon points="1500,520 1920,520 1920,570 1500,570" fill="#060810" opacity="0.9"/>
+  <!-- Row 2 -->
+  <polygon points="1520,470 1920,470 1920,522 1520,522" fill="#050710" opacity="0.9"/>
+  <!-- Row 3 -->
+  <polygon points="1545,420 1920,420 1920,472 1545,472" fill="#040610" opacity="0.9"/>
+  <!-- Row 4 -->
+  <polygon points="1570,370 1920,370 1920,422 1570,422" fill="#040610" opacity="0.9"/>
+  <!-- Row 5 -->
+  <polygon points="1600,320 1920,320 1920,372 1600,372" fill="#030508" opacity="0.9"/>
+  <!-- Row 6 -->
+  <polygon points="1630,270 1920,270 1920,322 1630,322" fill="#030508" opacity="0.9"/>
+  <!-- Bleacher seat hints (very dark lines between rows) -->
+  <line x1="1500" y1="570" x2="1920" y2="570" stroke="#090c18" stroke-width="2" opacity="0.6"/>
+  <line x1="1520" y1="522" x2="1920" y2="522" stroke="#090c18" stroke-width="2" opacity="0.6"/>
+  <line x1="1545" y1="472" x2="1920" y2="472" stroke="#090c18" stroke-width="2" opacity="0.5"/>
+  <line x1="1570" y1="422" x2="1920" y2="422" stroke="#090c18" stroke-width="2" opacity="0.5"/>
+  <line x1="1600" y1="372" x2="1920" y2="372" stroke="#080c16" stroke-width="2" opacity="0.4"/>
+  <!-- Bleacher vertical supports -->
+  <line x1="1650" y1="270" x2="1650" y2="570" stroke="#060810" stroke-width="3" opacity="0.5"/>
+  <line x1="1750" y1="270" x2="1750" y2="570" stroke="#060810" stroke-width="3" opacity="0.5"/>
+  <line x1="1850" y1="270" x2="1850" y2="570" stroke="#060810" stroke-width="3" opacity="0.5"/>
+
+  <!-- Storage room door (where Mitsugu hides) — back left wall -->
+  <rect x="80" y="350" width="90" height="170" fill="#030508" rx="3"/>
+  <rect x="76" y="346" width="98" height="178" fill="none" stroke="#080c18" stroke-width="4" rx="4"/>
+  <circle cx="158" cy="435" r="6" fill="#0c1020" opacity="0.7"/>
+  <!-- Faint outline of door frame -->
+  <line x1="80" y1="348" x2="80" y2="520" stroke="#0c1020" stroke-width="2" opacity="0.6"/>
+  <line x1="170" y1="348" x2="170" y2="520" stroke="#0c1020" stroke-width="2" opacity="0.6"/>
+  <line x1="78" y1="348" x2="172" y2="348" stroke="#0c1020" stroke-width="2" opacity="0.6"/>
+
+  <!-- Emergency exit signs — small green glowing rectangles -->
+  <!-- Left wall exit sign -->
+  <rect x="18" y="300" width="60" height="28" fill="#001808" rx="3" filter="url(#exitBloom)"/>
+  <rect x="20" y="302" width="56" height="24" fill="#004a18" rx="2"/>
+  <text x="48" y="316" font-family="sans-serif" font-size="9" fill="#00dd44" text-anchor="middle" opacity="0.85">非常口</text>
+  <!-- Green glow from left exit sign -->
+  <ellipse cx="48" cy="314" rx="70" ry="35" fill="url(#exitGlow)" opacity="0.25" filter="url(#exitBloom)"/>
+
+  <!-- Right side exit sign -->
+  <rect x="1842" y="300" width="60" height="28" fill="#001808" rx="3" filter="url(#exitBloom)"/>
+  <rect x="1844" y="302" width="56" height="24" fill="#004a18" rx="2"/>
+  <text x="1872" y="316" font-family="sans-serif" font-size="9" fill="#00dd44" text-anchor="middle" opacity="0.85">非常口</text>
+  <ellipse cx="1872" cy="314" rx="70" ry="35" fill="url(#exitGlow)" opacity="0.25" filter="url(#exitBloom)"/>
+
+  <!-- Red indicator light top left -->
+  <circle cx="200" cy="80" r="8" fill="#550000" filter="url(#redBloom)"/>
+  <circle cx="200" cy="80" r="5" fill="#ff1100" opacity="0.9"/>
+  <ellipse cx="200" cy="80" rx="25" ry="25" fill="url(#redGlow)" opacity="0.3" filter="url(#redBloom)"/>
+
+  <!-- Additional small indicator light right -->
+  <circle cx="1720" cy="80" r="8" fill="#550000" filter="url(#redBloom)"/>
+  <circle cx="1720" cy="80" r="5" fill="#ff1100" opacity="0.9"/>
+  <ellipse cx="1720" cy="80" rx="25" ry="25" fill="url(#redGlow)" opacity="0.3" filter="url(#redBloom)"/>
+
+  <!-- Floor exit sign near storage door (faint green reflection on floor) -->
+  <rect x="82" y="520" width="86" height="3" fill="#003010" opacity="0.4"/>
+  <ellipse cx="125" cy="540" rx="50" ry="15" fill="#003010" opacity="0.15"/>
+
+  <!-- Very faint center floor ambient light (ultra dim) -->
+  <ellipse cx="960" cy="780" rx="550" ry="250" fill="url(#centerGlow)" opacity="0.6" filter="url(#softGlow)"/>
+
+  <!-- Dark overall vignette -->
+  <rect width="1920" height="1080" fill="url(#vignette)" opacity="0.85"/>
+
+  <!-- Extra top darkness — high ceiling disappears into black -->
+  <rect x="0" y="0" width="1920" height="250" fill="#000000" opacity="0.65"/>
+  <!-- Side darkness -->
+  <rect x="0" y="0" width="80" height="1080" fill="#000000" opacity="0.75"/>
+  <rect x="1840" y="0" width="80" height="1080" fill="#000000" opacity="0.75"/>
+  <!-- Bottom darkness -->
+  <rect x="0" y="1000" width="1920" height="80" fill="#000000" opacity="0.7"/>
+</svg>
