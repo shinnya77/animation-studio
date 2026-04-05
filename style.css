@@ -164,14 +164,11 @@ label {
 
 /* === Asset Panel === */
 #asset-panel {
-  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  flex: 1;
   min-height: 0;
 }
-#asset-panel-toggle { cursor: pointer; }
-#asset-panel.collapsed .toggle-arrow { transform: rotate(-90deg); }
-#asset-panel.collapsed #asset-content { display: none; }
 
 #asset-content {
   flex: 1;
@@ -884,3 +881,184 @@ label {
 
 /* Canvas dragging states */
 #canvas-overlay.dragging { cursor: grabbing; }
+
+/* === Splitters === */
+.splitter {
+  background: var(--border);
+  flex-shrink: 0;
+  z-index: 20;
+  transition: background 0.15s;
+  position: relative;
+}
+.splitter:hover, .splitter.active { background: var(--accent); }
+.splitter-h { width: 4px; cursor: col-resize; }
+.splitter-v { height: 4px; cursor: row-resize; width: 100%; }
+.splitter::after { content: ''; position: absolute; background: transparent; }
+.splitter-h::after { top: 0; bottom: 0; left: -4px; right: -4px; cursor: col-resize; }
+.splitter-v::after { left: 0; right: 0; top: -4px; bottom: -4px; cursor: row-resize; }
+
+/* === Dock System === */
+.dock {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  min-width: 0;
+  min-height: 0;
+}
+#dock-left  { width: 220px; flex-shrink: 0; border-right: 1px solid var(--border); }
+#dock-right { width: 260px; flex-shrink: 0; border-left:  1px solid var(--border); }
+.dock-bottom {
+  height: 260px;
+  min-height: 80px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.dock-tabbar {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  min-height: 28px;
+  background: #0b1120;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.dock-tabbar::-webkit-scrollbar { display: none; }
+
+.dock-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px 0 12px;
+  height: 100%;
+  font-size: 12px;
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  user-select: none;
+  transition: background 0.1s, color 0.1s;
+  position: relative;
+}
+.dock-tab:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.dock-tab.active {
+  color: var(--text);
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--accent);
+}
+.dock-tab.drag-over { background: rgba(233,69,96,0.2); }
+
+.dock-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.dock-tab:hover .dock-tab-btn { opacity: 0.6; }
+.dock-tab-btn:hover { opacity: 1 !important; color: var(--accent); background: rgba(233,69,96,0.1); }
+
+.dock-panes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left / Right docks: exclusive tab – only active panel visible */
+#dock-left .dock-panes > *,
+#dock-right .dock-panes > * {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+#dock-left  .dock-panes > .dock-panel-active,
+#dock-right .dock-panes > .dock-panel-active { display: flex; }
+
+/* Bottom dock: all panels stacked and always visible */
+#dock-bottom .dock-panes {
+  overflow-y: auto;
+}
+#dock-bottom .dock-panes > * {
+  display: flex;
+  flex: 0 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-top: 1px solid var(--border);
+  flex-direction: column;
+}
+#dock-bottom .dock-panes > *:first-child { border-top: none; }
+
+/* Timeline gets a reasonable default height in the bottom dock */
+#dock-bottom .dock-panes > #timeline-area {
+  flex: 0 0 160px;
+  min-height: 80px;
+}
+/* Collapsed panels in bottom dock keep their header visible */
+#dock-bottom .dock-panes > .collapsed > *:not(.panel-header) { display: none; }
+
+/* === Floating Panel === */
+.panel-floating {
+  position: fixed !important;
+  z-index: 600;
+  background: var(--bg-panel);
+  border: 1px solid var(--accent) !important;
+  border-radius: 6px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  overflow: hidden;
+  resize: both;
+  display: flex !important;
+  flex-direction: column;
+  min-width: 180px;
+  min-height: 80px;
+}
+.panel-floating .panel-header,
+.panel-floating > .dock-tabbar {
+  cursor: move;
+  user-select: none;
+}
+.panel-floating .dock-panes > * { display: none; }
+.panel-floating .dock-panes > *.dock-panel-active { display: flex; }
+
+/* === Drop Zone Overlay === */
+#dock-zone-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 590;
+  pointer-events: none;
+}
+.dock-drop-zone {
+  position: absolute;
+  border: 2px dashed rgba(233,69,96,0.4);
+  border-radius: 8px;
+  background: rgba(233,69,96,0.05);
+  transition: border-color 0.1s, background 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(233,69,96,0.5);
+  pointer-events: none;
+}
+.dock-drop-zone.drop-active {
+  border-color: var(--accent);
+  background: rgba(233,69,96,0.18);
+  color: var(--accent);
+}

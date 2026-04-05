@@ -1,4 +1,4 @@
-const CACHE = 'animstudio-v1';
+const CACHE = 'animstudio-v7';
 const ASSETS = ['./index.html', './app.js', './style.css', './manifest.json'];
 
 self.addEventListener('install', (e) => {

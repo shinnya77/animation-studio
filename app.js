@@ -1716,9 +1716,6 @@
 
   assetSearch.addEventListener('input', () => renderAssetGrid(assetSearch.value));
 
-  $('#asset-panel-toggle').addEventListener('click', () => {
-    $('#asset-panel').classList.toggle('collapsed');
-  });
 
   loadAssetManifest();
 
@@ -3085,6 +3082,347 @@
   }
 
   init();
+
+  // Expose for DockManager
+  window._studioRefreshAll = refreshAll;
+})();
+
+// === Dock Manager ===
+(function () {
+
+  // ---- Splitter helpers ----
+  function initHSplitter(id, targetId, resizeRight) {
+    const spl = document.getElementById(id);
+    const target = document.getElementById(targetId);
+    if (!spl || !target) return;
+    spl.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      spl.classList.add('active');
+      const startX = e.clientX, startW = target.offsetWidth;
+      let rafH = 0;
+      const onMove = (e) => {
+        const w = Math.max(0, resizeRight ? startW - (e.clientX - startX) : startW + (e.clientX - startX));
+        target.style.width = w + 'px';
+        target.style.flex = 'none';
+        cancelAnimationFrame(rafH);
+        rafH = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+      };
+      const onUp = () => {
+        spl.classList.remove('active');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        window.dispatchEvent(new Event('resize'));
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+    spl.addEventListener('dblclick', () => {
+      target.style.width = target.style.flex = '';
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
+  function initVSplitter(id, targetId) {
+    const spl = document.getElementById(id);
+    const target = document.getElementById(targetId);
+    if (!spl || !target) return;
+    spl.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      spl.classList.add('active');
+      const startY = e.clientY, startH = target.offsetHeight;
+      let rafV = 0;
+      const onMove = (e) => {
+        const h = Math.max(60, startH - (e.clientY - startY));
+        target.style.height = h + 'px';
+        target.style.flex = 'none';
+        cancelAnimationFrame(rafV);
+        rafV = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+      };
+      const onUp = () => {
+        spl.classList.remove('active');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        window.dispatchEvent(new Event('resize'));
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+    spl.addEventListener('dblclick', () => {
+      target.style.height = target.style.flex = '';
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
+  initHSplitter('splitter-left',  'dock-left',   false);
+  initHSplitter('splitter-right', 'dock-right',  true);
+  initVSplitter('splitter-bottom', 'dock-bottom');
+
+  // ---- Panel registry ----
+  const registry = {
+    'layer-panel':    { title: '\u30ec\u30a4\u30e4\u30fc',     dockId: 'dock-left' },
+    'asset-panel':    { title: '\u30a2\u30bb\u30c3\u30c8',     dockId: 'dock-left' },
+    'property-panel': { title: '\u30d7\u30ed\u30d1\u30c6\u30a3',   dockId: 'dock-right' },
+    'timeline-area':  { title: '\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3', dockId: 'dock-bottom' },
+    'subtitle-panel': { title: '\u5b57\u5e55',         dockId: 'dock-bottom' },
+    'audio-panel':    { title: '\u30aa\u30fc\u30c7\u30a3\u30aa',   dockId: 'dock-bottom' },
+    'vc-panel':       { title: 'VC',             dockId: 'dock-bottom' },
+  };
+
+  function panelsInDock(dockId) {
+    return Object.entries(registry)
+      .filter(([, v]) => v.dockId === dockId)
+      .map(([id]) => id);
+  }
+
+  // ---- Build tab bar ----
+  function buildTabBar(dockId) {
+    const tabbar = document.getElementById(dockId + '-tabs');
+    if (!tabbar) return;
+    tabbar.innerHTML = '';
+    panelsInDock(dockId).forEach(panelId => {
+      const tab = document.createElement('div');
+      tab.className = 'dock-tab';
+      tab.dataset.panelId = panelId;
+      tab.dataset.dockId  = dockId;
+
+      const label = document.createTextNode(registry[panelId].title);
+      tab.appendChild(label);
+
+      const floatBtn = document.createElement('button');
+      floatBtn.className = 'dock-tab-btn';
+      floatBtn.title = '\u30d5\u30ed\u30fc\u30c6\u30a3\u30f3\u30b0\u5316';
+      floatBtn.textContent = '\u229e';
+      floatBtn.addEventListener('click', (e) => { e.stopPropagation(); floatPanel(panelId); });
+      tab.appendChild(floatBtn);
+
+      tab.addEventListener('click', () => activatePanel(panelId));
+      setupTabDrag(tab, panelId);
+      tabbar.appendChild(tab);
+    });
+  }
+
+  // ---- Activate panel ----
+  function activatePanel(panelId) {
+    const info = registry[panelId];
+    if (!info || info.dockId === 'floating') return;
+    const dockId = info.dockId;
+
+    if (dockId === 'dock-bottom') {
+      // Bottom dock: all panels stay visible; just uncollapse target
+      const el = document.getElementById(panelId);
+      if (el) {
+        el.classList.remove('collapsed');
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 30);
+      }
+    } else {
+      // Left/right docks: exclusive – hide all, show only target
+      panelsInDock(dockId).forEach(id => {
+        document.getElementById(id)?.classList.remove('dock-panel-active');
+      });
+      const el = document.getElementById(panelId);
+      if (el) el.classList.add('dock-panel-active');
+    }
+
+    const tabbar = document.getElementById(dockId + '-tabs');
+    if (tabbar) {
+      tabbar.querySelectorAll('.dock-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.panelId === panelId);
+      });
+    }
+
+    if (window._studioRefreshAll) window._studioRefreshAll();
+  }
+
+  // ---- Move panel to dock ----
+  function moveToDock(panelId, targetDockId) {
+    const info = registry[panelId];
+    if (!info) return;
+
+    const oldDockId = info.dockId;
+    const panel = document.getElementById(panelId);
+    const targetPanes = document.querySelector('#' + targetDockId + ' .dock-panes');
+    if (!panel || !targetPanes) return;
+
+    panel.classList.remove('panel-floating');
+    panel.style.cssText = '';
+    panel.querySelector('.dock-back-btn')?.remove();
+
+    targetPanes.appendChild(panel);
+    info.dockId = targetDockId;
+
+    if (oldDockId !== 'floating') {
+      buildTabBar(oldDockId);
+      const rem = panelsInDock(oldDockId);
+      if (rem.length) activatePanel(rem[0]);
+    }
+    buildTabBar(targetDockId);
+    activatePanel(panelId);
+  }
+
+  // ---- Float panel ----
+  function floatPanel(panelId) {
+    const info = registry[panelId];
+    if (!info || info.dockId === 'floating') return;
+
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+
+    const oldDockId = info.dockId;
+    const rect = panel.getBoundingClientRect();
+
+    info.prevDockId = info.dockId;
+    info.dockId = 'floating';
+    panel.classList.remove('dock-panel-active');
+    panel.classList.add('panel-floating');
+    panel.style.left   = Math.max(10, rect.left + 20) + 'px';
+    panel.style.top    = Math.max(10, rect.top  + 20) + 'px';
+    panel.style.width  = Math.max(240, rect.width)    + 'px';
+    panel.style.height = Math.max(160, rect.height)   + 'px';
+    document.body.appendChild(panel);
+
+    buildTabBar(oldDockId);
+    const rem = panelsInDock(oldDockId);
+    if (rem.length) activatePanel(rem[0]);
+
+    const dragHandle = panel.querySelector('.panel-header') || panel.querySelector('.dock-tabbar');
+    if (dragHandle) setupFloatDrag(panel, panelId, dragHandle);
+    addDockBackBtn(panel, panelId);
+
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  function addDockBackBtn(panel, panelId) {
+    const header = panel.querySelector('.panel-header');
+    if (!header) return;
+    header.querySelector('.dock-back-btn')?.remove();
+    const btn = document.createElement('button');
+    btn.className = 'dock-tab-btn dock-back-btn';
+    btn.style.opacity = '1';
+    btn.textContent = '\u229f';
+    btn.title = '\u30c9\u30c3\u30af\u306b\u623b\u3059';
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      moveToDock(panelId, registry[panelId].prevDockId || 'dock-left');
+    });
+    header.insertBefore(btn, header.firstChild);
+  }
+
+  // ---- Drag floating panel ----
+  function setupFloatDrag(panel, panelId, handle) {
+    if (handle._dockDragBound) handle.removeEventListener('mousedown', handle._dockDragBound);
+    handle._dockDragBound = (e) => {
+      if (['BUTTON','INPUT','SELECT'].includes(e.target.tagName)) return;
+      if (!panel.classList.contains('panel-floating')) return;
+      e.preventDefault();
+      const sx = e.clientX, sy = e.clientY;
+      const sl = parseInt(panel.style.left) || 0;
+      const st = parseInt(panel.style.top)  || 0;
+      showDropZones();
+      const onMove = (e) => {
+        panel.style.left = Math.max(0, sl + e.clientX - sx) + 'px';
+        panel.style.top  = Math.max(0, st + e.clientY - sy) + 'px';
+        highlightDropZone(e.clientX, e.clientY);
+      };
+      const onUp = (e) => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        const target = getDropZone(e.clientX, e.clientY);
+        hideDropZones();
+        if (target) moveToDock(panelId, target);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    };
+    handle.addEventListener('mousedown', handle._dockDragBound);
+  }
+
+  // ---- Tab drag → float → dock ----
+  function setupTabDrag(tab, panelId) {
+    tab.addEventListener('mousedown', (e) => {
+      if (['BUTTON', 'INPUT', 'SELECT'].includes(e.target.tagName)) return;
+      const sx = e.clientX, sy = e.clientY;
+      let dragging = false;
+
+      const onMove = (mv) => {
+        if (!dragging) {
+          if (Math.abs(mv.clientX - sx) < 5 && Math.abs(mv.clientY - sy) < 5) return;
+          dragging = true;
+          floatPanel(panelId);
+          showDropZones();
+        }
+        const panel = document.getElementById(panelId);
+        if (panel) {
+          panel.style.left = Math.max(0, mv.clientX - 80) + 'px';
+          panel.style.top  = Math.max(0, mv.clientY - 15) + 'px';
+        }
+        highlightDropZone(mv.clientX, mv.clientY);
+      };
+
+      const onUp = (up) => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        if (!dragging) return;
+        const target = getDropZone(up.clientX, up.clientY);
+        hideDropZones();
+        if (target) moveToDock(panelId, target);
+      };
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+
+  // ---- Drop zone overlay ----
+  let overlay = null;
+
+  function showDropZones() {
+    overlay = document.createElement('div');
+    overlay.id = 'dock-zone-overlay';
+    const labels = { 'dock-left': '\u2190 \u5de6', 'dock-right': '\u53f3 \u2192', 'dock-bottom': '\u2193 \u4e0b' };
+    ['dock-left','dock-right','dock-bottom'].forEach(dockId => {
+      const dock = document.getElementById(dockId);
+      if (!dock) return;
+      const r = dock.getBoundingClientRect();
+      const zone = document.createElement('div');
+      zone.className = 'dock-drop-zone';
+      zone.dataset.dockId = dockId;
+      zone.style.left   = r.left   + 'px';
+      zone.style.top    = r.top    + 'px';
+      zone.style.width  = r.width  + 'px';
+      zone.style.height = r.height + 'px';
+      zone.textContent  = labels[dockId];
+      overlay.appendChild(zone);
+    });
+    document.body.appendChild(overlay);
+  }
+
+  function hideDropZones() { overlay?.remove(); overlay = null; }
+
+  function highlightDropZone(x, y) {
+    if (!overlay) return;
+    overlay.querySelectorAll('.dock-drop-zone').forEach(z => {
+      const l = parseFloat(z.style.left), t = parseFloat(z.style.top);
+      z.classList.toggle('drop-active', x >= l && x <= l + parseFloat(z.style.width) && y >= t && y <= t + parseFloat(z.style.height));
+    });
+  }
+
+  function getDropZone(x, y) {
+    if (!overlay) return null;
+    for (const z of overlay.querySelectorAll('.dock-drop-zone')) {
+      const l = parseFloat(z.style.left), t = parseFloat(z.style.top);
+      if (x >= l && x <= l + parseFloat(z.style.width) && y >= t && y <= t + parseFloat(z.style.height)) return z.dataset.dockId;
+    }
+    return null;
+  }
+
+  // ---- Init ----
+  buildTabBar('dock-left');
+  buildTabBar('dock-right');
+  buildTabBar('dock-bottom');
+  activatePanel('layer-panel');
+  activatePanel('property-panel');
+  panelsInDock('dock-bottom').forEach(id => activatePanel(id));
+
 })();
 
 // Service Worker 登録（localhost / HTTPS 環境のみ）

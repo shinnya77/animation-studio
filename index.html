@@ -28,32 +28,36 @@
     </header>
 
     <div id="main-area">
-      <!-- Left Panel: Layers + Assets -->
-      <aside id="layer-panel">
-        <div class="panel-header">
-          <h2>レイヤー</h2>
-          <button id="btn-add-layer" title="画像レイヤー追加">+ 画像</button>
-        </div>
-        <ul id="layer-list"></ul>
-        <div id="asset-panel">
-          <div class="panel-header" id="asset-panel-toggle">
-            <h2>📦 アセット</h2>
-            <span class="toggle-arrow">▼</span>
-          </div>
-          <div id="asset-content">
-            <div id="asset-filter">
-              <input type="text" id="asset-search" placeholder="検索...">
+      <!-- Left Dock -->
+      <div class="dock" id="dock-left">
+        <div class="dock-tabbar" id="dock-left-tabs"></div>
+        <div class="dock-panes">
+          <aside id="layer-panel">
+            <div class="panel-header">
+              <h2>レイヤー</h2>
+              <button id="btn-add-layer" title="画像レイヤー追加">+ 画像</button>
             </div>
-            <div id="asset-grid"></div>
-          </div>
+            <ul id="layer-list"></ul>
+          </aside>
+          <aside id="asset-panel">
+            <div class="panel-header">
+              <h2>📦 アセット</h2>
+            </div>
+            <div id="asset-content">
+              <div id="asset-filter">
+                <input type="text" id="asset-search" placeholder="検索...">
+              </div>
+              <div id="asset-grid"></div>
+            </div>
+          </aside>
         </div>
-      </aside>
+      </div>
+      <div class="splitter splitter-h" id="splitter-left"></div>
 
       <!-- Center: Canvas -->
       <main id="canvas-area">
         <div id="canvas-container">
           <canvas id="stage-canvas" width="1920" height="1080"></canvas>
-          <!-- Overlay for drag interaction -->
           <div id="canvas-overlay"></div>
         </div>
         <div id="canvas-controls">
@@ -63,83 +67,97 @@
         </div>
       </main>
 
-      <!-- Right Panel: Properties -->
-      <aside id="property-panel">
-        <div class="panel-header">
-          <h2>プロパティ</h2>
-        </div>
-        <div id="property-content">
-          <p class="placeholder-text">レイヤーを選択してください</p>
-        </div>
-      </aside>
-    </div>
+      <div class="splitter splitter-h" id="splitter-right"></div>
 
-    <!-- Bottom: Timeline -->
-    <div id="timeline-area">
-      <div id="timeline-controls">
-        <button id="btn-play" title="再生">▶</button>
-        <button id="btn-pause" title="一時停止">⏸</button>
-        <button id="btn-stop" title="停止">⏹</button>
-        <span id="time-display">00:00.000 / 00:00.000</span>
-        <label>総時間(秒): <input type="number" id="total-duration" value="10" min="1" max="600" step="0.1"></label>
-      </div>
-      <div id="timeline-tracks-container">
-        <div id="timeline-ruler"></div>
-        <div id="timeline-tracks"></div>
-        <div id="timeline-playhead"></div>
+      <!-- Right Dock -->
+      <div class="dock" id="dock-right">
+        <div class="dock-tabbar" id="dock-right-tabs"></div>
+        <div class="dock-panes">
+          <aside id="property-panel">
+            <div class="panel-header">
+              <h2>プロパティ</h2>
+            </div>
+            <div id="property-content">
+              <p class="placeholder-text">レイヤーを選択してください</p>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
 
-    <!-- Subtitle Panel (collapsible) -->
-    <div id="subtitle-panel">
-      <div class="panel-header" id="subtitle-panel-toggle">
-        <h2>💬 字幕</h2>
-        <span class="toggle-arrow">▼</span>
-      </div>
-      <div id="subtitle-content">
-        <div id="subtitle-toolbar">
-          <button id="btn-add-subtitle">+ 字幕追加</button>
-          <span id="subtitle-count" style="color:var(--text-muted);font-size:11px;margin-left:8px;"></span>
-        </div>
-        <div id="subtitle-list"></div>
-      </div>
-    </div>
+    <div class="splitter splitter-v" id="splitter-bottom"></div>
 
-    <!-- Audio Panel (collapsible) -->
-    <div id="audio-panel">
-      <div class="panel-header" id="audio-panel-toggle">
-        <h2>🔊 オーディオ</h2>
-        <span class="toggle-arrow">▼</span>
-      </div>
-      <div id="audio-content">
-        <div class="audio-section">
-          <h3>BGM</h3>
-          <button id="btn-add-bgm">+ BGM追加</button>
-          <ul id="bgm-list"></ul>
-        </div>
-        <div class="audio-section">
-          <h3>効果音</h3>
-          <button id="btn-add-sfx">+ 効果音追加</button>
-          <ul id="sfx-list"></ul>
-        </div>
-        <div class="audio-section">
-          <h3>音声ファイル</h3>
-          <div class="audio-section-btns">
-            <button id="btn-add-voice">+ 追加</button>
-            <button id="btn-add-recording">🎙 録音</button>
+    <!-- Bottom Dock -->
+    <div class="dock dock-bottom" id="dock-bottom">
+      <div class="dock-tabbar" id="dock-bottom-tabs"></div>
+      <div class="dock-panes">
+
+        <!-- Timeline -->
+        <div id="timeline-area">
+          <div id="timeline-controls">
+            <button id="btn-play" title="再生">▶</button>
+            <button id="btn-pause" title="一時停止">⏸</button>
+            <button id="btn-stop" title="停止">⏹</button>
+            <span id="time-display">00:00.000 / 00:00.000</span>
+            <label>総時間(秒): <input type="number" id="total-duration" value="10" min="1" max="600" step="0.1"></label>
           </div>
-          <ul id="voice-list"></ul>
+          <div id="timeline-tracks-container">
+            <div id="timeline-ruler"></div>
+            <div id="timeline-tracks"></div>
+            <div id="timeline-playhead"></div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Voice Changer Panel -->
-    <div id="vc-panel" class="collapsed">
-      <div class="panel-header" id="vc-panel-toggle">
-        <h2>🎤 ボイスチェンジャー</h2>
-        <span class="toggle-arrow">▼</span>
-      </div>
-      <div id="vc-content">
+        <!-- Subtitle Panel -->
+        <div id="subtitle-panel">
+          <div class="panel-header" id="subtitle-panel-toggle">
+            <h2>💬 字幕</h2>
+            <span class="toggle-arrow">▼</span>
+          </div>
+          <div id="subtitle-content">
+            <div id="subtitle-toolbar">
+              <button id="btn-add-subtitle">+ 字幕追加</button>
+              <span id="subtitle-count" style="color:var(--text-muted);font-size:11px;margin-left:8px;"></span>
+            </div>
+            <div id="subtitle-list"></div>
+          </div>
+        </div>
+
+        <!-- Audio Panel -->
+        <div id="audio-panel">
+          <div class="panel-header" id="audio-panel-toggle">
+            <h2>🔊 オーディオ</h2>
+            <span class="toggle-arrow">▼</span>
+          </div>
+          <div id="audio-content">
+            <div class="audio-section">
+              <h3>BGM</h3>
+              <button id="btn-add-bgm">+ BGM追加</button>
+              <ul id="bgm-list"></ul>
+            </div>
+            <div class="audio-section">
+              <h3>効果音</h3>
+              <button id="btn-add-sfx">+ 効果音追加</button>
+              <ul id="sfx-list"></ul>
+            </div>
+            <div class="audio-section">
+              <h3>音声ファイル</h3>
+              <div class="audio-section-btns">
+                <button id="btn-add-voice">+ 追加</button>
+                <button id="btn-add-recording">🎙 録音</button>
+              </div>
+              <ul id="voice-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Changer Panel -->
+        <div id="vc-panel">
+          <div class="panel-header" id="vc-panel-toggle">
+            <h2>🎤 ボイスチェンジャー</h2>
+            <span class="toggle-arrow">▼</span>
+          </div>
+          <div id="vc-content">
         <div class="vc-row">
           <label>対象トラック</label>
           <select id="vc-target-select"></select>
@@ -180,9 +198,11 @@
           </div>
           <div id="vc-preset-list"></div>
         </div>
-      </div>
-    </div>
-  </div>
+          </div><!-- /vc-content -->
+        </div><!-- /vc-panel -->
+      </div><!-- /dock-panes -->
+    </div><!-- /dock-bottom -->
+  </div><!-- /app -->
 
   <!-- Hidden file inputs -->
   <input type="file" id="file-image" accept="image/*" style="display:none">
