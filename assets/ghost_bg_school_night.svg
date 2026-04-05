@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Night sky gradient: deep indigo to near-black -->
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#080c1a"/>
+      <stop offset="40%" stop-color="#0d1530"/>
+      <stop offset="100%" stop-color="#111828"/>
+    </linearGradient>
+    <!-- Ground gradient -->
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0f1c"/>
+      <stop offset="100%" stop-color="#060a12"/>
+    </linearGradient>
+    <!-- Candle glow filter for the one lit window -->
+    <radialGradient id="candleWindow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e8a040" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#c06820" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#80400a" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Window glow spill on building exterior -->
+    <radialGradient id="windowSpill" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d07820" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#80400a" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Cloudy sky texture filter -->
+    <filter id="cloudFilter" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="5" seed="42" result="noise"/>
+      <feColorMatrix type="matrix"
+        values="0 0 0 0 0.05
+                0 0 0 0 0.07
+                0 0 0 0 0.15
+                0 0 0 -3 2.5" result="cloudMask"/>
+      <feBlend in="SourceGraphic" in2="cloudMask" mode="multiply"/>
+    </filter>
+    <!-- Atmospheric haze -->
+    <filter id="haze">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <!-- Glow around window -->
+    <filter id="windowGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Tree texture -->
+    <filter id="treeFilter">
+      <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- === SKY === -->
+  <rect width="1920" height="1080" fill="url(#nightSky)"/>
+
+  <!-- Cloud layers — dark, heavy, overcast -->
+  <!-- Cloud mass 1 — upper left -->
+  <ellipse cx="300" cy="120" rx="380" ry="110" fill="#131a2e" opacity="0.85"/>
+  <ellipse cx="420" cy="100" rx="280" ry="80" fill="#0e1428" opacity="0.9"/>
+  <ellipse cx="180" cy="150" rx="200" ry="70" fill="#111828" opacity="0.8"/>
+  <!-- Cloud mass 2 — upper center -->
+  <ellipse cx="900" cy="80" rx="450" ry="120" fill="#0f1626" opacity="0.9"/>
+  <ellipse cx="780" cy="110" rx="320" ry="90" fill="#0c1322" opacity="0.85"/>
+  <ellipse cx="1050" cy="95" rx="260" ry="75" fill="#111930" opacity="0.8"/>
+  <!-- Cloud mass 3 — upper right -->
+  <ellipse cx="1600" cy="100" rx="400" ry="115" fill="#10162a" opacity="0.88"/>
+  <ellipse cx="1780" cy="130" rx="220" ry="80" fill="#0d1325" opacity="0.85"/>
+  <ellipse cx="1450" cy="85" rx="300" ry="70" fill="#0f1628" opacity="0.8"/>
+  <!-- Lower cloud layer -->
+  <ellipse cx="500" cy="240" rx="350" ry="95" fill="#0c1220" opacity="0.7"/>
+  <ellipse cx="1200" cy="220" rx="420" ry="100" fill="#0d1322" opacity="0.72"/>
+  <ellipse cx="1800" cy="260" rx="280" ry="80" fill="#0b1118" opacity="0.65"/>
+
+  <!-- === DISTANT TREES / TREELINE (far background) === -->
+  <!-- Far treeline silhouette -->
+  <path d="M0,680 Q60,620 120,650 Q180,580 240,620 Q300,560 360,600 Q420,550 480,585 Q540,545 600,575 Q660,555 720,570 Q780,540 840,565 Q900,545 960,560 Q1020,548 1080,562 Q1140,550 1200,568 Q1260,545 1320,570 Q1380,548 1440,572 Q1500,555 1560,575 Q1620,560 1680,580 Q1740,565 1800,582 Q1860,570 1920,580 L1920,700 L0,700 Z" fill="#0a0e1a" opacity="0.9"/>
+
+  <!-- === SCHOOL BUILDING === -->
+  <!-- Main building body — a typical 3-story Japanese elementary school, wide concrete building -->
+  <!-- Building shadow/depth -->
+  <rect x="220" y="400" width="1200" height="500" fill="#06080f" rx="2"/>
+  <!-- Main building face -->
+  <rect x="230" y="390" width="1180" height="490" fill="#0c1020" rx="2"/>
+
+  <!-- Roofline detail — slight overhang -->
+  <rect x="210" y="383" width="1200" height="16" fill="#080c18" rx="1"/>
+  <!-- Roof edge highlight (very subtle) -->
+  <rect x="210" y="383" width="1200" height="3" fill="#181e32" opacity="0.6"/>
+
+  <!-- === WINDOWS — 3 rows × ~10 cols, all dark except one === -->
+  <!-- Row 1 (top floor, y≈410) -->
+  <!-- Dark windows: each ~80×65px, spaced evenly -->
+  <!-- col positions: 260,370,480,590,700,810,920,1030,1140,1250,1360 -->
+  <g fill="#05070e" stroke="#0d1428" stroke-width="1.5">
+    <rect x="260" y="415" width="80" height="65" rx="2"/>
+    <rect x="370" y="415" width="80" height="65" rx="2"/>
+    <rect x="480" y="415" width="80" height="65" rx="2"/>
+    <rect x="590" y="415" width="80" height="65" rx="2"/>
+    <rect x="700" y="415" width="80" height="65" rx="2"/>
+    <rect x="810" y="415" width="80" height="65" rx="2"/>
+    <rect x="920" y="415" width="80" height="65" rx="2"/>
+    <rect x="1030" y="415" width="80" height="65" rx="2"/>
+    <rect x="1140" y="415" width="80" height="65" rx="2"/>
+    <rect x="1250" y="415" width="80" height="65" rx="2"/>
+    <rect x="1360" y="415" width="80" height="65" rx="2"/>
+  </g>
+
+  <!-- Row 2 (middle floor, y≈510) — THE CANDLE WINDOW IS HERE at col 590 -->
+  <g fill="#05070e" stroke="#0d1428" stroke-width="1.5">
+    <rect x="260" y="515" width="80" height="65" rx="2"/>
+    <rect x="370" y="515" width="80" height="65" rx="2"/>
+    <rect x="480" y="515" width="80" height="65" rx="2"/>
+    <!-- Candle window at 590 — amber glow -->
+    <!-- Window glow spill on building wall -->
+    <ellipse cx="630" cy="548" rx="70" ry="55" fill="url(#windowSpill)" filter="url(#windowGlow)"/>
+    <!-- Actual lit window -->
+    <rect x="590" y="515" width="80" height="65" rx="2" fill="#c06010" stroke="#e08020" stroke-width="1"/>
+    <!-- Candle glow fill inside window -->
+    <rect x="592" y="517" width="76" height="61" rx="1" fill="url(#candleWindow)"/>
+    <!-- Candle flame hint inside window -->
+    <ellipse cx="630" cy="535" rx="6" ry="10" fill="#ffe090" opacity="0.9"/>
+    <rect x="700" y="515" width="80" height="65" rx="2"/>
+    <rect x="810" y="515" width="80" height="65" rx="2"/>
+    <rect x="920" y="515" width="80" height="65" rx="2"/>
+    <rect x="1030" y="515" width="80" height="65" rx="2"/>
+    <rect x="1140" y="515" width="80" height="65" rx="2"/>
+    <rect x="1250" y="515" width="80" height="65" rx="2"/>
+    <rect x="1360" y="515" width="80" height="65" rx="2"/>
+  </g>
+
+  <!-- Row 3 (ground floor, y≈610) -->
+  <g fill="#05070e" stroke="#0d1428" stroke-width="1.5">
+    <rect x="260" y="615" width="80" height="65" rx="2"/>
+    <rect x="370" y="615" width="80" height="65" rx="2"/>
+    <rect x="480" y="615" width="80" height="65" rx="2"/>
+    <rect x="590" y="615" width="80" height="65" rx="2"/>
+    <rect x="700" y="615" width="80" height="65" rx="2"/>
+    <rect x="810" y="615" width="80" height="65" rx="2"/>
+    <rect x="920" y="615" width="80" height="65" rx="2"/>
+    <rect x="1030" y="615" width="80" height="65" rx="2"/>
+    <rect x="1140" y="615" width="80" height="65" rx="2"/>
+    <rect x="1250" y="615" width="80" height="65" rx="2"/>
+    <rect x="1360" y="615" width="80" height="65" rx="2"/>
+  </g>
+
+  <!-- Building horizontal floor dividers -->
+  <rect x="230" y="496" width="1180" height="8" fill="#080c18" opacity="0.8"/>
+  <rect x="230" y="596" width="1180" height="8" fill="#080c18" opacity="0.8"/>
+
+  <!-- Main entrance — double doors, ground level center -->
+  <rect x="830" y="700" width="130" height="180" fill="#07090f" rx="2"/>
+  <rect x="832" y="702" width="60" height="176" fill="#060810" rx="1"/>
+  <rect x="898" y="702" width="60" height="176" fill="#060810" rx="1"/>
+  <!-- Door handle hints -->
+  <rect x="888" y="775" width="8" height="20" fill="#0f1428" rx="1"/>
+  <rect x="900" y="775" width="8" height="20" fill="#0f1428" rx="1"/>
+
+  <!-- Side wing — right side of building, smaller -->
+  <rect x="1410" y="500" width="300" height="380" fill="#0a0e1c" rx="2"/>
+  <rect x="1400" y="493" width="310" height="12" fill="#070a15" rx="1"/>
+  <!-- Side wing windows -->
+  <g fill="#05070e" stroke="#0d1428" stroke-width="1.2">
+    <rect x="1435" y="520" width="65" height="55" rx="2"/>
+    <rect x="1530" y="520" width="65" height="55" rx="2"/>
+    <rect x="1435" y="610" width="65" height="55" rx="2"/>
+    <rect x="1530" y="610" width="65" height="55" rx="2"/>
+    <rect x="1435" y="700" width="65" height="55" rx="2"/>
+    <rect x="1530" y="700" width="65" height="55" rx="2"/>
+  </g>
+
+  <!-- === GROUND / SCHOOLYARD === -->
+  <rect x="0" y="870" width="1920" height="210" fill="url(#groundGrad)"/>
+  <!-- Asphalt texture hints -->
+  <rect x="0" y="868" width="1920" height="4" fill="#0a0e18" opacity="0.7"/>
+  <!-- Faint yard lines (basketball/athletic markings) -->
+  <line x1="400" y1="900" x2="1500" y2="900" stroke="#121828" stroke-width="2" opacity="0.5"/>
+  <ellipse cx="960" cy="930" rx="120" ry="30" fill="none" stroke="#111626" stroke-width="2" opacity="0.4"/>
+
+  <!-- === WIRE FENCE (foreground) === -->
+  <!-- Fence posts -->
+  <g fill="#0c1020" stroke="#151c30" stroke-width="2">
+    <!-- Vertical posts -->
+    <rect x="50" y="820" width="8" height="200" rx="2"/>
+    <rect x="150" y="818" width="8" height="202" rx="2"/>
+    <rect x="250" y="820" width="8" height="200" rx="2"/>
+    <rect x="350" y="818" width="8" height="202" rx="2"/>
+    <rect x="450" y="820" width="8" height="200" rx="2"/>
+    <rect x="550" y="818" width="8" height="202" rx="2"/>
+    <rect x="650" y="820" width="8" height="200" rx="2"/>
+    <rect x="750" y="818" width="8" height="202" rx="2"/>
+    <rect x="850" y="820" width="8" height="200" rx="2"/>
+    <rect x="950" y="818" width="8" height="202" rx="2"/>
+    <rect x="1050" y="820" width="8" height="200" rx="2"/>
+    <rect x="1150" y="818" width="8" height="202" rx="2"/>
+    <rect x="1250" y="820" width="8" height="200" rx="2"/>
+    <rect x="1350" y="818" width="8" height="202" rx="2"/>
+    <rect x="1450" y="820" width="8" height="200" rx="2"/>
+    <rect x="1550" y="818" width="8" height="202" rx="2"/>
+    <rect x="1650" y="820" width="8" height="200" rx="2"/>
+    <rect x="1750" y="818" width="8" height="202" rx="2"/>
+    <rect x="1850" y="820" width="8" height="200" rx="2"/>
+  </g>
+  <!-- Fence horizontal rails -->
+  <rect x="0" y="822" width="1920" height="5" fill="#131c2e" opacity="0.9"/>
+  <rect x="0" y="868" width="1920" height="5" fill="#131c2e" opacity="0.85"/>
+  <rect x="0" y="920" width="1920" height="5" fill="#0f1828" opacity="0.8"/>
+  <!-- Diamond wire mesh pattern — simplified as diagonal lines -->
+  <g stroke="#0e1626" stroke-width="1" opacity="0.7">
+    <!-- Diagonal lines going right-down, spaced 20px -->
+    <line x1="0" y1="822" x2="100" y2="922"/>
+    <line x1="100" y1="822" x2="200" y2="922"/>
+    <line x1="200" y1="822" x2="300" y2="922"/>
+    <line x1="300" y1="822" x2="400" y2="922"/>
+    <line x1="400" y1="822" x2="500" y2="922"/>
+    <line x1="500" y1="822" x2="600" y2="922"/>
+    <line x1="600" y1="822" x2="700" y2="922"/>
+    <line x1="700" y1="822" x2="800" y2="922"/>
+    <line x1="800" y1="822" x2="900" y2="922"/>
+    <line x1="900" y1="822" x2="1000" y2="922"/>
+    <line x1="1000" y1="822" x2="1100" y2="922"/>
+    <line x1="1100" y1="822" x2="1200" y2="922"/>
+    <line x1="1200" y1="822" x2="1300" y2="922"/>
+    <line x1="1300" y1="822" x2="1400" y2="922"/>
+    <line x1="1400" y1="822" x2="1500" y2="922"/>
+    <line x1="1500" y1="822" x2="1600" y2="922"/>
+    <line x1="1600" y1="822" x2="1700" y2="922"/>
+    <line x1="1700" y1="822" x2="1800" y2="922"/>
+    <line x1="1800" y1="822" x2="1900" y2="922"/>
+    <!-- Diagonal lines going left-down -->
+    <line x1="100" y1="822" x2="0" y2="922"/>
+    <line x1="200" y1="822" x2="100" y2="922"/>
+    <line x1="300" y1="822" x2="200" y2="922"/>
+    <line x1="400" y1="822" x2="300" y2="922"/>
+    <line x1="500" y1="822" x2="400" y2="922"/>
+    <line x1="600" y1="822" x2="500" y2="922"/>
+    <line x1="700" y1="822" x2="600" y2="922"/>
+    <line x1="800" y1="822" x2="700" y2="922"/>
+    <line x1="900" y1="822" x2="800" y2="922"/>
+    <line x1="1000" y1="822" x2="900" y2="922"/>
+    <line x1="1100" y1="822" x2="1000" y2="922"/>
+    <line x1="1200" y1="822" x2="1100" y2="922"/>
+    <line x1="1300" y1="822" x2="1200" y2="922"/>
+    <line x1="1400" y1="822" x2="1300" y2="922"/>
+    <line x1="1500" y1="822" x2="1400" y2="922"/>
+    <line x1="1600" y1="822" x2="1500" y2="922"/>
+    <line x1="1700" y1="822" x2="1600" y2="922"/>
+    <line x1="1800" y1="822" x2="1700" y2="922"/>
+    <line x1="1900" y1="822" x2="1800" y2="922"/>
+    <line x1="1920" y1="822" x2="1820" y2="922"/>
+  </g>
+
+  <!-- === FOREGROUND TREES (summer, dark) === -->
+  <!-- Tree 1 — far left -->
+  <path d="M60,820 L75,600 L90,820 Z" fill="#070a10"/>
+  <ellipse cx="75" cy="590" rx="55" ry="70" fill="#06090e"/>
+  <ellipse cx="55" cy="620" rx="40" ry="50" fill="#06090e"/>
+  <ellipse cx="95" cy="615" rx="38" ry="48" fill="#07090f"/>
+
+  <!-- Tree 2 — left area -->
+  <path d="M140,820 L158,640 L176,820 Z" fill="#070a10"/>
+  <ellipse cx="158" cy="628" rx="65" ry="75" fill="#060810"/>
+  <ellipse cx="130" cy="655" rx="45" ry="55" fill="#06090e"/>
+  <ellipse cx="185" cy="650" rx="42" ry="52" fill="#07090f"/>
+
+  <!-- Tree 3 — right area -->
+  <path d="M1700,820 L1718,650 L1736,820 Z" fill="#070a10"/>
+  <ellipse cx="1718" cy="638" rx="60" ry="72" fill="#06090e"/>
+  <ellipse cx="1690" cy="665" rx="44" ry="52" fill="#06090e"/>
+  <ellipse cx="1745" cy="658" rx="40" ry="50" fill="#07090f"/>
+
+  <!-- Tree 4 — far right -->
+  <path d="M1820,820 L1840,620 L1860,820 Z" fill="#070a10"/>
+  <ellipse cx="1840" cy="610" rx="58" ry="68" fill="#060810"/>
+  <ellipse cx="1815" cy="638" rx="42" ry="52" fill="#06090e"/>
+  <ellipse cx="1865" cy="632" rx="38" ry="48" fill="#07090f"/>
+
+  <!-- === AMBIENT GLOW — candle light spilling from window onto ground below === -->
+  <ellipse cx="630" cy="700" rx="80" ry="30" fill="#c06010" opacity="0.06" filter="url(#haze)"/>
+
+  <!-- === OVERALL DARK VIGNETTE === -->
+  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+    <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="70%" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="0.65"/>
+  </radialGradient>
+  <rect width="1920" height="1080" fill="url(#vignette)"/>
+
+  <!-- Bottom fog/ground mist -->
+  <linearGradient id="fogBottom" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0a0e18" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#050709" stop-opacity="0.85"/>
+  </linearGradient>
+  <rect x="0" y="900" width="1920" height="180" fill="url(#fogBottom)"/>
+</svg>
