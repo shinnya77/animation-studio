@@ -74,6 +74,71 @@
     },
   };
 
+  // ---- Undo ----
+  const imageCache = new Map(); // layerId -> { img, thumbCanvas }
+  const undoStack = [];
+  const redoStack = [];
+  const MAX_UNDO = 50;
+
+  function snapshotState() {
+    return {
+      layers: state.layers.map(l => ({
+        id: l.id, name: l.name, imgSrc: l.imgSrc,
+        visible: l.visible, x: l.x, y: l.y, w: l.w, h: l.h,
+        rotation: l.rotation, opacity: l.opacity, scaleX: l.scaleX, scaleY: l.scaleY,
+        keyframes: l.keyframes.map(k => ({ ...k })),
+        vibrations: l.vibrations.map(v => ({ ...v })),
+      })),
+      selectedLayerId: state.selectedLayerId,
+      subtitles: state.subtitles.map(s => ({ ...s })),
+      bgmTracks: state.bgmTracks.map(t => ({ ...t })),
+      sfxTracks: state.sfxTracks.map(t => ({ ...t })),
+      voiceTracks: state.voiceTracks.map(t => ({ ...t })),
+      totalDuration: state.totalDuration,
+      nextId: state.nextId,
+    };
+  }
+
+  function pushUndo() {
+    undoStack.push(snapshotState());
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+    redoStack.length = 0;
+  }
+
+  function applySnapshot(snap) {
+    state.selectedLayerId = snap.selectedLayerId;
+    state.totalDuration = snap.totalDuration;
+    state.nextId = snap.nextId;
+    state.subtitles = snap.subtitles.map(s => ({ ...s }));
+    state.bgmTracks = snap.bgmTracks.map(t => ({ ...t }));
+    state.sfxTracks = snap.sfxTracks.map(t => ({ ...t }));
+    state.voiceTracks = snap.voiceTracks.map(t => ({ ...t }));
+    state.layers = snap.layers.map(l => {
+      const cached = imageCache.get(l.id);
+      return {
+        ...l,
+        keyframes: l.keyframes.map(k => ({ ...k })),
+        vibrations: l.vibrations.map(v => ({ ...v })),
+        img: cached ? cached.img : null,
+        thumbCanvas: cached ? cached.thumbCanvas : null,
+      };
+    });
+    totalDurationInput.value = state.totalDuration;
+    refreshAll();
+  }
+
+  function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(snapshotState());
+    applySnapshot(undoStack.pop());
+  }
+
+  function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(snapshotState());
+    applySnapshot(redoStack.pop());
+  }
+
   // ---- DOM refs ----
   const $ = (sel) => document.querySelector(sel);
   const canvas = $('#stage-canvas');
@@ -193,6 +258,7 @@
 
   // ---- Keyframe management ----
   function addKeyframe(layer) {
+    pushUndo();
     const time = Math.round(state.currentTime * 100) / 100;
     // Check if keyframe already exists at this time (within 0.05s tolerance)
     const existing = layer.keyframes.findIndex((kf) => Math.abs(kf.time - time) < 0.05);
@@ -217,6 +283,7 @@
   function deleteKeyframeAtTime(layer, time) {
     const idx = layer.keyframes.findIndex((kf) => Math.abs(kf.time - time) < 0.05);
     if (idx >= 0) {
+      pushUndo();
       layer.keyframes.splice(idx, 1);
       refreshAll();
     }
@@ -700,6 +767,7 @@
       id: genId(), name: trackName, audioBuffer: trimmed, dataUrl,
       startTime, volume: 1, duration: trimmed.duration, vc: makeDefaultVC(),
     };
+    pushUndo();
     state.voiceTracks.push(track);
     closeRecordModal();
     refreshAll();
@@ -873,6 +941,8 @@
         keyframes: [],
         vibrations: [], // [{ sourceType, sourceIndex, intensity, threshold }]
       };
+      imageCache.set(id, { img, thumbCanvas });
+      pushUndo();
       state.layers.unshift(layer);
       state.selectedLayerId = id;
       refreshAll();
@@ -885,6 +955,7 @@
   }
 
   function removeLayer(id) {
+    pushUndo();
     state.layers = state.layers.filter((l) => l.id !== id);
     if (state.selectedLayerId === id) state.selectedLayerId = null;
     refreshAll();
@@ -894,6 +965,7 @@
     const idx = state.layers.findIndex((l) => l.id === id);
     const newIdx = idx + dir;
     if (newIdx < 0 || newIdx >= state.layers.length) return;
+    pushUndo();
     [state.layers[idx], state.layers[newIdx]] = [state.layers[newIdx], state.layers[idx]];
     refreshAll();
   }
@@ -954,7 +1026,7 @@
         nameSpan.replaceWith(input);
         input.focus();
         input.select();
-        const finish = () => { layer.name = input.value || layer.name; refreshAll(); };
+        const finish = () => { pushUndo(); layer.name = input.value || layer.name; refreshAll(); };
         input.onblur = finish;
         input.onkeydown = (ev) => { if (ev.key === 'Enter') finish(); };
       };
@@ -962,7 +1034,7 @@
       const vis = document.createElement('span');
       vis.className = 'layer-visibility';
       vis.textContent = layer.visible ? '👁' : '🚫';
-      vis.onclick = (e) => { e.stopPropagation(); layer.visible = !layer.visible; refreshAll(); };
+      vis.onclick = (e) => { e.stopPropagation(); pushUndo(); layer.visible = !layer.visible; refreshAll(); };
 
       const btnUp = document.createElement('button');
       btnUp.className = 'layer-order-btn';
@@ -1086,9 +1158,11 @@
 
     // Property input bindings
     propertyContent.querySelectorAll('[data-prop]').forEach((input) => {
+      if (input.type === 'range') input.addEventListener('mousedown', () => pushUndo());
       input.addEventListener('change', () => {
         const prop = input.dataset.prop;
         if (!EDITABLE_PROPS.has(prop)) return;
+        if (input.type !== 'range') pushUndo();
         let val = input.type === 'range' ? parseFloat(input.value) : input.value;
         if (input.type === 'number') val = val === '' ? null : parseFloat(val);
         layer[prop] = val;
@@ -1124,6 +1198,7 @@
       sel.addEventListener('change', () => {
         const idx = parseInt(sel.dataset.kfEasingIdx);
         if (layer.keyframes[idx]) {
+          pushUndo();
           layer.keyframes[idx].easing = sel.value;
           render();
         }
@@ -1135,6 +1210,7 @@
       el.addEventListener('click', () => {
         const idx = parseInt(el.dataset.kfDelIdx);
         if (layer.keyframes[idx]) {
+          pushUndo();
           layer.keyframes.splice(idx, 1);
           refreshAll();
         }
@@ -1219,6 +1295,7 @@
         delBtn.className = 'vib-delete';
         delBtn.textContent = '✕';
         delBtn.onclick = () => {
+          pushUndo();
           layer.vibrations.splice(idx, 1);
           renderVibList();
         };
@@ -1235,6 +1312,7 @@
 
     btnAdd.onclick = () => {
       const firstOpt = audioOpts[0];
+      pushUndo();
       layer.vibrations.push({
         sourceType: firstOpt ? firstOpt.type : 'voice',
         sourceIndex: firstOpt ? firstOpt.index : 0,
@@ -1558,6 +1636,7 @@
     const { x, y } = canvasToStage(e.clientX, e.clientY);
     const hit = hitTest(x, y);
     if (hit) {
+      pushUndo();
       state.selectedLayerId = hit.id;
       state.isDragging = true;
       state.dragOffsetX = x - hit.x;
@@ -1641,6 +1720,7 @@
           duration: audioBuffer.duration,
           vc: makeDefaultVC(),
         };
+        pushUndo();
         state[AUDIO_TRACK_KEYS[type]].push(track);
         refreshAll();
       } catch (err) {
@@ -1755,6 +1835,7 @@
         rm.textContent = '✕';
         rm.onclick = () => {
           const key = AUDIO_TRACK_KEYS[type];
+          pushUndo();
           state[key] = state[key].filter((a) => a.id !== t.id);
           refreshAll();
         };
@@ -1934,6 +2015,7 @@
       del.className = 'sub-delete';
       del.textContent = '✕';
       del.onclick = () => {
+        pushUndo();
         state.subtitles = state.subtitles.filter((s) => s.id !== sub.id);
         if (state.selectedSubtitleId === sub.id) state.selectedSubtitleId = null;
         refreshSubtitleList();
@@ -1954,7 +2036,7 @@
         const textInput = document.createElement('input');
         textInput.type = 'text';
         textInput.value = sub.text;
-        textInput.onchange = () => { sub.text = textInput.value; refreshSubtitleList(); render(); };
+        textInput.onchange = () => { pushUndo(); sub.text = textInput.value; refreshSubtitleList(); render(); };
         textInput.oninput = () => { sub.text = textInput.value; badge.textContent = sub.speaker ? `[${sub.speaker}] ${sub.text}` : sub.text; render(); };
         row2.appendChild(textLabel);
         row2.appendChild(textInput);
@@ -1968,7 +2050,7 @@
         spkInput.value = sub.speaker || '';
         spkInput.placeholder = '（任意）';
         spkInput.style.maxWidth = '80px';
-        spkInput.onchange = () => { sub.speaker = spkInput.value; refreshSubtitleList(); render(); };
+        spkInput.onchange = () => { pushUndo(); sub.speaker = spkInput.value; refreshSubtitleList(); render(); };
         row2b.appendChild(spkLabel);
         row2b.appendChild(spkInput);
 
@@ -1983,7 +2065,7 @@
           if (v === sub.position) o.selected = true;
           posSel.appendChild(o);
         });
-        posSel.onchange = () => { sub.position = posSel.value; render(); };
+        posSel.onchange = () => { pushUndo(); sub.position = posSel.value; render(); };
         row2b.appendChild(posLabel);
         row2b.appendChild(posSel);
 
@@ -1996,7 +2078,7 @@
         fsInput.min = 12;
         fsInput.max = 120;
         fsInput.step = 2;
-        fsInput.onchange = () => { sub.fontSize = parseInt(fsInput.value) || 48; render(); };
+        fsInput.onchange = () => { pushUndo(); sub.fontSize = parseInt(fsInput.value) || 48; render(); };
         row2b.appendChild(fsLabel);
         row2b.appendChild(fsInput);
 
@@ -2011,7 +2093,7 @@
         stInput.min = 0;
         stInput.max = state.totalDuration;
         stInput.step = 0.1;
-        stInput.onchange = () => { sub.startTime = parseFloat(stInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
+        stInput.onchange = () => { pushUndo(); sub.startTime = parseFloat(stInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
         const etLabel = document.createElement('label');
         etLabel.textContent = '終了:';
         const etInput = document.createElement('input');
@@ -2020,16 +2102,16 @@
         etInput.min = 0;
         etInput.max = state.totalDuration;
         etInput.step = 0.1;
-        etInput.onchange = () => { sub.endTime = parseFloat(etInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
+        etInput.onchange = () => { pushUndo(); sub.endTime = parseFloat(etInput.value) || 0; refreshSubtitleList(); refreshTimeline(); render(); };
 
         const setStartBtn = document.createElement('button');
         setStartBtn.textContent = '◀ 現在位置';
         setStartBtn.style.fontSize = '10px';
-        setStartBtn.onclick = () => { sub.startTime = state.currentTime; stInput.value = sub.startTime; refreshSubtitleList(); refreshTimeline(); render(); };
+        setStartBtn.onclick = () => { pushUndo(); sub.startTime = state.currentTime; stInput.value = sub.startTime; refreshSubtitleList(); refreshTimeline(); render(); };
         const setEndBtn = document.createElement('button');
         setEndBtn.textContent = '現在位置 ▶';
         setEndBtn.style.fontSize = '10px';
-        setEndBtn.onclick = () => { sub.endTime = state.currentTime; etInput.value = sub.endTime; refreshSubtitleList(); refreshTimeline(); render(); };
+        setEndBtn.onclick = () => { pushUndo(); sub.endTime = state.currentTime; etInput.value = sub.endTime; refreshSubtitleList(); refreshTimeline(); render(); };
 
         row3.appendChild(stLabel);
         row3.appendChild(stInput);
@@ -2050,7 +2132,7 @@
           const c = document.createElement('input');
           c.type = 'color';
           c.value = sub[prop] && sub[prop] !== 'transparent' ? sub[prop] : '#000000';
-          c.onchange = () => { sub[prop] = c.value; refreshSubtitleList(); render(); };
+          c.onchange = () => { pushUndo(); sub[prop] = c.value; refreshSubtitleList(); render(); };
           g.appendChild(s);
           g.appendChild(c);
           row4.appendChild(g);
@@ -2067,6 +2149,7 @@
         bgOpInput.value = sub.bgOpacity;
         bgOpInput.min = 0; bgOpInput.max = 1; bgOpInput.step = 0.05;
         bgOpInput.style.width = '50px';
+        bgOpInput.addEventListener('mousedown', () => pushUndo());
         bgOpInput.oninput = () => { sub.bgOpacity = parseFloat(bgOpInput.value); render(); };
         row4.appendChild(bgOpLabel);
         row4.appendChild(bgOpInput);
@@ -2084,6 +2167,7 @@
           btn.textContent = p.name;
           btn.title = p.name;
           btn.onclick = () => {
+            pushUndo();
             sub.color = p.color;
             sub.bgColor = p.bgColor;
             sub.outlineColor = p.outlineColor;
@@ -2108,6 +2192,7 @@
   }
 
   $('#btn-add-subtitle').addEventListener('click', () => {
+    pushUndo();
     const sub = createSubtitle();
     state.subtitles.push(sub);
     state.selectedSubtitleId = sub.id;
@@ -2954,6 +3039,7 @@
   $('#btn-stop').addEventListener('click', stop);
 
   totalDurationInput.addEventListener('change', () => {
+    pushUndo();
     state.totalDuration = parseFloat(totalDurationInput.value) || 10;
     refreshTimeline();
   });
@@ -3072,6 +3158,19 @@
     refreshVoiceChangerUI();
     render();
   }
+
+  // ---- Keyboard shortcuts ----
+  document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      redo();
+    }
+  });
 
   // ---- Init ----
   function init() {
